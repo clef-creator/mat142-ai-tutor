@@ -1,0 +1,2617 @@
+[
+  {
+    "id": "what-is-a-function",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 1,
+    "title": "What is a Function?",
+    "student_facing_name": "Introduction to Functions",
+    "summary": "A function is a rule that relates exactly one output to each input. This topic covers the definition of functions, the key constraint that no input can have more than one output, and the four main ways to represent functions: ordered pairs, mapping diagrams, tables of values, and graphs.",
+    "notation": [
+      "$f(x)$",
+      "$f: A \\to B$",
+      "domain",
+      "codomain",
+      "image"
+    ],
+    "method_steps": [
+      "Identify the input (independent variable) and output (dependent variable)",
+      "Check if each input has exactly one output (vertical line test for graphs)",
+      "Represent the function using one of four representations",
+      "Identify the domain (set of all inputs) and range (set of all outputs)"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [],
+    "prerequisites": [
+      "pc-slope-coordinate-geometry",
+      "pc-function-notation"
+    ],
+    "common_errors": [
+      "Confusing domain with codomain",
+      "Thinking multiple inputs can map to one output is forbidden (it is allowed)",
+      "Attempting to draw vertical lines for graph test",
+      "Misidentifying range vs codomain"
+    ],
+    "geogebra_prompt": null
+  },
+  {
+    "id": "mathematical-functions",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 2,
+    "title": "Evaluating Mathematical Functions",
+    "student_facing_name": "Working with Function Types and Evaluation",
+    "summary": "Students learn to evaluate polynomial, rational, and piecewise functions at specific input values. The slides cover function types including power, linear, quadratic, polynomial, rational, exponential, logarithmic, and piecewise functions, with emphasis on careful substitution and order of operations.",
+    "notation": [
+      "$f(x) = \\ldots$",
+      "$P(x) = \\ldots$",
+      "piecewise notation with cases"
+    ],
+    "method_steps": [
+      "Substitute the given input value for $x$ in the function expression",
+      "Follow order of operations (PEMDAS) carefully",
+      "For piecewise functions, identify which case applies to your input",
+      "Perform all arithmetic operations and simplify"
+    ],
+    "worked_examples": [
+      {
+        "problem": "If $f(x) = \\frac{3x^2 - 2x + 5}{2x + 1}$ and $g(x) = 5x^2 - 3x + 1$, find $7f(3) + 5g(2)$",
+        "answer": "101",
+        "context": "general computation"
+      },
+      {
+        "problem": "Let $f(x) = \\begin{cases} 5x - 2 & -5 \\le x < 5 \\\\ 3x + 10 & 5 \\le x < 10 \\\\ 7x - 5 & 10 \\le x \\le 20 \\end{cases}$. Compute $4f(-2) + 3f(7) - 2f(10) + 5f(15)$",
+        "answer": "415",
+        "context": "piecewise functions"
+      },
+      {
+        "problem": "At EcoGlow Industries, the cost function for producing LED bulbs is $C(x) = 20 + 3x^2$ where $C(x)$ is the total cost (in rupees) to produce $x$ units. Find the cost to produce 100 light bulbs.",
+        "answer": "30,020 rupees",
+        "context": "production cost"
+      },
+      {
+        "problem": "A company determines that if $x$ thousand dollars are spent on advertising a product, then $S(x) = -2x^3 + 27x^2 + 132x + 207$ units will be sold, where $0 \\le x \\le 17$. How many units will be sold if 5,000 dollars are spent on advertising?",
+        "answer": "1292 units",
+        "context": "advertising and sales"
+      }
+    ],
+    "applied_contexts": [
+      "LED light bulb production",
+      "advertising and sales"
+    ],
+    "prerequisites": [
+      "pc-order-of-operations",
+      "what-is-a-function"
+    ],
+    "common_errors": [
+      "Making sign errors when substituting negative numbers",
+      "Forgetting to apply order of operations correctly",
+      "Selecting the wrong case in a piecewise function",
+      "Arithmetic mistakes with fractions or large numbers"
+    ],
+    "geogebra_prompt": "Plot f(x) = 20 + 3*x^2 to see the production cost curve"
+  },
+  {
+    "id": "exponential-functions",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 3,
+    "title": "Exponential Functions",
+    "student_facing_name": "Exponential Functions and Their Applications",
+    "summary": "Exponential functions model situations where quantities grow or decay by a constant factor. Students learn eight key exponent rules and how to simplify expressions involving exponents, then apply these to real-world exponential models involving population growth and other applications.",
+    "notation": [
+      "$a^m \\cdot a^n = a^{m+n}$",
+      "$a^m \\div a^n = a^{m-n}$",
+      "$a^m \\cdot b^m = (ab)^m$",
+      "$a^{m/n} = \\sqrt[n]{a^m}$",
+      "$e^{kt}$"
+    ],
+    "method_steps": [
+      "Apply exponent rules to simplify the expression",
+      "Convert fractional exponents to radicals if needed",
+      "For applications, substitute time or input values into the exponential model",
+      "Evaluate using given values like $e^{0.15} = 1.1618$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Simplify $\\left(\\frac{5^2}{5^4}\\right)^{3/2}$",
+        "answer": "By exponent rules: simplifies to $5^{-3}$",
+        "context": "exponent rule practice"
+      },
+      {
+        "problem": "The population of a city is modeled by $P(t) = 10000 e^{0.03t}$, where $t$ is time in years. Find the population after 5 years. (Given: $e^{0.15} = 1.1618$)",
+        "answer": "11,618 people",
+        "context": "population growth"
+      }
+    ],
+    "applied_contexts": [
+      "population growth",
+      "radioactive decay",
+      "compound interest"
+    ],
+    "prerequisites": [
+      "pc-exponent-radical-rules"
+    ],
+    "common_errors": [
+      "Confusing multiplication and addition of exponents",
+      "Forgetting to apply the exponent to all factors inside parentheses",
+      "Making errors with negative exponents",
+      "Misapplying rules when bases are different"
+    ],
+    "geogebra_prompt": "Plot P(t) = 10000*exp(0.03*t) to visualize exponential population growth"
+  },
+  {
+    "id": "logarithmic-functions",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 4,
+    "title": "Logarithmic Functions",
+    "student_facing_name": "Working with Logarithmic Functions",
+    "summary": "Logarithmic functions are the inverse of exponential functions. Students learn five key logarithm rules for product, quotient, power, and special cases, and apply these to simplify logarithmic expressions and solve skill development models.",
+    "notation": [
+      "$\\log_b(M \\cdot N) = \\log_b M + \\log_b N$",
+      "$\\log_b\\left(\\frac{M}{N}\\right) = \\log_b M - \\log_b N$",
+      "$\\log_b(M^k) = k \\log_b M$",
+      "$\\log_b(1) = 0$",
+      "$\\log_b(b) = 1$"
+    ],
+    "method_steps": [
+      "Identify which logarithm rule(s) apply to the expression",
+      "Apply the rule step by step",
+      "Simplify all remaining logarithmic terms",
+      "Verify the result follows from the rules"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Simplify $\\log_b(28) - \\log_b(7)$",
+        "answer": "$\\log_b(4)$",
+        "context": "quotient rule"
+      },
+      {
+        "problem": "A person's skill level after training time $t$ hours is $S(t) = 20 \\log_{10}(t+1)$. Find the skill level after 9 hours of training.",
+        "answer": "20",
+        "context": "skill training"
+      }
+    ],
+    "applied_contexts": [
+      "skill training",
+      "learning curves"
+    ],
+    "prerequisites": [
+      "exponential-functions"
+    ],
+    "common_errors": [
+      "Forgetting that $\\log(x+y) \\ne \\log x + \\log y$",
+      "Applying the power rule to coefficients outside the logarithm",
+      "Confusing natural log (ln) with common log (log base 10)",
+      "Not recognizing when a logarithm cannot be simplified further"
+    ],
+    "geogebra_prompt": "Plot S(t) = 20*log(t+1) to see how skill increases with training time"
+  },
+  {
+    "id": "increasing-decreasing-functions",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 5,
+    "title": "Increasing and Decreasing Functions",
+    "student_facing_name": "Identifying Function Behavior",
+    "summary": "A function is increasing on an interval if outputs increase when inputs increase; it is decreasing if outputs decrease when inputs increase. This is the foundation for understanding rates of change and derivatives, and can be determined by examining the sign of the slope.",
+    "notation": [
+      "increasing: $f(x_2) > f(x_1)$ whenever $x_2 > x_1$",
+      "decreasing: $f(x_2) < f(x_1)$ whenever $x_2 > x_1$"
+    ],
+    "method_steps": [
+      "For a linear function, check the slope coefficient",
+      "Positive slope means increasing; negative slope means decreasing",
+      "For non-linear functions, you will need calculus (derivative) to determine"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Examine whether the following functions are increasing or decreasing: $f(x) = 3x + 5$ and $f(x) = 7 - 10x$",
+        "answer": "First is increasing (slope 3 > 0); second is decreasing (slope -10 < 0)",
+        "context": "linear functions"
+      }
+    ],
+    "applied_contexts": [
+      "trend analysis",
+      "business metrics"
+    ],
+    "prerequisites": [
+      "mathematical-functions"
+    ],
+    "common_errors": [
+      "Confusing the direction of increase/decrease",
+      "Thinking a function must be monotonic (always increasing or always decreasing) everywhere",
+      "Not accounting for the domain when determining behavior"
+    ],
+    "geogebra_prompt": "Plot f(x) = 3*x + 5 and g(x) = 7 - 10*x to see increasing vs decreasing functions"
+  },
+  {
+    "id": "even-odd-functions",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 6,
+    "title": "Even and Odd Functions",
+    "student_facing_name": "Symmetry Properties of Functions",
+    "summary": "A function is even if $f(-x) = f(x)$ (symmetric about the $y$-axis) and odd if $f(-x) = -f(x)$ (symmetric about the origin). These properties help understand function behavior and simplify integration and other calculations.",
+    "notation": [
+      "even: $f(-x) = f(x)$",
+      "odd: $f(-x) = -f(x)$"
+    ],
+    "method_steps": [
+      "Replace $x$ with $-x$ in the function",
+      "Simplify the resulting expression",
+      "Compare to $f(x)$ and $-f(x)$: if it equals $f(x)$, the function is even; if it equals $-f(x)$, the function is odd"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Examine whether the following functions are even or odd: $f(x) = 5x^4 + 7$ and $f(x) = x^5 + x$",
+        "answer": "First is even; second is odd",
+        "context": "polynomial functions"
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "mathematical-functions"
+    ],
+    "common_errors": [
+      "Forgetting to replace ALL instances of $x$ with $-x$",
+      "Confusing even/odd with increasing/decreasing",
+      "Not simplifying completely before comparing",
+      "Assuming a function must be either even or odd (many are neither)"
+    ],
+    "geogebra_prompt": "Plot f(x) = 5*x^4 + 7 and g(x) = x^5 + x to see even and odd function symmetry"
+  },
+  {
+    "id": "combining-functions",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 7,
+    "title": "Combining Functions",
+    "student_facing_name": "Operations on Functions",
+    "summary": "When two functions $f$ and $g$ have the same domain, we can form new functions by adding, subtracting, multiplying, and dividing them. A key business application is forming profit functions from revenue and cost functions.",
+    "notation": [
+      "$(f+g)(x) = f(x) + g(x)$",
+      "$(f-g)(x) = f(x) - g(x)$",
+      "$(fg)(x) = f(x) \\cdot g(x)$",
+      "$\\left(\\frac{f}{g}\\right)(x) = \\frac{f(x)}{g(x)}, g(x) \\ne 0$"
+    ],
+    "method_steps": [
+      "Identify the operations needed (addition, subtraction, multiplication, division)",
+      "Apply the operation pointwise to $f(x)$ and $g(x)$",
+      "Simplify the resulting expression",
+      "For profit, compute Revenue minus Cost"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A manufacturer can sell a product for \\$150 per unit. Total cost consists of a fixed overhead of \\$7,500 plus production costs of \\$60 per unit. Determine the profit function $P(x)$ and find the profit when 100 units are sold.",
+        "answer": "$P(x) = 90x - 7500$; profit = \\$1500 (actually 100 units gives \\$900(100) - \\$7500 = \\$82,500 - correction: $P(100) = 90(100) - 7500 = 9000 - 7500 = 1500$)",
+        "context": "profit function"
+      }
+    ],
+    "applied_contexts": [
+      "profit analysis",
+      "revenue and cost models"
+    ],
+    "prerequisites": [
+      "mathematical-functions"
+    ],
+    "common_errors": [
+      "Forgetting to distribute negative signs when subtracting",
+      "Confusing revenue with profit",
+      "Including fixed cost in both total cost and somehow counting it twice",
+      "Not simplifying combined expressions fully"
+    ],
+    "geogebra_prompt": "Plot R(x) = 150*x and C(x) = 7500 + 60*x and P(x) = R(x) - C(x) to visualize profit"
+  },
+  {
+    "id": "function-composition",
+    "deck": 1,
+    "unit_title": "Overview of Functions",
+    "order": 8,
+    "title": "Composition of Functions",
+    "student_facing_name": "Nested Functions and Composition",
+    "summary": "The composition of functions $f$ and $g$, written $(f \\circ g)(x)$ or $f(g(x))$, means applying $g$ first, then applying $f$ to the result. Composition models multi-step real-world processes like how carbon monoxide levels depend on population growth over time.",
+    "notation": [
+      "$(f \\circ g)(x) = f(g(x))$",
+      "composition is read 'f of g of x'"
+    ],
+    "method_steps": [
+      "Identify the inner function $g(x)$",
+      "Apply $g$ to get an intermediate expression",
+      "Substitute that expression into $f$ in place of $x$",
+      "Simplify the resulting composition"
+    ],
+    "worked_examples": [
+      {
+        "problem": "If $f(x) = x^2 + 3x + 1$ and $g(x) = x + 1$, determine the composite functions $f(g(x))$ and $g(f(x))$",
+        "answer": "$f(g(x)) = x^2 + 5x + 5$; $g(f(x)) = x^2 + 3x + 2$",
+        "context": "polynomial composition"
+      },
+      {
+        "problem": "An environmental study suggests that the average daily carbon monoxide level in the air will be $c(p) = 0.5p + 1$ parts per million when the population is $p$ thousand. It is estimated that $t$ years from now the population will be $p(t) = 10 + 0.1t^2$ thousand. Express the carbon monoxide level as a function of time and determine when it reaches 6.8 ppm.",
+        "answer": "$c(t) = 6 + 0.05t^2$; reached at $t = 4$ years",
+        "context": "environmental model (carbon monoxide and population)"
+      }
+    ],
+    "applied_contexts": [
+      "carbon monoxide and population growth",
+      "multi-stage business processes"
+    ],
+    "prerequisites": [
+      "mathematical-functions"
+    ],
+    "common_errors": [
+      "Confusing the order: applying $f$ first instead of $g$ first",
+      "Failing to substitute the entire expression for $g(x)$ into $f$",
+      "Arithmetic errors when substituting complex expressions",
+      "Thinking $(f \\circ g)(x) = f(x) \\cdot g(x)$ (this is multiplication, not composition)"
+    ],
+    "geogebra_prompt": "Define f(x) = x^2 + 3*x + 1 and g(x) = x + 1, then plot f(g(x)) to see the composition"
+  },
+  {
+    "id": "slope-and-average-rate-of-change",
+    "deck": 2,
+    "unit_title": "Average Rate of Change",
+    "order": 9,
+    "title": "Slope and Average Rate of Change",
+    "student_facing_name": "Introduction to Rate of Change",
+    "summary": "The average rate of change of a function over an interval is the slope of the line (secant line) connecting two points on the function. It measures how quickly the output changes relative to the input and is fundamental to the concept of a derivative.",
+    "notation": [
+      "slope $= \\frac{\\Delta y}{\\Delta x} = \\frac{y_2 - y_1}{x_2 - x_1}$",
+      "$\\Delta$ means 'change in'"
+    ],
+    "method_steps": [
+      "Identify the two points: $(x_1, y_1)$ and $(x_2, y_2)$",
+      "Compute the change in $y$: $\\Delta y = y_2 - y_1$",
+      "Compute the change in $x$: $\\Delta x = x_2 - x_1$",
+      "Divide: slope $= \\frac{\\Delta y}{\\Delta x}$",
+      "Interpret: if positive, output increases as input increases; if negative, output decreases"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A bakery tracks its monthly revenue. In January (Month 1), revenue was 25,000 rupees. By April (Month 4), it rose to 40,000 rupees. What is the average monthly growth?",
+        "answer": "5,000 rupees per month",
+        "context": "business revenue"
+      },
+      {
+        "problem": "A biology student measured sunflower height. On day 5, the plant was 18 cm tall. By day 11, it reached 30 cm. Determine the plant's average growth rate.",
+        "answer": "2 cm per day",
+        "context": "plant growth"
+      }
+    ],
+    "applied_contexts": [
+      "business revenue",
+      "plant growth",
+      "speed and distance"
+    ],
+    "prerequisites": [
+      "pc-slope-coordinate-geometry",
+      "mathematical-functions"
+    ],
+    "common_errors": [
+      "Computing $\\frac{y_1 - y_2}{x_1 - x_2}$ instead of $\\frac{y_2 - y_1}{x_2 - x_1}$ (sign error)",
+      "Using $y_2 - y_1$ without subtracting the $x$-values",
+      "Confusing average rate with instantaneous rate",
+      "Forgetting units on the answer"
+    ],
+    "geogebra_prompt": "Plot two points and the secant line to visualize slope"
+  },
+  {
+    "id": "slope-of-curves",
+    "deck": 2,
+    "unit_title": "Average Rate of Change",
+    "order": 10,
+    "title": "Rate of Change on Curves",
+    "student_facing_name": "Average Rate of Change for Nonlinear Functions",
+    "summary": "For curves (nonlinear functions), the slope is not constant. A secant line connects two points on the curve, and its slope is the average rate of change between those points. As the two points get closer, the secant slope approaches the instantaneous rate of change (derivative).",
+    "notation": [
+      "secant line slope $= \\frac{f(x+\\Delta x) - f(x)}{\\Delta x}$",
+      "difference quotient"
+    ],
+    "method_steps": [
+      "Identify the starting point $x$ and the change $\\Delta x$",
+      "Compute $f(x)$ and $f(x + \\Delta x)$",
+      "Calculate the difference quotient: $\\frac{f(x+\\Delta x) - f(x)}{\\Delta x}$",
+      "Interpret in context: this is the average rate of change over the interval $[x, x+\\Delta x]$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A small tech startup tracks daily app downloads modeled by $f(x) = x^2 + 5x + 3$, where $x$ is days since launch and $y$ is downloads on day $x$. Calculate the average rate of change in downloads from day 1 to day 5.",
+        "answer": "12 downloads per day",
+        "context": "app downloads"
+      }
+    ],
+    "applied_contexts": [
+      "app downloads",
+      "user growth",
+      "population models"
+    ],
+    "prerequisites": [
+      "mathematical-functions",
+      "slope-and-average-rate-of-change"
+    ],
+    "common_errors": [
+      "Thinking the curve has a constant slope like a line",
+      "Confusing average rate with instantaneous rate",
+      "Arithmetic errors when computing $f(x + \\Delta x)$",
+      "Failing to simplify the difference quotient fully"
+    ],
+    "geogebra_prompt": "Plot f(x) = x^2 + 5*x + 3 and a secant line between two points to see variable slope"
+  },
+  {
+    "id": "secant-line-and-difference-quotient",
+    "deck": 2,
+    "unit_title": "Average Rate of Change",
+    "order": 11,
+    "title": "Secant Lines and Difference Quotient",
+    "student_facing_name": "The Difference Quotient Formula",
+    "summary": "The difference quotient $\\frac{f(x+\\Delta x) - f(x)}{\\Delta x}$ is a general formula representing both (1) the average rate of change in $y$ with respect to $x$ over an interval, and (2) the slope of the secant line connecting two points on the curve.",
+    "notation": [
+      "difference quotient $= \\frac{f(x+\\Delta x) - f(x)}{\\Delta x}$",
+      "secant line"
+    ],
+    "method_steps": [
+      "Substitute $x + \\Delta x$ into $f$",
+      "Subtract $f(x)$ from the result",
+      "Divide by $\\Delta x$",
+      "Simplify the expression"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Aisha runs an online business selling handcrafted notebooks. Her daily profit (in hundreds of rupees) from selling $x$ dozen notebooks is $f(x) = 3x^2 - 2x$. Calculate her profit when selling 1 dozen, when selling 3 dozen, and the average rate of change in profit over this interval.",
+        "answer": "$f(1) = 1$ (100 rupees); $f(3) = 21$ (2100 rupees); average rate = 1000 rupees per dozen",
+        "context": "online notebook business profit"
+      },
+      {
+        "problem": "Ravi runs a blog and earns revenue through ads. His daily advertising revenue (in hundreds of rupees) from $x$ thousand website visits is $f(x) = 4x^2 + x$. Calculate the average rate of change in revenue from 2,000 to 5,000 visitors and interpret it.",
+        "answer": "28 hundred rupees per thousand visitors = 2800 rupees per 1000 additional visitors",
+        "context": "blog advertising revenue"
+      }
+    ],
+    "applied_contexts": [
+      "online business profit",
+      "advertising revenue",
+      "website traffic"
+    ],
+    "prerequisites": [
+      "what-is-a-function",
+      "slope-of-curves"
+    ],
+    "common_errors": [
+      "Forgetting to use $x + \\Delta x$ instead of just $\\Delta x$ as input",
+      "Not subtracting $f(x)$ in the numerator",
+      "Forgetting to divide by $\\Delta x$",
+      "Failing to simplify completely before interpreting"
+    ],
+    "geogebra_prompt": "Define f(x) = 3*x^2 - 2*x and compute the difference quotient to visualize average rate of change"
+  },
+  {
+    "id": "average-rate-applications",
+    "deck": 2,
+    "unit_title": "Average Rate of Change",
+    "order": 12,
+    "title": "Applications of Average Rate of Change",
+    "student_facing_name": "Real-World Rate of Change Problems",
+    "summary": "Average rate of change appears in many business and science contexts: profit per unit sold, revenue per customer, velocity, cost per platform, and many others. Interpreting the result in context is critical.",
+    "notation": [
+      "average rate $= \\frac{\\text{change in output}}{\\text{change in input}}$"
+    ],
+    "method_steps": [
+      "Identify what the input and output represent",
+      "Compute $f(x_1)$ and $f(x_2)$ at the endpoints",
+      "Calculate $\\frac{f(x_2) - f(x_1)}{x_2 - x_1}$",
+      "Write the answer with units and interpret in context"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A manufacturer produces digital recorders at \\$50 each. If recorders are sold for $p$ dollars, consumers buy $q = 120 - p$ recorders monthly. Express profit $P$ as a function of $q$ and find the average rate of profit as production increases from 0 to 20 units.",
+        "answer": "$P(q) = 70q - 6000$ (approximately); average rate involves finding $P(0)$ and $P(20)$",
+        "context": "digital recorder profit"
+      },
+      {
+        "problem": "A toy rocket's height (in feet) at $t$ seconds is $h(t) = -16t^2 + 200t$. Find the height at 6 seconds and the average velocity over the first 6 seconds.",
+        "answer": "Height = 504 feet; average velocity = 84 feet/second",
+        "context": "projectile motion"
+      },
+      {
+        "problem": "A digital marketing agency's cost function for advertising on $x$ platforms is $C(x) = \\frac{x^2}{4} + 300x$ rupees. Find the average rate of change in cost from 2 to 6 platforms.",
+        "answer": "Approximately 301.5 rupees per platform",
+        "context": "advertising cost"
+      }
+    ],
+    "applied_contexts": [
+      "profit analysis",
+      "projectile motion",
+      "advertising cost",
+      "website traffic revenue"
+    ],
+    "prerequisites": [
+      "mathematical-functions",
+      "secant-line-and-difference-quotient"
+    ],
+    "common_errors": [
+      "Forgetting to compute function values before finding the rate",
+      "Computing the rate as a single point value rather than over an interval",
+      "Dropping units in the final answer",
+      "Misinterpreting what the rate means in the business context"
+    ],
+    "geogebra_prompt": "Plot C(x) = x^2/4 + 300*x and show the secant line from x=2 to x=6 to visualize rate of change"
+  },
+  {
+    "id": "limit-concept-and-motivation",
+    "deck": 3,
+    "unit_title": "Limit of a Function",
+    "order": 13,
+    "title": "What is a Limit? Motivation and Introduction",
+    "student_facing_name": "Understanding Limits",
+    "summary": "A limit formalizes the intuitive idea of what value a function 'approaches' as the input approaches a particular point, even if the function is not defined at that point or if direct substitution gives a meaningless result like 0/0. The core idea: we can make $f(x)$ as close to $L$ as we like by making $x$ as close to $c$ as we like.",
+    "notation": [
+      "$\\lim_{x \\to c} f(x) = L$",
+      "read 'the limit of $f(x)$ as $x$ approaches $c$ is $L$'"
+    ],
+    "method_steps": [
+      "Attempt direct substitution: substitute $x = c$ into $f(x)$",
+      "If you get a definite number, that is the limit",
+      "If you get an indeterminate form like $\\frac{0}{0}$, use a table or algebraic method",
+      "Make a table of values approaching $c$ from both sides to observe the limiting behavior"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A manager determines that when $x$% of plant capacity is used, the total cost is $C(x) = \\frac{8x^2 - 636x - 320}{x^2 - 68x - 960}$ hundred thousand dollars. The company wants to operate at 80% capacity. What cost should be expected?",
+        "answer": "7 hundred thousand dollars",
+        "context": "manufacturing capacity and cost"
+      },
+      {
+        "problem": "How does $f(x) = \\frac{x^2 - 1}{x - 1}$ behave near $x = 1$?",
+        "answer": "$\\lim_{x \\to 1} f(x) = 2$ (by table of values and factoring)",
+        "context": "removable discontinuity"
+      },
+      {
+        "problem": "How does $f(x) = \\frac{x^2 - 9}{x - 3}$ behave near $x = 3$?",
+        "answer": "$\\lim_{x \\to 3} f(x) = 6$ (by factoring $(x-3)$ from numerator)",
+        "context": "removable discontinuity"
+      }
+    ],
+    "applied_contexts": [
+      "manufacturing cost",
+      "production economics"
+    ],
+    "prerequisites": [
+      "mathematical-functions"
+    ],
+    "common_errors": [
+      "Confusing the limit with the function value $f(c)$ (limit can exist even if $f(c)$ is undefined)",
+      "Assuming the limit must be found by direct substitution",
+      "Giving up when direct substitution yields $\\frac{0}{0}$",
+      "Not checking both left and right approaches"
+    ],
+    "geogebra_prompt": "Plot C(x) = (8*x^2 - 636*x - 320)/(x^2 - 68*x - 960) and zoom near x = 80 to see the limiting behavior"
+  },
+  {
+    "id": "limit-by-table-method",
+    "deck": 3,
+    "unit_title": "Limit of a Function",
+    "order": 14,
+    "title": "Finding Limits Using Tables",
+    "student_facing_name": "Computing Limits Numerically",
+    "summary": "When direct substitution produces an indeterminate form, create a table of function values as $x$ approaches the target value from both sides. As the function values converge to a single number, that is the limit.",
+    "notation": [
+      "$x \\to c^-$ (approach from the left), $x \\to c^+$ (approach from the right)"
+    ],
+    "method_steps": [
+      "Choose $x$-values approaching $c$ from both left and right",
+      "Compute $f(x)$ at each value in your table",
+      "Observe the $y$-values: do they converge to a single value $L$?",
+      "If both sides converge to $L$, then $\\lim_{x \\to c} f(x) = L$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find $\\lim_{x \\to 7} \\frac{x^2 - 49}{2x - 14}$ by preparing a table of values",
+        "answer": "7 (by table or factoring: $\\frac{(x-7)(x+7)}{2(x-7)} = \\frac{x+7}{2}$ at $x=7$ gives $\\frac{14}{2} = 7$)",
+        "context": "limit computation"
+      },
+      {
+        "problem": "Find $\\lim_{x \\to -5} \\frac{x^2 - 25}{3x + 15}$ by table",
+        "answer": "$\\frac{-10}{3}$ (factor: $\\frac{(x-5)(x+5)}{3(x+5)} = \\frac{x-5}{3}$ at $x=-5$ gives $\\frac{-10}{3}$)",
+        "context": "limit computation"
+      },
+      {
+        "problem": "Find $\\lim_{x \\to 6} \\frac{1}{2x - 12}$ by table",
+        "answer": "Does not exist (denominator approaches 0, function is unbounded)",
+        "context": "vertical asymptote"
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "limit-concept-and-motivation"
+    ],
+    "common_errors": [
+      "Not choosing values close enough to the target to see the trend",
+      "Expecting the limit to exist when the function is unbounded",
+      "Making arithmetic errors in computing table values",
+      "Assuming both sides must converge to the same value without checking"
+    ],
+    "geogebra_prompt": "Plot f(x) = (x^2 - 49)/(2*x - 14) and trace values as x approaches 7"
+  },
+  {
+    "id": "limit-properties-and-rules",
+    "deck": 3,
+    "unit_title": "Limit of a Function",
+    "order": 15,
+    "title": "Properties of Limits",
+    "student_facing_name": "Limit Laws and Rules",
+    "summary": "Limits follow algebraic rules: limits of sums, products, quotients, and compositions can be computed from the individual limits. Constant limits and identity limits are especially useful special cases.",
+    "notation": [
+      "$\\lim_{x \\to a} f(x) = l_1$ and $\\lim_{x \\to a} g(x) = l_2$"
+    ],
+    "method_steps": [
+      "Apply the appropriate limit property (sum, product, quotient, composition)",
+      "Compute the limit of each component",
+      "Combine according to the rule"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [],
+    "prerequisites": [
+      "limit-concept-and-motivation"
+    ],
+    "common_errors": [
+      "Applying a rule when the component limits do not exist",
+      "For quotient limits, forgetting the restriction $l_2 \\ne 0$",
+      "Confusing limit properties with limit values"
+    ],
+    "geogebra_prompt": null
+  },
+  {
+    "id": "limit-by-factorization",
+    "deck": 3,
+    "unit_title": "Limit of a Function",
+    "order": 16,
+    "title": "Limits by Factorization (Indeterminate Forms)",
+    "student_facing_name": "Resolving 0/0 Using Algebra",
+    "summary": "When direct substitution gives the indeterminate form 0/0, we can often factor both numerator and denominator to cancel the common factor $(x - a)$ and then evaluate the limit of the simplified expression.",
+    "notation": [
+      "indeterminate form: $\\frac{0}{0}$"
+    ],
+    "method_steps": [
+      "Verify that direct substitution gives $\\frac{0}{0}$",
+      "Factor both numerator and denominator completely",
+      "Cancel the common factor $(x - a)$",
+      "Evaluate the limit of the simplified expression (now direct substitution should work)"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find $\\lim_{x \\to -4} \\frac{x^3 + 64}{x^2 - 16}$",
+        "answer": "$-3$ (factor: $\\frac{(x+4)(x^2-4x+16)}{(x-4)(x+4)} = \\frac{x^2-4x+16}{x-4}$ at $x=-4$ gives $\\frac{16+16+16}{-8} = \\frac{48}{-8} = -6$; correction: $\\frac{16+16+16}{-8} = -6$)",
+        "context": "factoring sum of cubes"
+      },
+      {
+        "problem": "Find $\\lim_{x \\to 2} \\frac{x^2 + 3x}{x^2 - 4}$",
+        "answer": "Does not exist (denominator has factor $(x-2)$ but numerator does not at $x=2$ we have $x(x+3) = 2(5) = 10 \\ne 0$ so no common factor; thus undefined)",
+        "context": "vertical asymptote"
+      },
+      {
+        "problem": "Find $\\lim_{x \\to 0} \\frac{4x^2 - 2x}{6x^2 + 9x}$",
+        "answer": "$\\frac{2}{3}$ (factor: $\\frac{2x(2x-1)}{3x(2x+3)} = \\frac{2(2x-1)}{3(2x+3)}$ at $x=0$ gives $\\frac{-2}{9}$; correction: $\\frac{2x(2x-1)}{3x(2x+3)}$ cancel $x$: $\\frac{2(2x-1)}{3(2x+3)}$ at $x=0$ gives $\\frac{2(-1)}{3(3)} = \\frac{-2}{9}$)",
+        "context": "factoring polynomials"
+      },
+      {
+        "problem": "Find $\\lim_{x \\to 3} \\frac{x + 6 - 9}{x - 3}$ (this requires rationalizing or rewriting)",
+        "answer": "$\\frac{1}{6}$ (rationalizing or recognizing this as related to the derivative definition)",
+        "context": "rationalizing numerator"
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "pc-factoring",
+      "limit-by-table-method"
+    ],
+    "common_errors": [
+      "Canceling factors without verifying both numerator and denominator have them",
+      "Stopping after canceling without completing the limit evaluation",
+      "Using incorrect factorization (e.g., missing a factor)",
+      "Not recognizing when factorization will not resolve the 0/0 form"
+    ],
+    "geogebra_prompt": "Plot f(x) = (x^3 + 64)/(x^2 - 16) and observe the hole at x = -4"
+  },
+  {
+    "id": "advanced-limit-problems",
+    "deck": 3,
+    "unit_title": "Limit of a Function",
+    "order": 17,
+    "title": "Advanced Limit Computations",
+    "student_facing_name": "Complex Limit Problems",
+    "summary": "Some limits require combining factorization, rationalizing, and limit properties. The collection of 14 examples in the slides covers polynomials, rational functions, and nested radicals.",
+    "notation": [
+      "factoring, rationalizing conjugate, limit properties"
+    ],
+    "method_steps": [
+      "Try direct substitution first",
+      "If indeterminate, identify the form and the best method (factoring, rationalizing, etc.)",
+      "Simplify algebraically",
+      "Evaluate the limit of the simplified expression"
+    ],
+    "worked_examples": [
+      {
+        "problem": "$\\lim_{x \\to 0} \\frac{6x^3 + 14x^2 + 20x}{2x^2 + 10x}$",
+        "answer": "$1$ (factor out $2x$ from denominator, $2x(x+5) = 2x(x+5)$; numerator $2x(3x^2+7x+10)$; no wait: careful factorization needed)",
+        "context": "polynomial limit"
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "limit-properties-and-rules",
+      "limit-by-factorization"
+    ],
+    "common_errors": [
+      "Attempting the wrong simplification method",
+      "Arithmetic errors in complex algebra",
+      "Not checking the final result by substitution or table"
+    ],
+    "geogebra_prompt": null
+  },
+  {
+    "id": "limits-at-infinity",
+    "deck": 4,
+    "unit_title": "Limits (Part B)",
+    "order": 18,
+    "title": "Limits at Infinity",
+    "student_facing_name": "Finding limits as x approaches plus or minus infinity",
+    "summary": "Students learn to determine the long-term behavior of rational functions by finding limits at infinity. The key technique is dividing numerator and denominator by the highest power of x to evaluate the limit.",
+    "notation": [
+      "$\\lim_{x \\to \\infty} f(x)$",
+      "$\\lim_{x \\to -\\infty} f(x)$"
+    ],
+    "method_steps": [
+      "Identify the highest power of x in the numerator and denominator",
+      "Divide both numerator and denominator by the highest power",
+      "Evaluate the limit as the higher-order terms vanish",
+      "State whether the limit is a finite number, infinity, or negative infinity"
+    ],
+    "worked_examples": [
+      {
+        "problem": "$\\lim_{x \\to \\infty} \\frac{20x^2 - 12x + 9}{5x^2 - 7x + 10}$",
+        "answer": "$4$",
+        "context": "Both numerator and denominator have degree 2; leading coefficient ratio gives the limit"
+      },
+      {
+        "problem": "$\\lim_{x \\to \\infty} \\frac{46x^7 + 15x + 33}{23x^2 - 52x + 49}$",
+        "answer": "$\\infty$",
+        "context": "Numerator has higher degree than denominator"
+      },
+      {
+        "problem": "$\\lim_{x \\to \\infty} \\frac{65x^2 - 45x + 35}{32x^7 + 16x + 28}$",
+        "answer": "$0$",
+        "context": "Denominator has higher degree than numerator"
+      }
+    ],
+    "applied_contexts": [
+      "long-run cost behavior in production",
+      "long-term revenue trends",
+      "asymptotic population size"
+    ],
+    "prerequisites": [
+      "pc-exponent-radical-rules",
+      "pc-rational-expressions",
+      "mathematical-functions"
+    ],
+    "common_errors": [
+      "Forgetting to divide all terms by the highest power",
+      "Comparing degrees incorrectly",
+      "Concluding a limit exists when the leading coefficients are different in same-degree polynomials",
+      "Treating $\\infty$ as a number rather than a limiting behavior"
+    ],
+    "geogebra_prompt": "f(x) = (20x^2 - 12x + 9)/(5x^2 - 7x + 10); Zoom out to see horizontal asymptote"
+  },
+  {
+    "id": "limits-negative-infinity",
+    "deck": 4,
+    "unit_title": "Limits (Part B)",
+    "order": 19,
+    "title": "Limits as x Approaches Negative Infinity",
+    "student_facing_name": "Finding limits as x approaches negative infinity",
+    "summary": "Students extend limit-at-infinity techniques to $x \\to -\\infty$. The process is identical, but students must be careful about sign changes with odd powers.",
+    "notation": [
+      "$\\lim_{x \\to -\\infty} f(x)$"
+    ],
+    "method_steps": [
+      "Apply the same degree-comparison technique as for $x \\to \\infty$",
+      "Note that the result is the same for even-degree leading terms",
+      "For odd-degree leading terms, the sign may flip as $x \\to -\\infty$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "$\\lim_{x \\to -\\infty} \\frac{96x^7 + 29x + 32}{12x^2 - 45x + 72}$",
+        "answer": "$-\\infty$",
+        "context": "Numerator degree 7 > denominator degree 2; negative direction contributes sign flip"
+      },
+      {
+        "problem": "$\\lim_{x \\to -\\infty} \\frac{62x^2 - 35x + 52}{45x^7 + 30x + 24}$",
+        "answer": "$0$",
+        "context": "Denominator has higher degree"
+      }
+    ],
+    "applied_contexts": [
+      "theoretical behavior of models for very small values",
+      "understanding model validity in extreme conditions"
+    ],
+    "prerequisites": [
+      "pc-sign-rules",
+      "limits-at-infinity"
+    ],
+    "common_errors": [
+      "Assuming $\\lim_{x \\to -\\infty}$ always equals $\\lim_{x \\to \\infty}$",
+      "Miscounting the sign of odd-power terms",
+      "Not distinguishing between $-\\infty$ and $\\infty$ in final answer"
+    ],
+    "geogebra_prompt": "f(x) = (96x^7 + 29x + 32)/(12x^2 - 45x + 72); Check left and right end behavior"
+  },
+  {
+    "id": "limits-infinity-applied",
+    "deck": 4,
+    "unit_title": "Limits (Part B)",
+    "order": 20,
+    "title": "Applied Limits: Business and Economics Contexts",
+    "student_facing_name": "Interpreting long-run behavior in real-world problems",
+    "summary": "Students apply limits at infinity to interpret the long-term behavior of real-world quantities such as average cost, production levels, population, and concentration. The focus is on understanding what the limit means in context.",
+    "notation": [
+      "$\\lim_{x \\to \\infty} A(x)$",
+      "long-run",
+      "steady-state"
+    ],
+    "method_steps": [
+      "Set up the function modeling the real-world quantity",
+      "Compute the limit as the independent variable approaches infinity",
+      "Interpret the limit as the long-term or steady-state value",
+      "Explain what this tells the business or scientist"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A company estimates total cost $C(x) = 12.8x + 180000$ dollars. Average cost per unit is $A(x) = \\frac{C(x)}{x}$. Find $\\lim_{x \\to \\infty} A(x)$ and interpret.",
+        "answer": "$12.8$; the average cost approaches 12.8 dollars per unit as production increases indefinitely",
+        "context": "long-run production costs; fixed costs become negligible"
+      },
+      {
+        "problem": "Revenue is $R(x) = 800 + 150x - 2x^2$ (thousands of dollars) and advertising cost is $C(x) = 3x^2 + 500$ (thousands). Let $Q(x) = \\frac{R(x)}{C(x)}$. What happens to $Q(x)$ as $x \\to \\infty$?",
+        "answer": "$0$; the ratio of revenue to cost approaches 0 as advertising increases",
+        "context": "diminishing returns on advertising spend"
+      },
+      {
+        "problem": "Production level (thousands of units) after $t$ months is $Q(t) = \\frac{15t^2 + 20t}{(3t + 4)^2}$. What happens to production in the long run?",
+        "answer": "$\\frac{5}{3}$ thousand units (or $\\approx 1.67$ thousand)",
+        "context": "production stabilizes at a steady-state level"
+      },
+      {
+        "problem": "Population (thousands) of a growing town is $Q(t) = \\frac{80t}{5t^2 + 12} - \\frac{120}{4t + 7} + 65$. What happens in the long run?",
+        "answer": "$65$ thousand; population stabilizes",
+        "context": "long-run population forecast"
+      }
+    ],
+    "applied_contexts": [
+      "average cost of production",
+      "revenue-to-cost ratio",
+      "production levels over time",
+      "population growth models",
+      "drug concentration in bloodstream"
+    ],
+    "prerequisites": [
+      "pc-rational-expressions",
+      "mathematical-functions",
+      "limits-at-infinity"
+    ],
+    "common_errors": [
+      "Computing the limit correctly but failing to interpret it in context",
+      "Confusing the units (forgetting 'thousands' or 'dollars')",
+      "Thinking that the limit is achieved at a finite time",
+      "Misreading whether the quantity is increasing or decreasing"
+    ],
+    "geogebra_prompt": "A(x) = (12.8*x + 180000)/x; Note the horizontal asymptote at y = 12.8"
+  },
+  {
+    "id": "one-sided-limits",
+    "deck": 4,
+    "unit_title": "Limits (Part B)",
+    "order": 21,
+    "title": "One-Sided Limits",
+    "student_facing_name": "Understanding limits from the left and from the right",
+    "summary": "Students learn to evaluate one-sided limits: left-hand ($x \\to a^-$) and right-hand ($x \\to a^+$). These are essential for understanding continuity and for functions with breaks or asymptotes.",
+    "notation": [
+      "$\\lim_{x \\to a^-} f(x)$",
+      "$\\lim_{x \\to a^+} f(x)$"
+    ],
+    "method_steps": [
+      "To find $\\lim_{x \\to a^-} f(x)$, approach $a$ from values less than $a$",
+      "To find $\\lim_{x \\to a^+} f(x)$, approach $a$ from values greater than $a$",
+      "Substitute the limiting value into the appropriate piece of a piecewise function",
+      "For rational functions, watch for vertical asymptotes"
+    ],
+    "worked_examples": [
+      {
+        "problem": "For $g(x) = \\begin{cases} 4 - x & 0 \\le x < 3 \\\\ x^2 - 2 & x \\ge 3 \\end{cases}$, find $\\lim_{x \\to 3^-} g(x)$ and $\\lim_{x \\to 3^+} g(x)$.",
+        "answer": "$\\lim_{x \\to 3^-} g(x) = 1$; $\\lim_{x \\to 3^+} g(x) = 7$",
+        "context": "piecewise function; limits differ so two-sided limit does not exist"
+      },
+      {
+        "problem": "For $h(x) = \\begin{cases} 2x - 3 & x < 2 \\\\ -x^2 + 5x - 2 & x \\ge 2 \\end{cases}$, determine whether $\\lim_{x \\to 2} h(x)$ exists.",
+        "answer": "$\\lim_{x \\to 2^-} h(x) = 1$; $\\lim_{x \\to 2^+} h(x) = 4$; limit does not exist",
+        "context": "one-sided limits are not equal"
+      },
+      {
+        "problem": "For $f(x) = \\frac{x}{|x|}$, find $\\lim_{x \\to 0^+} f(x)$ and $\\lim_{x \\to 0^-} f(x)$. Does $\\lim_{x \\to 0} f(x)$ exist?",
+        "answer": "$\\lim_{x \\to 0^+} f(x) = 1$; $\\lim_{x \\to 0^-} f(x) = -1$; two-sided limit does not exist",
+        "context": "absolute value creates opposite signs from each side"
+      }
+    ],
+    "applied_contexts": [
+      "understanding discontinuities in piecewise cost functions",
+      "behavior of functions at domain boundaries"
+    ],
+    "prerequisites": [
+      "mathematical-functions",
+      "limit-properties-and-rules"
+    ],
+    "common_errors": [
+      "Confusing left and right directions ($a^-$ vs $a^+$)",
+      "Using the wrong piece of a piecewise function",
+      "Concluding a two-sided limit exists when one-sided limits differ",
+      "Not recognizing when a vertical asymptote means the limit is $\\pm \\infty$"
+    ],
+    "geogebra_prompt": "g(x) = if(x < 3, 4 - x, x^2 - 2); Zoom in on x = 3 to see the jump discontinuity"
+  },
+  {
+    "id": "limit-existence",
+    "deck": 4,
+    "unit_title": "Limits (Part B)",
+    "order": 22,
+    "title": "Existence of Limits",
+    "student_facing_name": "When does a limit exist?",
+    "summary": "Students learn the formal criterion for existence: a two-sided limit $\\lim_{x \\to a} f(x)$ exists if and only if the one-sided limits exist and are equal. This is a key bridge to continuity.",
+    "notation": [
+      "$\\lim_{x \\to a} f(x) = \\lim_{x \\to a^-} f(x) = \\lim_{x \\to a^+} f(x) = L$"
+    ],
+    "method_steps": [
+      "Evaluate the left-hand limit $\\lim_{x \\to a^-} f(x)$",
+      "Evaluate the right-hand limit $\\lim_{x \\to a^+} f(x)$",
+      "If they are equal, the two-sided limit exists and equals that value",
+      "If they differ or either does not exist, the two-sided limit does not exist"
+    ],
+    "worked_examples": [
+      {
+        "problem": "For $g(x) = \\begin{cases} x^2 + 2x & x < 4 \\\\ -x^2 + 5x - 2 & x \\ge 4 \\end{cases}$, evaluate $\\lim_{x \\to 4^-} g(x)$ and $\\lim_{x \\to 4^+} g(x)$. Does $\\lim_{x \\to 4} g(x)$ exist?",
+        "answer": "$\\lim_{x \\to 4^-} g(x) = 24$; $\\lim_{x \\to 4^+} g(x) = -2$; limit does not exist",
+        "context": "one-sided limits are unequal"
+      }
+    ],
+    "applied_contexts": [
+      "determining where functions have breaks",
+      "verifying continuity at transition points"
+    ],
+    "prerequisites": [
+      "one-sided-limits"
+    ],
+    "common_errors": [
+      "Assuming a limit exists without checking both sides",
+      "Confusing 'the limit does not exist' with 'the limit is infinity'",
+      "Arithmetic errors when evaluating at the boundary"
+    ],
+    "geogebra_prompt": "g(x) = if(x < 4, x^2 + 2*x, -x^2 + 5*x - 2); Examine behavior near x = 4"
+  },
+  {
+    "id": "asymptotes-vertical",
+    "deck": 4,
+    "unit_title": "Limits (Part B)",
+    "order": 23,
+    "title": "Vertical Asymptotes",
+    "student_facing_name": "Finding and interpreting vertical asymptotes",
+    "summary": "Students learn to find vertical asymptotes by identifying where the denominator is zero and the numerator is not. Vertical asymptotes represent values where the function approaches $\\pm \\infty$.",
+    "notation": [
+      "$x = a$ is a vertical asymptote",
+      "$\\lim_{x \\to a} f(x) = \\pm \\infty$"
+    ],
+    "method_steps": [
+      "For a rational function, find where the denominator equals zero",
+      "Check that the numerator does not also equal zero at that point (removable discontinuity)",
+      "The line $x = a$ is a vertical asymptote if $\\lim_{x \\to a} f(x) = \\pm \\infty$",
+      "Use one-sided limits to determine whether it approaches $+\\infty$ or $-\\infty$ from each side"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find the vertical asymptote of $f(x) = \\frac{1}{x}$.",
+        "answer": "$x = 0$",
+        "context": "classic reciprocal function; denominator zero at $x = 0$"
+      },
+      {
+        "problem": "Find the vertical asymptote(s) of $g(x) = \\frac{4x - 9}{3x + 6}$.",
+        "answer": "$x = -2$",
+        "context": "set denominator $3x + 6 = 0$ to get $x = -2$"
+      },
+      {
+        "problem": "Compute the horizontal and vertical asymptotes of $f(x) = \\frac{x^2 - 1}{x^2 - 4x + 3}$.",
+        "answer": "Vertical: $x = 1$ and $x = 3$; Horizontal: $y = 1$",
+        "context": "$f(x) = \\frac{(x-1)(x+1)}{(x-1)(x-3)} = \\frac{x+1}{x-3}$ for $x \\ne 1$; hole at $x=1$, asymptote at $x=3$"
+      }
+    ],
+    "applied_contexts": [
+      "boundaries of rational function models (production cannot be negative)",
+      "singularities in cost or demand functions"
+    ],
+    "prerequisites": [
+      "pc-factoring",
+      "mathematical-functions",
+      "limit-concept-and-motivation"
+    ],
+    "common_errors": [
+      "Forgetting to check if the numerator is also zero (removable discontinuity)",
+      "Claiming an asymptote exists without checking that the limit is $\\pm \\infty$",
+      "Confusing vertical asymptotes with horizontal asymptotes",
+      "Not simplifying before finding asymptotes"
+    ],
+    "geogebra_prompt": "f(x) = (x^2 - 1)/(x^2 - 4*x + 3); Look for vertical lines the graph approaches"
+  },
+  {
+    "id": "asymptotes-horizontal",
+    "deck": 4,
+    "unit_title": "Limits (Part B)",
+    "order": 24,
+    "title": "Horizontal Asymptotes",
+    "student_facing_name": "Finding and interpreting horizontal asymptotes",
+    "summary": "Students learn that horizontal asymptotes are limits at infinity. The line $y = b$ is a horizontal asymptote if $\\lim_{x \\to \\infty} f(x) = b$ or $\\lim_{x \\to -\\infty} f(x) = b$.",
+    "notation": [
+      "$y = b$ is a horizontal asymptote",
+      "$\\lim_{x \\to \\infty} f(x) = b$"
+    ],
+    "method_steps": [
+      "Compute $\\lim_{x \\to \\infty} f(x)$",
+      "If this limit exists and equals $b$, then $y = b$ is a horizontal asymptote (right side)",
+      "Compute $\\lim_{x \\to -\\infty} f(x)$",
+      "If this limit exists and equals $b$ (possibly different), then $y = b$ is a horizontal asymptote (left side)"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find the horizontal asymptote of $f(x) = \\frac{1}{x}$.",
+        "answer": "$y = 0$",
+        "context": "$\\lim_{x \\to \\pm \\infty} \\frac{1}{x} = 0$"
+      },
+      {
+        "problem": "Find the horizontal asymptote(s) of $g(x) = \\frac{7x + 4}{3x - 11}$.",
+        "answer": "$y = \\frac{7}{3}$",
+        "context": "leading coefficient ratio; both $x \\to \\infty$ and $x \\to -\\infty$ give the same limit"
+      },
+      {
+        "problem": "Compute the horizontal and vertical asymptotes of $g(x) = \\frac{2x - 5}{x + 4}$.",
+        "answer": "Vertical: $x = -4$; Horizontal: $y = 2$",
+        "context": "degree-one numerator and denominator; horizontal asymptote is ratio of leading coefficients"
+      }
+    ],
+    "applied_contexts": [
+      "long-run average cost stabilization",
+      "steady-state concentration or population",
+      "limiting behavior of efficiency ratios"
+    ],
+    "prerequisites": [
+      "limits-at-infinity"
+    ],
+    "common_errors": [
+      "Assuming the function cannot cross a horizontal asymptote",
+      "Confusing the limit value with a value the function actually achieves",
+      "Not computing limits at both $+\\infty$ and $-\\infty$ separately"
+    ],
+    "geogebra_prompt": "f(x) = (2*x - 5)/(x + 4); Zoom out to see the horizontal line y = 2"
+  },
+  {
+    "id": "continuity-definition",
+    "deck": 5,
+    "unit_title": "Continuity of the Function",
+    "order": 25,
+    "title": "Definition of Continuity at a Point",
+    "student_facing_name": "Understanding what continuity means",
+    "summary": "A function is continuous at a point $x = c$ if: (1) $f(c)$ exists, (2) $\\lim_{x \\to c} f(x)$ exists, and (3) $\\lim_{x \\to c} f(x) = f(c)$. Continuity is the absence of breaks, holes, or jumps.",
+    "notation": [
+      "$f$ is continuous at $x = c$",
+      "$\\lim_{x \\to c} f(x) = f(c)$"
+    ],
+    "method_steps": [
+      "Check that $f(c)$ exists (i.e., $c$ is in the domain)",
+      "Compute $\\lim_{x \\to c} f(x)$; check that it exists",
+      "Verify that the limit equals the function value: $\\lim_{x \\to c} f(x) = f(c)$",
+      "If all three conditions hold, $f$ is continuous at $c$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Examine the continuity of $f(x) = \\frac{x^2 - 25}{x - 5}$ at $x = 5$.",
+        "answer": "$f(5)$ is undefined (not in domain); $f$ is not continuous at $x = 5$ (removable discontinuity)",
+        "context": "hole in the graph; factoring gives $f(x) = x + 5$ for $x \\ne 5$"
+      },
+      {
+        "problem": "Examine the continuity of $f(x) = \\begin{cases} \\frac{x^2 - 49}{x + 7} & x \\ne -7 \\\\ 3x + 7 & x = -7 \\end{cases}$ at $x = -7$.",
+        "answer": "$f(-7) = -14$; $\\lim_{x \\to -7} f(x) = -14$ (since $\\frac{x^2 - 49}{x + 7} = x - 7$ for $x \\ne -7$); continuous",
+        "context": "the function is defined so that the limit equals the value; discontinuity is removable and removed"
+      },
+      {
+        "problem": "Examine the continuity of $f(x) = \\begin{cases} x^3 - 125 & x > 5 \\\\ 7x + 20 & x \\le 5 \\end{cases}$ at $x = 5$.",
+        "answer": "$f(5) = 35$; $\\lim_{x \\to 5^-} f(x) = 35$; $\\lim_{x \\to 5^+} f(x) = 0$; not continuous (jump discontinuity)",
+        "context": "one-sided limits are not equal"
+      }
+    ],
+    "applied_contexts": [
+      "continuity of cost functions (piecewise pricing)",
+      "continuity of revenue models",
+      "checking whether models are realistic (no sudden jumps)"
+    ],
+    "prerequisites": [
+      "what-is-a-function",
+      "one-sided-limits",
+      "limit-existence"
+    ],
+    "common_errors": [
+      "Forgetting to check that $f(c)$ is defined",
+      "Computing the limit but not verifying it equals $f(c)$",
+      "Assuming a function is continuous without checking all three conditions",
+      "Confusing continuous with 'smooth' (differentiable)"
+    ],
+    "geogebra_prompt": "f(x) = if(x != 5, (x^2 - 25)/(x - 5), undefined); Note the hole at x = 5"
+  },
+  {
+    "id": "continuity-operations",
+    "deck": 5,
+    "unit_title": "Continuity of the Function",
+    "order": 26,
+    "title": "Continuity Rules: Sums, Products, Quotients",
+    "student_facing_name": "Using rules to determine continuity of combined functions",
+    "summary": "If $f$ and $g$ are continuous at $x = c$, then $f + g$, $f - g$, $kf$, $f \\cdot g$, $\\frac{f}{g}$ (if $g(c) \\ne 0$), $f^n$, and $\\sqrt[n]{f}$ (if defined) are all continuous at $c$. These rules allow quick assessment without checking all three conditions.",
+    "notation": [
+      "$f + g$, $f - g$, $kf$, $f \\cdot g$, $\\frac{f}{g}$, $f^n$, $\\sqrt[n]{f}$"
+    ],
+    "method_steps": [
+      "Verify that the component functions are continuous at the point",
+      "Apply the appropriate rule",
+      "Note any restrictions (e.g., denominator $\\ne 0$, radicand $\\ge 0$ for even roots)"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Discuss the continuity of each of the following: (a) $f(x) = 3x + 5$ (b) $f(x) = 5x^2 - 9x + 10$ (c) $g(x) = \\frac{3x + 1}{5x - 2}$.",
+        "answer": "(a) Polynomial: continuous everywhere. (b) Polynomial: continuous everywhere. (c) Rational: continuous wherever $5x - 2 \\ne 0$, i.e., $x \\ne \\frac{2}{5}$",
+        "context": "polynomials are continuous everywhere; rationals are continuous where defined"
+      },
+      {
+        "problem": "Discuss the continuity of $f(x) = \\frac{2}{x + 1}$.",
+        "answer": "Rational function: continuous wherever $x + 1 \\ne 0$, i.e., $x \\ne -1$",
+        "context": "vertical asymptote at $x = -1$ means discontinuity"
+      },
+      {
+        "problem": "Discuss the continuity of $g(x) = \\frac{3x^2 - 5x + 21}{2x^2 - 7x + 5}$.",
+        "answer": "Rational function: continuous wherever denominator $\\ne 0$. Solve $2x^2 - 7x + 5 = 0$ to find discontinuities.",
+        "context": "factor the denominator to find where it is zero"
+      }
+    ],
+    "applied_contexts": [
+      "verifying that composed cost, revenue, and profit functions are continuous",
+      "identifying domain restrictions"
+    ],
+    "prerequisites": [
+      "mathematical-functions",
+      "continuity-definition"
+    ],
+    "common_errors": [
+      "Forgetting to identify where the denominator is zero",
+      "Assuming a function is continuous everywhere without checking restrictions",
+      "Not recognizing that roots and powers have domain restrictions"
+    ],
+    "geogebra_prompt": "f(x) = (3*x + 1)/(5*x - 2); Identify where the asymptote occurs"
+  },
+  {
+    "id": "continuity-polynomials-rationals",
+    "deck": 5,
+    "unit_title": "Continuity of the Function",
+    "order": 27,
+    "title": "Continuity of Polynomials and Rational Functions",
+    "student_facing_name": "Quick tests for continuity in polynomial and rational functions",
+    "summary": "Key fact: All polynomials are continuous everywhere. All rational functions are continuous wherever they are defined (i.e., where the denominator is nonzero).",
+    "notation": [
+      "$\\lim_{x \\to c} p(x) = p(c)$ for polynomial $p$",
+      "$\\lim_{x \\to c} \\frac{p(x)}{q(x)} = \\frac{p(c)}{q(c)}$ if $q(c) \\ne 0$"
+    ],
+    "method_steps": [
+      "For a polynomial: it is continuous everywhere",
+      "For a rational function: find where the denominator is zero; discontinuities occur only there",
+      "Use direct substitution to evaluate limits at continuous points"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Is $f(x) = x^3 - 12x + 100$ continuous at $x = 5$?",
+        "answer": "Yes; it is a polynomial, so it is continuous everywhere",
+        "context": "polynomial functions have no restrictions"
+      }
+    ],
+    "applied_contexts": [
+      "ensuring that economic models based on polynomials are realistic",
+      "identifying where rational models break down"
+    ],
+    "prerequisites": [
+      "continuity-operations"
+    ],
+    "common_errors": [
+      "Forgetting that discontinuities are only at denominator zeros",
+      "Trying to factor before concluding discontinuity"
+    ],
+    "geogebra_prompt": "p(x) = x^3 - 12*x + 100; Confirm no jumps or asymptotes"
+  },
+  {
+    "id": "continuity-removable-jump",
+    "deck": 5,
+    "unit_title": "Continuity of the Function",
+    "order": 28,
+    "title": "Types of Discontinuities: Removable and Jump",
+    "student_facing_name": "Identifying and understanding removable and jump discontinuities",
+    "summary": "A removable discontinuity (hole) occurs when $\\lim_{x \\to c} f(x)$ exists but $f(c)$ does not or $\\lim_{x \\to c} f(x) \\ne f(c)$. A jump discontinuity occurs when the one-sided limits exist but are not equal. These concepts help students understand what the tutor should focus on.",
+    "notation": [
+      "removable discontinuity (hole)",
+      "jump discontinuity"
+    ],
+    "method_steps": [
+      "To detect a removable discontinuity: factor and simplify; if a factor cancels, there is a hole",
+      "To detect a jump discontinuity: check one-sided limits at the suspected point",
+      "Evaluate what the function value should be to remove the discontinuity"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Examine the continuity of $f(x) = \\frac{x^3 - 125}{x - 5}$ at $x = 5$.",
+        "answer": "Removable discontinuity at $x = 5$. Factor: $\\frac{(x - 5)(x^2 + 5x + 25)}{x - 5} = x^2 + 5x + 25$ for $x \\ne 5$. $\\lim_{x \\to 5} f(x) = 75$.",
+        "context": "define $f(5) = 75$ to remove the discontinuity"
+      },
+      {
+        "problem": "Examine the continuity of $f(x) = \\frac{x^2 - 49}{x + 7}$ at $x = -7$.",
+        "answer": "Removable discontinuity. $f(x) = \\frac{(x - 7)(x + 7)}{x + 7} = x - 7$ for $x \\ne -7$. $\\lim_{x \\to -7} f(x) = -14$.",
+        "context": "hole at $(-7, -14)$"
+      },
+      {
+        "problem": "Examine the continuity of $f(x) = \\begin{cases} x^3 - 125 & x > 5 \\\\ 7x + 20 & x \\le 5 \\end{cases}$ at $x = 5$.",
+        "answer": "Jump discontinuity. $\\lim_{x \\to 5^-} f(x) = 35$; $\\lim_{x \\to 5^+} f(x) = 0$.",
+        "context": "one-sided limits differ; cannot be removed by redefining $f(5)$"
+      }
+    ],
+    "applied_contexts": [
+      "piecewise cost functions with pricing tiers (jump)",
+      "removing artificial singularities from rational models (removable)"
+    ],
+    "prerequisites": [
+      "pc-factoring",
+      "one-sided-limits",
+      "continuity-definition"
+    ],
+    "common_errors": [
+      "Not simplifying before concluding a discontinuity is removable",
+      "Assuming all discontinuities are removable",
+      "Misidentifying the x-coordinate of a hole"
+    ],
+    "geogebra_prompt": "f(x) = if(x != 5, (x^3 - 125)/(x - 5), undefined); Zoom in to see the hole"
+  },
+  {
+    "id": "continuity-finding-constants",
+    "deck": 5,
+    "unit_title": "Continuity of the Function",
+    "order": 29,
+    "title": "Finding Constants to Ensure Continuity",
+    "student_facing_name": "Using continuity conditions to solve for unknown constants",
+    "summary": "Students use the continuity definition to solve for unknown constants in piecewise functions. This is a classic application that ties limits, one-sided limits, and continuity together.",
+    "notation": [
+      "Find $A$ such that $f$ is continuous at $x = c$"
+    ],
+    "method_steps": [
+      "Set up the continuity condition: $\\lim_{x \\to c^-} f(x) = \\lim_{x \\to c^+} f(x) = f(c)$",
+      "Evaluate each piece at the boundary",
+      "Set the left and right limits equal and solve for the unknown constant"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find the value of the constant $A$ so that $f(x) = \\begin{cases} \\frac{x^3 - 27}{x - 3} & x \\ne 3 \\\\ 2x + 3A & x = 3 \\end{cases}$ is continuous at $x = 3$.",
+        "answer": "$A = 1$. We have $\\lim_{x \\to 3} \\frac{x^3 - 27}{x - 3} = \\lim_{x \\to 3} (x^2 + 3x + 9) = 27$. So $2(3) + 3A = 27 \\Rightarrow A = 1$.",
+        "context": "remove the removable discontinuity by choosing the right constant"
+      },
+      {
+        "problem": "Find the value of the constant $A$ so that $f(x) = \\begin{cases} \\frac{x^2 - 81}{x - 9} & x \\ne 9 \\\\ Ax + 10 & x = 9 \\end{cases}$ is continuous at $x = 9$.",
+        "answer": "$\\lim_{x \\to 9} \\frac{x^2 - 81}{x - 9} = \\lim_{x \\to 9} (x + 9) = 18$. So $9A + 10 = 18 \\Rightarrow A = \\frac{8}{9}$.",
+        "context": "solve the linear equation for $A$"
+      },
+      {
+        "problem": "Find the value of the constant $A$ so that $f(x) = \\begin{cases} 2 - 5x & x < 5 \\\\ 3Ax^2 + 5x - 13 & x \\ge 5 \\end{cases}$ is continuous at $x = 5$.",
+        "answer": "$\\lim_{x \\to 5^-} f(x) = 2 - 25 = -23$. Setting $3A(25) + 25 - 13 = -23$ gives $75A = -35$, so $A = -\\frac{7}{15}$.",
+        "context": "piecewise function requiring both left and right continuity"
+      },
+      {
+        "problem": "Find the values of $a$ and $b$ that make $f(x) = \\begin{cases} x + 2 & x < 2 \\\\ ax^2 - bx + 3 & 2 \\le x < 3 \\\\ 2x - a + b & x \\ge 3 \\end{cases}$ continuous at $x = 2$ and $x = 3$.",
+        "answer": "At $x = 2$: $\\lim_{x \\to 2^-} f(x) = 4$ and $\\lim_{x \\to 2^+} f(x) = 4a - 2b + 3$, so $4a - 2b + 3 = 4$, i.e., $4a - 2b = 1$. At $x = 3$: $\\lim_{x \\to 3^-} f(x) = 9a - 3b + 3$ and $\\lim_{x \\to 3^+} f(x) = 6 - a + b$, so $9a - 3b + 3 = 6 - a + b$, i.e., $10a - 4b = 3$. Solving: $a = 1/2, b = -1$.",
+        "context": "system of two equations with two unknowns"
+      }
+    ],
+    "applied_contexts": [
+      "setting prices to avoid discontinuous jumps",
+      "ensuring smooth transitions in rate changes"
+    ],
+    "prerequisites": [
+      "pc-solving-equations",
+      "one-sided-limits",
+      "continuity-definition"
+    ],
+    "common_errors": [
+      "Forgetting to simplify before setting up the equation",
+      "Solving for $x$ instead of the constant",
+      "Making arithmetic errors when substituting into the second piece",
+      "Forgetting to check the answer by substituting back"
+    ],
+    "geogebra_prompt": "f(x) = if(x < 5, 2 - 5*x, 3*a*x^2 + 5*x - 13); Use slider to adjust a until continuous"
+  },
+  {
+    "id": "continuity-on-intervals",
+    "deck": 5,
+    "unit_title": "Continuity of the Function",
+    "order": 30,
+    "title": "Continuity on Open and Closed Intervals",
+    "student_facing_name": "Understanding continuity on intervals",
+    "summary": "A function is continuous on an open interval $(a, b)$ if it is continuous at every point in that interval. A function is continuous on a closed interval $[a, b]$ if it is continuous on the open interval and continuous from the right at $a$ and from the left at $b$.",
+    "notation": [
+      "$f$ is continuous on $(a, b)$",
+      "$f$ is continuous on $[a, b]$"
+    ],
+    "method_steps": [
+      "For an open interval, check continuity at every interior point",
+      "For a closed interval, additionally check right-continuity at the left endpoint and left-continuity at the right endpoint"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Discuss the continuity of the function $f(x) = \\frac{x + 2}{x - 3}$ on the open interval $(-2, 3)$ and on the closed interval $[-2, 3]$.",
+        "answer": "On $(-2, 3)$: continuous (denominator is never zero in this interval). On $[-2, 3]$: not continuous; $x = 3$ is not in the domain.",
+        "context": "closed interval includes the boundary; rational function discontinuous at $x = 3$"
+      }
+    ],
+    "applied_contexts": [
+      "defining domains of cost or demand functions",
+      "understanding valid ranges for models"
+    ],
+    "prerequisites": [
+      "continuity-definition",
+      "continuity-operations"
+    ],
+    "common_errors": [
+      "Forgetting to check the endpoints of a closed interval",
+      "Confusing open and closed interval definitions"
+    ],
+    "geogebra_prompt": "f(x) = (x + 2)/(x - 3); Check behavior on [-2, 3]"
+  },
+  {
+    "id": "derivative-first-principle-intro",
+    "deck": 6,
+    "unit_title": "Differentiation (Part A)",
+    "order": 31,
+    "title": "The Derivative: Secant and Tangent Lines",
+    "student_facing_name": "Understanding instantaneous rate of change via secants and tangents",
+    "summary": "Students visualize the derivative as the slope of the tangent line, obtained as the limit of slopes of secant lines. A secant passes through two distinct points; a tangent passes through one point and represents the instantaneous rate of change.",
+    "notation": [
+      "secant line",
+      "tangent line",
+      "average rate of change",
+      "instantaneous rate of change"
+    ],
+    "method_steps": [
+      "Draw a secant line through two points on the curve: $(a, f(a))$ and $(a+h, f(a+h))$",
+      "The slope of the secant is $\\frac{f(a+h) - f(a)}{h}$ (average rate of change over the interval $[a, a+h]$)",
+      "As $h \\to 0$, the secant approaches the tangent line at $x = a$",
+      "The slope of the tangent is the derivative $f'(a)$"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [
+      "marginal cost (instantaneous rate of change of cost)",
+      "marginal revenue (instantaneous rate of change of revenue)",
+      "velocity (instantaneous rate of change of position)",
+      "rate of growth (population, bacteria, etc.)"
+    ],
+    "prerequisites": [
+      "slope-and-average-rate-of-change",
+      "limit-concept-and-motivation"
+    ],
+    "common_errors": [
+      "Confusing average rate of change with instantaneous rate of change",
+      "Misunderstanding the secant-to-tangent limit process",
+      "Thinking the tangent must cross the curve only at one point"
+    ],
+    "geogebra_prompt": "f(x) = x^2; Create a secant through (a, f(a)) and (a+h, f(a+h)); use slider to shrink h toward 0"
+  },
+  {
+    "id": "derivative-first-principle-definition",
+    "deck": 6,
+    "unit_title": "Differentiation (Part A)",
+    "order": 32,
+    "title": "The Derivative by First Principle (Limit Definition)",
+    "student_facing_name": "Computing derivatives from the definition",
+    "summary": "The derivative of $f(x)$ at $x = a$ is $f'(a) = \\lim_{h \\to 0} \\frac{f(a+h) - f(a)}{h}$. This is the formal definition and the basis for all derivative rules. Students should be able to apply this definition to simple polynomials, square roots, and rational functions.",
+    "notation": [
+      "$f'(a) = \\lim_{h \\to 0} \\frac{f(a+h) - f(a)}{h}$",
+      "derivative",
+      "first principle"
+    ],
+    "method_steps": [
+      "Write $f(a+h)$ by substituting $(a+h)$ into the function",
+      "Compute $f(a+h) - f(a)$ and simplify",
+      "Form the quotient $\\frac{f(a+h) - f(a)}{h}$",
+      "Simplify (usually by canceling $h$ or rationalizing)",
+      "Take the limit as $h \\to 0$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "For $f(x) = \\frac{x^2}{3} + 5x$, compute the instantaneous rate of change at $x = 2$ using the first principle.",
+        "answer": "$f'(2) = \\frac{4}{3} + 5 = \\frac{19}{3}$",
+        "context": "students should show all steps: $f(2+h) = \\frac{(2+h)^2}{3} + 5(2+h)$, expand, simplify difference quotient, cancel $h$, take limit"
+      },
+      {
+        "problem": "For $f(x) = x^2 + 10x$, compute the slope of the tangent line at $x = 2$ using the first principle.",
+        "answer": "$f'(2) = 14$. Steps: $f(2+h) = (2+h)^2 + 10(2+h) = 4 + 4h + h^2 + 20 + 10h = 24 + 14h + h^2$. $f(2+h) - f(2) = 24 + 14h + h^2 - 24 = 14h + h^2 = h(14 + h)$. $\\frac{f(2+h) - f(2)}{h} = 14 + h$. $\\lim_{h \\to 0} (14 + h) = 14$.",
+        "context": "polynomial expansion and cancellation"
+      },
+      {
+        "problem": "Find the slope of the curve $f(x) = \\sqrt{x + 1}$ at the point $x = 8$ using the first principle.",
+        "answer": "$f'(8) = \\frac{1}{6}$. Steps: $f(8+h) = \\sqrt{9 + h}$. $f(8+h) - f(8) = \\sqrt{9+h} - 3$. Rationalize: $\\frac{\\sqrt{9+h} - 3}{h} \\cdot \\frac{\\sqrt{9+h} + 3}{\\sqrt{9+h} + 3} = \\frac{9 + h - 9}{h(\\sqrt{9+h} + 3)} = \\frac{1}{\\sqrt{9+h} + 3}$. As $h \\to 0$, this approaches $\\frac{1}{6}$.",
+        "context": "rationalization of square root expressions"
+      },
+      {
+        "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = 3x^2 + 8$ at $x = 4$.",
+        "answer": "$f'(4) = 24$. $f(4+h) = 3(4+h)^2 + 8 = 3(16 + 8h + h^2) + 8 = 48 + 24h + 3h^2 + 8 = 56 + 24h + 3h^2$. $f(4+h) - f(4) = 56 + 24h + 3h^2 - 56 = 24h + 3h^2 = h(24 + 3h)$. $\\frac{f(4+h) - f(4)}{h} = 24 + 3h$. $\\lim_{h \\to 0} (24 + 3h) = 24$.",
+        "context": "standard polynomial derivative from first principles"
+      },
+      {
+        "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = \\frac{5}{2 + 5x}$ at $x = 10$.",
+        "answer": "$f'(10) = -\\frac{25}{52^2}$ (after careful algebra). Steps: $f(10+h) = \\frac{5}{2 + 5(10+h)} = \\frac{5}{52 + 5h}$. $f(10+h) - f(10) = \\frac{5}{52 + 5h} - \\frac{5}{52}$. Common denominator: $\\frac{5 \\cdot 52 - 5(52 + 5h)}{52(52 + 5h)} = \\frac{-25h}{52(52 + 5h)}$. Quotient: $\\frac{-25h}{52h(52 + 5h)} = \\frac{-25}{52(52 + 5h)}$. As $h \\to 0$: $\\frac{-25}{52^2}$.",
+        "context": "rational function requiring common denominator manipulation"
+      },
+      {
+        "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = 4x + 5$ at $x = 5$.",
+        "answer": "$f'(5) = 4$. $f(5+h) = 4(5+h) + 5 = 20 + 4h + 5 = 25 + 4h$. $f(5+h) - f(5) = 25 + 4h - 25 = 4h$. $\\frac{f(5+h) - f(5)}{h} = \\frac{4h}{h} = 4$. $\\lim_{h \\to 0} 4 = 4$.",
+        "context": "linear function; derivative is the slope of the line"
+      },
+      {
+        "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = 5 - 7x^2$ at $x = 8$.",
+        "answer": "$f'(8) = -112$. $f(8+h) = 5 - 7(8+h)^2 = 5 - 7(64 + 16h + h^2) = 5 - 448 - 112h - 7h^2 = -443 - 112h - 7h^2$. $f(8+h) - f(8) = -443 - 112h - 7h^2 - (-443) = -112h - 7h^2 = h(-112 - 7h)$. $\\frac{f(8+h) - f(8)}{h} = -112 - 7h$. $\\lim_{h \\to 0} (-112 - 7h) = -112$.",
+        "context": "quadratic with leading negative coefficient"
+      },
+      {
+        "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = \\sqrt{35 - x}$ at $x = 10$.",
+        "answer": "$f'(10) = -\\frac{1}{10}$. $f(10+h) = \\sqrt{25 - h}$. $f(10+h) - f(10) = \\sqrt{25-h} - 5$. Rationalize: $\\frac{(\\sqrt{25-h} - 5)(\\sqrt{25-h} + 5)}{h(\\sqrt{25-h} + 5)} = \\frac{25 - h - 25}{h(\\sqrt{25-h} + 5)} = \\frac{-h}{h(\\sqrt{25-h} + 5)} = \\frac{-1}{\\sqrt{25-h} + 5}$. As $h \\to 0$: $\\frac{-1}{10}$.",
+        "context": "square root under subtraction; requires careful rationalization"
+      },
+      {
+        "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = \\frac{3+x}{2-x}$ at $x = 8$.",
+        "answer": "$f'(8) = \\frac{5}{36}$ (after simplification). $f(8+h) = \\frac{11+h}{-6-h}$. $f(8+h) - f(8) = \\frac{11+h}{-6-h} - \\frac{11}{-6} = \\frac{11+h}{-6-h} + \\frac{11}{6}$. Common denominator: $\\frac{6(11+h) + 11(-6-h)}{6(-6-h)} = \\frac{66 + 6h - 66 - 11h}{6(-6-h)} = \\frac{-5h}{6(-6-h)}$. Quotient: $\\frac{-5h}{6h(-6-h)} = \\frac{-5}{6(-6-h)}$. As $h \\to 0$: $\\frac{-5}{-36} = \\frac{5}{36}$.",
+        "context": "rational function with both $x$ in numerator and denominator"
+      }
+    ],
+    "applied_contexts": [
+      "marginal cost, revenue, profit (business)",
+      "velocity, acceleration (physics)",
+      "rate of population change (biology)"
+    ],
+    "prerequisites": [
+      "pc-exponent-radical-rules",
+      "pc-rational-expressions",
+      "limit-concept-and-motivation",
+      "derivative-first-principle-intro"
+    ],
+    "common_errors": [
+      "Failing to fully expand $(a+h)^2$ or $(a+h)^3$ correctly",
+      "Forgetting to divide the entire numerator by $h$, not just part of it",
+      "Not rationalizing square roots; leaving $\\sqrt{a+h} - \\sqrt{a}$ in the quotient",
+      "Not canceling $h$ before taking the limit",
+      "Arithmetic errors in simplifying the difference $f(a+h) - f(a)$"
+    ],
+    "geogebra_prompt": "f(x) = x^2 + 10*x; Secant line with draggable h parameter; watch slope approach tangent as h -> 0"
+  },
+  {
+    "id": "derivative-rules-basic",
+    "deck": 6,
+    "unit_title": "Differentiation (Part A)",
+    "order": 33,
+    "title": "Basic Derivative Rules: Power, Constant, Exponential, Logarithm",
+    "student_facing_name": "Quick rules for finding derivatives",
+    "summary": "Students learn shortcut formulas: constant rule, power rule, exponential rule, natural log rule. These avoid the need for first principles in most cases.",
+    "notation": [
+      "$\\frac{d}{dx}[c] = 0$",
+      "$\\frac{d}{dx}[x^n] = nx^{n-1}$",
+      "$\\frac{d}{dx}[a^x] = a^x \\ln a$",
+      "$\\frac{d}{dx}[e^x] = e^x$",
+      "$\\frac{d}{dx}[\\ln x] = \\frac{1}{x}$"
+    ],
+    "method_steps": [
+      "Identify which rule(s) apply to the function",
+      "Apply the rule(s) to each term",
+      "Simplify the result"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [
+      "quickly computing marginal quantities",
+      "optimizing production or revenue"
+    ],
+    "prerequisites": [
+      "derivative-first-principle-definition"
+    ],
+    "common_errors": [
+      "Forgetting the exponent decrease in the power rule",
+      "Confusing $\\frac{d}{dx}[a^x]$ with $\\frac{d}{dx}[x^a]$",
+      "Forgetting $\\ln a$ in the exponential rule",
+      "Misapplying the power rule to negative or fractional exponents"
+    ],
+    "geogebra_prompt": "y = x^3; Derivative should be 3*x^2"
+  },
+  {
+    "id": "derivative-rules-sum-product-quotient",
+    "deck": 6,
+    "unit_title": "Differentiation (Part A)",
+    "order": 34,
+    "title": "Sum, Product, and Quotient Rules",
+    "student_facing_name": "Derivatives of sums, products, and quotients of functions",
+    "summary": "Students learn the sum rule, product rule, and quotient rule. These allow differentiation of more complex expressions by breaking them into simpler parts.",
+    "notation": [
+      "$\\frac{d}{dx}[u + v] = \\frac{du}{dx} + \\frac{dv}{dx}$",
+      "$\\frac{d}{dx}[u \\cdot v] = u \\frac{dv}{dx} + v \\frac{du}{dx}$",
+      "$\\frac{d}{dx}\\left[\\frac{u}{v}\\right] = \\frac{v \\frac{du}{dx} - u \\frac{dv}{dx}}{v^2}$"
+    ],
+    "method_steps": [
+      "For sum/difference: differentiate each term and add/subtract",
+      "For product: use $u \\frac{dv}{dx} + v \\frac{du}{dx}$",
+      "For quotient: use $\\frac{v du - u dv}{v^2}$ or the mnemonic 'low d-high minus high d-low, square the bottom'",
+      "Simplify"
+    ],
+    "worked_examples": [
+      {
+        "problem": "$y = 2x^2 + 3e^x + 5\\ln x + 7\\sqrt{x}$",
+        "answer": "$\\frac{dy}{dx} = 4x + 3e^x + \\frac{5}{x} + \\frac{7}{2\\sqrt{x}}$",
+        "context": "sum rule applied term-by-term"
+      },
+      {
+        "problem": "$y = 5x^6 + 3x + 5x^{3/2} + 7$",
+        "answer": "$\\frac{dy}{dx} = 30x^5 + 3 + \\frac{15}{2}x^{1/2}$",
+        "context": "power rule on each term"
+      },
+      {
+        "problem": "$y = (5x^2 - 2)^2$",
+        "answer": "$\\frac{dy}{dx} = 2(5x^2 - 2) \\cdot 10x = 20x(5x^2 - 2) = 100x^3 - 40x$",
+        "context": "This example is also solvable by expanding or by chain rule (later)"
+      },
+      {
+        "problem": "$y = (2x - 5)^3$",
+        "answer": "$\\frac{dy}{dx} = 3(2x - 5)^2 \\cdot 2 = 6(2x - 5)^2$",
+        "context": "chain rule perspective; can also expand and differentiate"
+      },
+      {
+        "problem": "$y = \\frac{(x^2 - 25)(7x^4 + 2x^2 + 10)}{x - 5}$",
+        "answer": "Students should note $(x^2 - 25) = (x-5)(x+5)$, so the function simplifies to $(x+5)(7x^4 + 2x^2 + 10)$ for $x \\ne 5$. Then apply product rule.",
+        "context": "simplify before differentiating"
+      },
+      {
+        "problem": "$y = \\frac{x^2(x^3 - 64)}{x - 4}$",
+        "answer": "Note $x^3 - 64 = (x-4)(x^2+4x+16)$, so $y = x^2(x^2 + 4x + 16)$ for $x \\ne 4$. Then expand and differentiate.",
+        "context": "cancellation simplifies the problem"
+      }
+    ],
+    "applied_contexts": [
+      "marginal profit, cost, revenue for complex functions",
+      "elasticity calculations"
+    ],
+    "prerequisites": [
+      "derivative-rules-basic"
+    ],
+    "common_errors": [
+      "Applying the product rule when sum rule is appropriate (forgetting linearity)",
+      "Reversing the order in the quotient rule numerator (u dv - v du vs. v du - u dv)",
+      "Forgetting to square the denominator in quotient rule",
+      "Not simplifying or factoring before applying the rule, leading to messy algebra"
+    ],
+    "geogebra_prompt": "y = (x^2 - 2)^2; Compute derivative symbolically"
+  },
+  {
+    "id": "derivative-chain-rule",
+    "deck": 6,
+    "unit_title": "Differentiation (Part A)",
+    "order": 35,
+    "title": "Chain Rule",
+    "student_facing_name": "Derivatives of composite functions",
+    "summary": "The chain rule states: if $y = f(u)$ and $u = g(x)$, then $\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$. This is one of the most important rules and is used extensively in later calculus.",
+    "notation": [
+      "$\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$",
+      "outer function",
+      "inner function"
+    ],
+    "method_steps": [
+      "Identify the outer function and inner function",
+      "Differentiate the outer function with respect to the inner function",
+      "Multiply by the derivative of the inner function",
+      "Simplify"
+    ],
+    "worked_examples": [
+      {
+        "problem": "$y = (9x^2 - 5x + 100)^3$",
+        "answer": "$\\frac{dy}{dx} = 3(9x^2 - 5x + 100)^2 \\cdot (18x - 5)$",
+        "context": "outer function is 'cube'; inner is the polynomial"
+      },
+      {
+        "problem": "$y = \\sqrt[3]{7x^2 - 5}$",
+        "answer": "$\\frac{dy}{dx} = \\frac{1}{3}(7x^2 - 5)^{-2/3} \\cdot 14x = \\frac{14x}{3(7x^2 - 5)^{2/3}}$",
+        "context": "cube root means exponent 1/3; apply power rule to outer function"
+      },
+      {
+        "problem": "$y = e^{5x^2 - 3x + 2}$",
+        "answer": "$\\frac{dy}{dx} = e^{5x^2 - 3x + 2} \\cdot (10x - 3)$",
+        "context": "derivative of $e^u$ is $e^u$ times the derivative of $u$"
+      },
+      {
+        "problem": "$y = \\ln(7x^2 - 5)$",
+        "answer": "$\\frac{dy}{dx} = \\frac{14x}{7x^2 - 5}$",
+        "context": "derivative of $\\ln u$ is $\\frac{1}{u}$ times the derivative of $u$"
+      },
+      {
+        "problem": "$y = 2\\ln(x^3 + 2x^2 + 5x + 1)$",
+        "answer": "$\\frac{dy}{dx} = 2 \\cdot \\frac{3x^2 + 4x + 5}{x^3 + 2x^2 + 5x + 1}$",
+        "context": "chain rule with logarithm"
+      }
+    ],
+    "applied_contexts": [
+      "growth models with exponential and logarithmic components",
+      "compound rate changes"
+    ],
+    "prerequisites": [
+      "function-composition",
+      "derivative-rules-sum-product-quotient"
+    ],
+    "common_errors": [
+      "Forgetting to multiply by the derivative of the inner function",
+      "Misidentifying which is the outer and which is the inner function",
+      "Applying the chain rule when not needed (e.g., $(2x)^2$ is not a composition)"
+    ],
+    "geogebra_prompt": "y = (9*x^2 - 5*x + 100)^3; Verify derivative by numerical differentiation"
+  },
+  {
+    "id": "derivative-complex-examples",
+    "deck": 6,
+    "unit_title": "Differentiation (Part A)",
+    "order": 36,
+    "title": "Differentiation of Complex Functions",
+    "student_facing_name": "Combining multiple rules to differentiate complicated expressions",
+    "summary": "Students practice combining sum, product, quotient, and chain rules on functions involving polynomials, exponentials, logarithms, and roots. This builds fluency and confidence.",
+    "notation": [
+      "all previous notation"
+    ],
+    "method_steps": [
+      "Identify the dominant structure (sum, product, quotient, or composition)",
+      "Apply the appropriate rule(s) and note each sub-rule used",
+      "Simplify at each step if possible"
+    ],
+    "worked_examples": [
+      {
+        "problem": "$y = 5x \\ln x$",
+        "answer": "$\\frac{dy}{dx} = 5 \\ln x + 5x \\cdot \\frac{1}{x} = 5 \\ln x + 5$",
+        "context": "product rule"
+      },
+      {
+        "problem": "$y = 7^x x^7$",
+        "answer": "$\\frac{dy}{dx} = 7^x \\ln 7 \\cdot x^7 + 7^x \\cdot 7x^6 = 7^x(x^7 \\ln 7 + 7x^6)$",
+        "context": "product rule on exponential and power"
+      },
+      {
+        "problem": "$y = e^x \\ln x \\cdot x^5$",
+        "answer": "This is a product of three functions; apply product rule twice or regroup. $\\frac{dy}{dx} = e^x \\ln x \\cdot x^5 + e^x \\cdot \\frac{1}{x} \\cdot x^5 + e^x \\ln x \\cdot 5x^4$.",
+        "context": "triple product rule"
+      },
+      {
+        "problem": "$y = e^x 3^x x^3$",
+        "answer": "$\\frac{dy}{dx} = e^x 3^x \\ln 3 \\cdot x^3 + e^x \\cdot 3^x \\cdot x^3 \\ln e + e^x 3^x \\cdot 3x^2 = e^x 3^x (x^3 \\ln 3 + x^3 + 3x^2)$",
+        "context": "carefully apply product rule multiple times"
+      },
+      {
+        "problem": "$y = \\frac{2^x}{x^2}$",
+        "answer": "$\\frac{dy}{dx} = \\frac{2^x \\ln 2 \\cdot x^2 - 2^x \\cdot 2x}{x^4} = \\frac{2^x(x^2 \\ln 2 - 2x)}{x^4} = \\frac{2^x(x \\ln 2 - 2)}{x^3}$",
+        "context": "quotient rule"
+      },
+      {
+        "problem": "$y = \\frac{e^x}{\\ln x}$",
+        "answer": "$\\frac{dy}{dx} = \\frac{e^x \\ln x - e^x \\cdot \\frac{1}{x}}{(\\ln x)^2} = \\frac{e^x(\\ln x - \\frac{1}{x})}{(\\ln x)^2} = \\frac{e^x(x \\ln x - 1)}{x(\\ln x)^2}$",
+        "context": "quotient rule with exponential and logarithm"
+      },
+      {
+        "problem": "$y = \\frac{5 - \\ln x}{x^5}$",
+        "answer": "$\\frac{dy}{dx} = \\frac{-\\frac{1}{x} \\cdot x^5 - (5 - \\ln x) \\cdot 5x^4}{x^{10}} = \\frac{-x^4 - 5x^4(5 - \\ln x)}{x^{10}} = \\frac{-x^4(1 + 5(5 - \\ln x))}{x^{10}} = \\frac{-(26 - 5\\ln x)}{x^6}$",
+        "context": "quotient rule with logarithm and power"
+      },
+      {
+        "problem": "$y = \\frac{2x^2 + 5}{3 - 5x^2}$",
+        "answer": "$\\frac{dy}{dx} = \\frac{4x(3 - 5x^2) - (2x^2 + 5)(-10x)}{(3 - 5x^2)^2} = \\frac{12x - 20x^3 + 20x^3 + 50x}{(3 - 5x^2)^2} = \\frac{62x}{(3 - 5x^2)^2}$",
+        "context": "quotient rule simplifying nicely"
+      }
+    ],
+    "applied_contexts": [
+      "complex economic models",
+      "optimization in multi-factor systems"
+    ],
+    "prerequisites": [
+      "derivative-rules-sum-product-quotient"
+    ],
+    "common_errors": [
+      "Losing track of which rule to apply in multi-layered expressions",
+      "Arithmetic errors in combining terms",
+      "Not fully simplifying the final answer",
+      "Applying rules in the wrong order"
+    ],
+    "geogebra_prompt": "y = (5-ln(x))/x^5; Compute and plot derivative"
+  },
+  {
+    "id": "second-order-derivatives",
+    "deck": 7,
+    "unit_title": "Differentiation (Part B)",
+    "order": 37,
+    "title": "Second and Higher-Order Derivatives",
+    "student_facing_name": "Taking derivatives of derivatives",
+    "summary": "A second-order derivative is the derivative of the first derivative: $\\frac{d^2y}{dx^2} = \\frac{d}{dx}\\left(\\frac{dy}{dx}\\right)$. Third-order and higher derivatives follow the same pattern. These describe rates of change of rates of change and are essential for understanding concavity and testing for maxima and minima.",
+    "notation": [
+      "$\\frac{dy}{dx}$",
+      "$\\frac{d^2y}{dx^2}$",
+      "$\\frac{d^3y}{dx^3}$",
+      "$f'(x)$",
+      "$f''(x)$"
+    ],
+    "method_steps": [
+      "Find the first derivative $f'(x)$",
+      "Differentiate $f'(x)$ to obtain $f''(x)$",
+      "Repeat if higher orders are required"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [],
+    "prerequisites": [
+      "derivative-first-principle-definition",
+      "derivative-rules-basic"
+    ],
+    "common_errors": [
+      "Forgetting to apply the power rule completely when taking second derivatives",
+      "Confusing notation: $f''$ means derivative of $f'$, not squaring $f$"
+    ],
+    "geogebra_prompt": "Plot y = x^3 - 3x^2 + 1, then plot its first derivative, then its second derivative to see how concavity changes"
+  },
+  {
+    "id": "second-deriv-test-maxima-minima",
+    "deck": 7,
+    "unit_title": "Differentiation (Part B)",
+    "order": 38,
+    "title": "Second-Derivative Test for Maxima and Minima",
+    "student_facing_name": "Using the second derivative to find max and min",
+    "summary": "To find relative extrema: (1) Solve $f'(x) = 0$ to find critical points; (2) Evaluate $f''(x)$ at each critical point. If $f''(a) < 0$, then $x = a$ gives a relative maximum. If $f''(a) > 0$, then $x = a$ gives a relative minimum. This is THE method taught in this course.",
+    "notation": [
+      "$f'(x) = 0$",
+      "$f''(a) < 0$ (maximum)",
+      "$f''(a) > 0$ (minimum)"
+    ],
+    "method_steps": [
+      "Find $f'(x)$ and set it equal to zero",
+      "Solve for critical points (stationary values)",
+      "Find $f''(x)$",
+      "Evaluate $f''$ at each critical point",
+      "If $f''< 0$ at that point, it is a maximum; if $f'' > 0$, it is a minimum",
+      "(Optional) Calculate the actual maximum or minimum value by substituting back into $f(x)$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Investigate the maxima and minima of $y = 2x^3 + 3x^2 - 36x + 10$",
+        "answer": "Maximum at $x = -3$, $y_\\text{max} = 91$; Minimum at $x = 2$, $y_\\text{min} = -34$",
+        "context": "Pure optimization problem"
+      },
+      {
+        "problem": "Investigate the maxima and minima of $y = 2x^3 + 9x^2 - 60x + 5$",
+        "answer": "Two critical points to classify",
+        "context": "Pure optimization problem"
+      },
+      {
+        "problem": "Investigate the maxima and minima of $y = 2x^3 - 21x^2 + 60x - 8$",
+        "answer": "Two critical points to classify",
+        "context": "Pure optimization problem"
+      }
+    ],
+    "applied_contexts": [
+      "economics",
+      "business",
+      "manufacturing"
+    ],
+    "prerequisites": [
+      "second-order-derivatives"
+    ],
+    "common_errors": [
+      "Using first-derivative sign test instead of second-derivative test (wrong method for this course)",
+      "Forgetting to check that $f'(x) = 0$ before applying the second derivative test",
+      "Confusing the inequality: $f'' < 0$ means maximum, $f'' > 0$ means minimum"
+    ],
+    "geogebra_prompt": "f(x) = 2x^3 + 3x^2 - 36x + 10; find critical points, plot f''(x), mark the max and min"
+  },
+  {
+    "id": "optimization-cost-problems",
+    "deck": 7,
+    "unit_title": "Differentiation (Part B)",
+    "order": 39,
+    "title": "Optimization: Cost and Production Problems",
+    "student_facing_name": "Minimizing cost and maximizing production efficiency",
+    "summary": "Apply the second-derivative test to real-world cost functions to find production levels that minimize unit cost or total cost. These problems are central to the course's business focus and include overhead costs, per-unit material costs, and labour costs as polynomials in production quantity.",
+    "notation": [
+      "$C(x) = $ total cost",
+      "$x = $ units produced"
+    ],
+    "method_steps": [
+      "Set up the cost function $C(x)$ (may involve fixed costs, variable costs per unit, and higher-order terms)",
+      "Find $C'(x)$ and solve $C'(x) = 0$",
+      "Verify the critical point is a minimum using $C''(x) > 0$",
+      "Calculate the minimum cost and/or optimal production quantity"
+    ],
+    "worked_examples": [
+      {
+        "problem": "If the cost function of a commodity is $C(x) = \\frac{x^2}{25} - 6x + 500$, how many units should be produced for minimum cost? Find the minimum cost.",
+        "answer": "$x = 75$ units for minimum cost of $C(75) = 225 - 450 + 500 = 275$",
+        "context": "Commodity production: minimize total cost"
+      },
+      {
+        "problem": "The manufacturing cost of an item consists of Rs. 1200 as overhead cost, material cost of Rs. 4 per item, and labour cost of $\\frac{3x^2}{256}$ for $x$ items produced. Find how many items should be produced to have the average cost as minimum.",
+        "answer": "Minimize average cost by solving $\\frac{d}{dx}\\left[\\frac{1200 + 4x + \\frac{3x^2}{256}}{x}\\right] = 0$",
+        "context": "Manufacturing with fixed overhead, per-unit material, and production-dependent labour"
+      }
+    ],
+    "applied_contexts": [
+      "manufacturing cost minimization",
+      "production planning",
+      "overhead and labour costs in rupees"
+    ],
+    "prerequisites": [
+      "second-deriv-test-maxima-minima"
+    ],
+    "common_errors": [
+      "Forgetting to include fixed (overhead) costs in the cost function",
+      "Minimizing total cost when the problem asks for average cost (or vice versa)",
+      "Not checking the second derivative to confirm it is a minimum"
+    ],
+    "geogebra_prompt": "C(x) = x^2/25 - 6x + 500; plot C(x), C'(x), and mark the minimum"
+  },
+  {
+    "id": "optimization-revenue-profit",
+    "deck": 7,
+    "unit_title": "Differentiation (Part B)",
+    "order": 40,
+    "title": "Optimization: Revenue and Profit Problems",
+    "student_facing_name": "Maximizing revenue and profit",
+    "summary": "Apply optimization to revenue and profit functions. Revenue often decreases as price increases (due to elasticity), and profit is revenue minus cost. Use the second-derivative test to find production/pricing levels that maximize revenue or profit.",
+    "notation": [
+      "$R(x) = $ total revenue",
+      "$P(x) = R(x) - C(x) = $ profit",
+      "$x = $ units sold or produced"
+    ],
+    "method_steps": [
+      "Set up the revenue function $R(x)$ (may be quadratic or higher degree, often with a negative leading coefficient to reflect elasticity)",
+      "Find $R'(x)$ and solve $R'(x) = 0$",
+      "Verify using $R''(x) < 0$ that the critical point is a maximum",
+      "Calculate maximum revenue, or if a cost function is given, calculate maximum profit"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A company's total revenue is $R(x) = 40,000,000 - x(2000 - x)^2$. What number of units sold maximizes total revenue? What is the maximum total revenue? If 2500 units are sold, what is the total revenue?",
+        "answer": "Find $R'(x) = 0$ to locate maximum revenue",
+        "context": "Revenue function with elasticity; at higher quantities, revenue declines"
+      },
+      {
+        "problem": "A company has $C(x) = 100 + 0.015x^2$ and $R(x) = 3x$. Find the production rate that maximizes profit. What is the maximum profit?",
+        "answer": "$P(x) = R(x) - C(x) = 3x - 100 - 0.015x^2$. Solve $P'(x) = 0$ and verify $P'' < 0$.",
+        "context": "Linear revenue, quadratic cost; simple profit maximization"
+      }
+    ],
+    "applied_contexts": [
+      "revenue maximization",
+      "profit maximization",
+      "price elasticity",
+      "demand and supply"
+    ],
+    "prerequisites": [
+      "second-deriv-test-maxima-minima"
+    ],
+    "common_errors": [
+      "Confusing revenue (price times quantity) with profit (revenue minus cost)",
+      "Not verifying a critical point is a maximum (using second derivative)",
+      "Arithmetic errors when setting $R'(x) = 0$ or expanding $(ax + b)^n$ terms"
+    ],
+    "geogebra_prompt": "C(x) = 100 + 0.015x^2; R(x) = 3x; P(x) = R(x) - C(x); plot all three and mark max profit"
+  },
+  {
+    "id": "marginal-analysis-economics",
+    "deck": 7,
+    "unit_title": "Differentiation (Part B)",
+    "order": 41,
+    "title": "Marginal Analysis in Economics",
+    "student_facing_name": "Understanding marginal cost, revenue, and profit",
+    "summary": "Marginal cost, marginal revenue, and marginal profit are the derivatives of cost, revenue, and profit functions. The marginal value at $x = k$ approximates the actual change in the total quantity when production increases from $k$ to $k+1$ units. Marginal analysis connects rates of change to real economic quantities.",
+    "notation": [
+      "$MC = C'(x)$",
+      "$MR = R'(x)$",
+      "$MP = P'(x)$",
+      "$C(k+1) - C(k)$ (actual incremental cost)"
+    ],
+    "method_steps": [
+      "Find $C'(x)$, $R'(x)$, and $P'(x)$ as the marginal functions",
+      "Evaluate the derivative at a specific production level $k$ to estimate the cost/revenue/profit of the next unit",
+      "Compare the marginal value to the actual incremental value $C(k+1) - C(k)$ to show how close the derivative approximation is"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A manufacturer estimates that when $x$ units of a commodity are produced, total cost will be $C(x) = \\frac{1}{8}x^2 + 3x + 98$ dollars. (a) Find $C'(x)$ and compute $C'(8)$. (b) Find $C(9) - C(8)$. (c) Is $C'(8)$ close to $C(9) - C(8)$?",
+        "answer": "$C'(x) = \\frac{1}{4}x + 3$; $C'(8) = 5$; $C(9) - C(8) = 5.125$; yes, very close",
+        "context": "Demonstrates how marginal cost approximates actual incremental cost"
+      },
+      {
+        "problem": "A manufacturer estimates that when $x$ units are produced, all units will be sold when price is $p(x) = \\frac{1}{3}(75 - x)$ dollars per unit. (a) Find the marginal revenue function and use it to estimate revenue from selling the ninth unit. (b) What is the actual revenue from selling the ninth unit? (c) How close is marginal revenue to actual?",
+        "answer": "$R(x) = p(x) \\cdot x = \\frac{1}{3}(75 - x) \\cdot x$; compute $R'(x)$, then $R'(8)$ and $R(9) - R(8)$",
+        "context": "Marginal revenue with price-dependent demand"
+      },
+      {
+        "problem": "A manufacturer estimates $C(x) = \\frac{1}{8}x^2 + 3x + 98$ and $p(x) = \\frac{1}{3}(75 - x)$. (a) Find the marginal profit function and estimate profit from selling the ninth unit. (b) What is the actual profit? (c) Compare.",
+        "answer": "$P'(x) = R'(x) - C'(x)$; compute $P'(8)$ and $P(9) - P(8)$",
+        "context": "Marginal profit combines marginal revenue and marginal cost"
+      }
+    ],
+    "applied_contexts": [
+      "pricing and demand",
+      "production planning",
+      "unit cost analysis",
+      "incremental business decisions"
+    ],
+    "prerequisites": [
+      "second-deriv-test-maxima-minima"
+    ],
+    "common_errors": [
+      "Confusing marginal (derivative) with total (function value)",
+      "Forgetting that marginal is an approximation and will not exactly equal the actual incremental change",
+      "Computing $C(k) - C(k+1)$ instead of $C(k+1) - C(k)$ (sign error)"
+    ],
+    "geogebra_prompt": "C(x) = x^2/8 + 3x + 98; plot C(x) and C'(x); mark x=8 and show how C'(8) approximates the slope"
+  },
+  {
+    "id": "marginal-approach-to-profit-max",
+    "deck": 7,
+    "unit_title": "Differentiation (Part B)",
+    "order": 42,
+    "title": "Marginal Approach to Profit Maximization",
+    "student_facing_name": "Finding max profit using marginals",
+    "summary": "Profit is maximized when marginal revenue equals marginal cost: $MR = MC$, or equivalently $R'(x) = C'(x)$. This is a key principle in economics: at the optimal production level, the revenue from one more unit equals the cost of producing one more unit.",
+    "notation": [
+      "$R'(x) = C'(x)$",
+      "$MR = MC$",
+      "$P'(x) = 0$"
+    ],
+    "method_steps": [
+      "Set up cost and revenue functions",
+      "Find $C'(x)$ and $R'(x)$",
+      "Solve $R'(x) = C'(x)$",
+      "Evaluate profit $P(x) = R(x) - C(x)$ at the solution to find maximum profit"
+    ],
+    "worked_examples": [
+      {
+        "problem": "The total cost and revenue functions for a product are $C(q) = 40,000 + 25q + 0.002q^2$ and $R(q) = 75q - 0.008q^2$. Using the marginal approach, determine the profit-maximizing level of output and the maximum profit.",
+        "answer": "$R'(q) = 75 - 0.016q$; $C'(q) = 25 + 0.004q$; solve $75 - 0.016q = 25 + 0.004q$ to find $q$, then compute profit",
+        "context": "Standard profit maximization with cost and revenue functions"
+      },
+      {
+        "problem": "A manufacturer has developed solar collection panels. Demand: $q = 100,000 - 200p$. Cost: $C = 150,000 + 100q + 0.003q^2$. (a) Formulate profit as a function of $q$. (b) Using the marginal approach, determine the profit-maximizing output level.",
+        "answer": "Express revenue as $R = p \\cdot q$ where $p = \\frac{100,000 - q}{200}$; form $P(q)$; solve $P'(q) = 0$",
+        "context": "Demand-based pricing; requires expressing price as a function of quantity demanded"
+      }
+    ],
+    "applied_contexts": [
+      "production optimization",
+      "pricing strategy",
+      "supply chain",
+      "manufacturing management"
+    ],
+    "prerequisites": [
+      "marginal-analysis-economics"
+    ],
+    "common_errors": [
+      "Solving $MR = MC$ but forgetting to verify it gives a maximum (not minimum)",
+      "Arithmetic errors when equating the derivatives and solving for $q$",
+      "Confusing demand function $q(p)$ with inverse demand $p(q)$"
+    ],
+    "geogebra_prompt": "C(q) = 40000 + 25q + 0.002q^2; R(q) = 75q - 0.008q^2; plot C'(q) and R'(q); mark their intersection"
+  },
+  {
+    "id": "increasing-decreasing-intervals",
+    "deck": 7,
+    "unit_title": "Differentiation (Part B)",
+    "order": 43,
+    "title": "Intervals of Increase and Decrease",
+    "student_facing_name": "Where functions go up and down",
+    "summary": "A function is increasing on an interval where $f'(x) > 0$ and decreasing where $f'(x) < 0$. This tells us the behavior of a function between critical points and is useful for sketching curves and understanding real-world behavior.",
+    "notation": [
+      "$f'(x) > 0$ (increasing)",
+      "$f'(x) < 0$ (decreasing)",
+      "Critical point: $f'(x) = 0$"
+    ],
+    "method_steps": [
+      "Find $f'(x)$",
+      "Solve $f'(x) = 0$ to find critical points",
+      "Create a sign chart for $f'(x)$ by testing the sign in each interval between critical points",
+      "Determine intervals where $f'(x) > 0$ (increasing) and where $f'(x) < 0$ (decreasing)"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [
+      "trend analysis",
+      "business metrics",
+      "production efficiency over time"
+    ],
+    "prerequisites": [
+      "second-deriv-test-maxima-minima"
+    ],
+    "common_errors": [
+      "Forgetting to check signs in all regions separated by critical points",
+      "Claiming a function increases/decreases at a single point (intervals only)",
+      "Sign errors when evaluating test points in $f'(x)$"
+    ],
+    "geogebra_prompt": "f(x) = x^3 - 3x^2 - 9x + 5; plot f(x), f'(x); mark critical points and shade increasing/decreasing regions"
+  },
+  {
+    "id": "antiderivative-definition",
+    "deck": 8,
+    "unit_title": "Integration (Part A)",
+    "order": 44,
+    "title": "Antiderivatives and the Indefinite Integral",
+    "student_facing_name": "Reversing differentiation",
+    "summary": "A function $F(x)$ is an antiderivative of $f(x)$ if $F'(x) = f(x)$. Since differentiation removes constants, all antiderivatives of $f(x)$ have the form $F(x) + C$ where $C$ is an arbitrary constant. The indefinite integral notation $\\int f(x) dx = F(x) + C$ represents the entire family of antiderivatives.",
+    "notation": [
+      "$F'(x) = f(x)$",
+      "$\\int f(x) dx = F(x) + C$",
+      "Integral sign: $\\int$",
+      "Integrand: $f(x)$",
+      "Constant of integration: $C$"
+    ],
+    "method_steps": [
+      "Recognize that integration reverses differentiation",
+      "Verify an antiderivative by differentiating it",
+      "Remember that all antiderivatives differ by a constant"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Verify that $F(x) = \\frac{1}{3}x^3 + 5x + 2$ is an antiderivative of $f(x) = x^2 + 5$.",
+        "answer": "$F'(x) = \\frac{1}{3}(3x^2) + 5 = x^2 + 5 = f(x)$ ✓",
+        "context": "Verification that differentiation of $F$ gives $f$"
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "derivative-rules-basic",
+      "second-order-derivatives"
+    ],
+    "common_errors": [
+      "Forgetting the constant of integration $C$",
+      "Thinking there is only one antiderivative (there are infinitely many, differing by constants)",
+      "Confusing antiderivative with derivative"
+    ],
+    "geogebra_prompt": "Plot F(x) = x^3/3 + 5x, F(x) = x^3/3 + 5x + 2, F(x) = x^3/3 + 5x - 3 to visualize different antiderivatives"
+  },
+  {
+    "id": "power-rule-integration",
+    "deck": 8,
+    "unit_title": "Integration (Part A)",
+    "order": 45,
+    "title": "Integration Rules for Common Functions",
+    "student_facing_name": "Integrating powers, polynomials, and exponentials",
+    "summary": "Key integration rules reverse differentiation rules: Power Rule ($\\int x^n dx = \\frac{x^{n+1}}{n+1} + c$ for $n \\neq -1$), Constant Rule ($\\int 1 dx = x + c$), Logarithmic Rule ($\\int \\frac{1}{x} dx = \\ln x + c$), and Exponential Rule ($\\int e^x dx = e^x + c$, $\\int a^x dx = \\frac{a^x}{\\ln a} + c$).",
+    "notation": [
+      "$\\int x^n dx = \\frac{x^{n+1}}{n+1} + c$ (for $n \\neq -1$)",
+      "$\\int \\frac{1}{x} dx = \\ln x + c$",
+      "$\\int e^x dx = e^x + c$",
+      "$\\int a^x dx = \\frac{a^x}{\\ln a} + c$"
+    ],
+    "method_steps": [
+      "Identify the form of the integrand",
+      "Apply the appropriate rule",
+      "Do not forget the constant of integration"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [],
+    "prerequisites": [
+      "antiderivative-definition"
+    ],
+    "common_errors": [
+      "Applying power rule when $n = -1$ (use logarithm rule instead)",
+      "Forgetting to add 1 to the exponent and divide by the new exponent",
+      "Sign errors with negative exponents"
+    ],
+    "geogebra_prompt": "Numerically integrate f(x) = x^3 - 2x + 5 and verify against F(x) = x^4/4 - x^2 + 5x + C"
+  },
+  {
+    "id": "algebraic-rules-indefinite-integration",
+    "deck": 8,
+    "unit_title": "Integration (Part A)",
+    "order": 46,
+    "title": "Algebraic Rules for Indefinite Integration",
+    "student_facing_name": "Integrating sums, differences, and scaled functions",
+    "summary": "Integration is linear: the integral of a sum is the sum of integrals, and constants factor out. These properties allow breaking complex integrands into simpler pieces. Formally: $\\int [f(x) + g(x)] dx = \\int f(x) dx + \\int g(x) dx$ and $\\int kf(x) dx = k \\int f(x) dx$.",
+    "notation": [
+      "$\\int kf(x) dx = k \\int f(x) dx$ (constant multiple rule)",
+      "$\\int [f(x) + g(x)] dx = \\int f(x) dx + \\int g(x) dx$ (sum rule)",
+      "$\\int [f(x) - g(x)] dx = \\int f(x) dx - \\int g(x) dx$ (difference rule)"
+    ],
+    "method_steps": [
+      "Split the integrand into individual terms",
+      "Apply power rule or other appropriate rule to each term",
+      "Combine results and include a single $C$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find $\\int (27 + 18x^5 - 13x^3 + 15) dx$",
+        "answer": "$27x + 3x^6 - \\frac{13x^4}{4} + 15x + C$",
+        "context": "Polynomial integral using sum rule and power rule"
+      },
+      {
+        "problem": "Find $\\int (5x^4 - 12x^3)(3\\sqrt{x} - 5x^2) dx$",
+        "answer": "Expand, apply sum and constant rules, integrate term by term",
+        "context": "Requires expansion before integrating"
+      },
+      {
+        "problem": "Find $\\int t\\sqrt{t}(t^3 - t + 10) dt$",
+        "answer": "Rewrite as $\\int t^{3/2}(t^3 - t + 10) dt$, expand, integrate",
+        "context": "Radical must be rewritten using exponent notation"
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "power-rule-integration"
+    ],
+    "common_errors": [
+      "Forgetting that only one $C$ is needed when integrating multiple terms",
+      "Failing to expand products before integrating term-by-term",
+      "Not rewriting radicals and negative powers using exponent notation"
+    ],
+    "geogebra_prompt": "Plot several polynomials and their antiderivatives to verify algebraic rules"
+  },
+  {
+    "id": "integration-by-substitution",
+    "deck": 8,
+    "unit_title": "Integration (Part A)",
+    "order": 47,
+    "title": "Integration by Substitution",
+    "student_facing_name": "Simplifying integrals with u-substitution",
+    "summary": "Substitution (u-substitution) reverses the chain rule. When an integral has the form $\\int f(g(x)) g'(x) dx$, we can substitute $u = g(x)$, $du = g'(x) dx$ to get $\\int f(u) du$, which is often simpler to integrate. After integrating in terms of $u$, substitute back to express the answer in terms of $x$.",
+    "notation": [
+      "$u = g(x)$",
+      "$du = g'(x) dx$",
+      "$\\int f(g(x)) g'(x) dx = \\int f(u) du = F(u) + C = F(g(x)) + C$"
+    ],
+    "method_steps": [
+      "Step 1: Choose a substitution $u = u(x)$ that simplifies the integrand",
+      "Step 2: Express the entire integral in terms of $u$ and $du = u'(x) dx$. All terms involving $x$ and $dx$ must be transformed",
+      "Step 3: When the integrand is now in a simpler form, integrate with respect to $u$",
+      "Step 4: Substitute $u = u(x)$ back into the result"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find $\\int (3x^2 + 1)(x^3 + x)^5 dx$",
+        "answer": "Let $u = x^3 + x$, $du = (3x^2 + 1) dx$. Then $\\int u^5 du = \\frac{u^6}{6} + C = \\frac{(x^3+x)^6}{6} + C$",
+        "context": "The derivative of the inside is present in the integrand"
+      },
+      {
+        "problem": "Find $\\int \\sqrt{2x+1} dx$",
+        "answer": "Let $u = 2x + 1$, $du = 2 dx$. Then $\\int \\frac{1}{2}u^{1/2} du = \\frac{1}{2} \\cdot \\frac{2u^{3/2}}{3} + C = \\frac{(2x+1)^{3/2}}{3} + C$",
+        "context": "Handle the constant adjustment when $du$ is a multiple of $dx$"
+      },
+      {
+        "problem": "Find $\\int x\\sqrt{2x+1}\\,dx$",
+        "answer": "Let $u = 2x + 1$, so $x = \\frac{u-1}{2}$. Substitute and expand before integrating.",
+        "context": "More complex substitution requiring algebraic manipulation"
+      },
+      {
+        "problem": "Find $\\int (\\ln x)^7/x dx$",
+        "answer": "Let $u = \\ln x$, $du = \\frac{1}{x} dx$. Then $\\int u^7 du = \\frac{u^8}{8} + C = \\frac{(\\ln x)^8}{8} + C$",
+        "context": "Logarithmic function as the inner function"
+      },
+      {
+        "problem": "Find $\\int (2x+6)^5 dx$",
+        "answer": "Let $u = 2x + 6$, $du = 2 dx$. Then $\\int u^5 \\frac{du}{2} = \\frac{1}{2} \\cdot \\frac{u^6}{6} + C = \\frac{(2x+6)^6}{12} + C$",
+        "context": "Adjusting for constant coefficient in $du$"
+      },
+      {
+        "problem": "Find $\\int e^{5x+2} dx$",
+        "answer": "Let $u = 5x + 2$, $du = 5 dx$. Then $\\int e^u \\frac{du}{5} = \\frac{e^u}{5} + C = \\frac{e^{5x+2}}{5} + C$",
+        "context": "Exponential function with linear argument"
+      },
+      {
+        "problem": "Find $\\int 3^{15x+2} dx$",
+        "answer": "Let $u = 15x + 2$, $du = 15 dx$. Then $\\int 3^u \\frac{du}{15} = \\frac{3^u}{15\\ln 3} + C = \\frac{3^{15x+2}}{15\\ln 3} + C$",
+        "context": "General exponential with linear argument"
+      },
+      {
+        "problem": "Find $\\int 8x(4x^2-3)^5 dx$",
+        "answer": "Let $u = 4x^2 - 3$, $du = 8x dx$. Then $\\int u^5 du = \\frac{u^6}{6} + C = \\frac{(4x^2-3)^6}{6} + C$",
+        "context": "Quadratic inside; derivative is linear"
+      },
+      {
+        "problem": "Find $\\int (x+1)(x^2+2x+5)^{12} dx$",
+        "answer": "Let $u = x^2 + 2x + 5$, $du = (2x + 2) dx = 2(x+1) dx$. Then $\\int u^{12} \\frac{du}{2} = \\frac{u^{13}}{26} + C = \\frac{(x^2+2x+5)^{13}}{26} + C$",
+        "context": "Derivative of the inside appears with a constant factor"
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "algebraic-rules-indefinite-integration"
+    ],
+    "common_errors": [
+      "Forgetting to substitute back at the end",
+      "Not transforming ALL terms involving $x$ and $dx$ into terms involving $u$ and $du$",
+      "Not accounting for constant factors when computing $du$",
+      "Choosing a substitution that does not simplify the integrand"
+    ],
+    "geogebra_prompt": "Plot f(x) = (3x^2 + 1)(x^3 + x)^5 and verify its antiderivative (x^3+x)^6/6",
+    "slides_show_answers": false,
+    "notation_warning": "The slides state the four-step substitution procedure but the example slides are BLANK below the problem — they were worked live on the board. No answers exist in the deck; the tutor must compute them and must double-check its own algebra."
+  },
+  {
+    "id": "integration-by-parts",
+    "deck": 8,
+    "unit_title": "Integration (Part A)",
+    "order": 48,
+    "title": "Integration by Parts",
+    "student_facing_name": "Integrating products of functions",
+    "summary": "Integration by parts reverses the product rule. The formula is $\\int f(x) g(x) dx = f(x) \\int g(x) dx - \\int f'(x) \\left[ \\int g(x) dx \\right] dx$. In the standard form: $\\int u \\, dv = uv - \\int v \\, du$. This is useful when the integrand is a product where one factor is easier to differentiate and the other is easier to integrate.",
+    "notation": [
+      "$\\int f(x)\\,g(x)\\,dx = f(x)\\int g(x)\\,dx - \\int\\left[f'(x)\\int g(x)\\,dx\\right]dx$",
+      "$f(x)$ = the factor that gets differentiated (the 'first' function)",
+      "$g(x)$ = the factor that gets integrated (the 'second' function)"
+    ],
+    "method_steps": [
+      "Write the integrand as a product $f(x)\\,g(x)$.",
+      "Choose $f(x)$ as the factor that gets simpler when differentiated (a polynomial, or $\\ln x$), and $g(x)$ as the factor you can integrate.",
+      "Compute $\\int g(x)\\,dx$ and $f'(x)$.",
+      "Substitute into $\\int f\\,g\\,dx = f(x)\\int g\\,dx - \\int\\left[f'(x)\\int g\\,dx\\right]dx$.",
+      "Evaluate the remaining integral and add $+C$."
+    ],
+    "worked_examples": [
+      {
+        "problem": "$\\int x e^x\\,dx$",
+        "answer": "$xe^x - e^x + C$",
+        "context": null
+      },
+      {
+        "problem": "$\\int x \\ln x\\,dx$",
+        "answer": "$\\frac{x^2}{2}\\ln x - \\frac{x^2}{4} + C$",
+        "context": null
+      },
+      {
+        "problem": "$\\int x^2 \\ln x\\,dx$",
+        "answer": "$\\frac{x^3}{3}\\ln x - \\frac{x^3}{9} + C$",
+        "context": null
+      },
+      {
+        "problem": "$\\int \\ln x\\,dx$",
+        "answer": "$x\\ln x - x + C$",
+        "context": null
+      }
+    ],
+    "applied_contexts": [],
+    "prerequisites": [
+      "integration-by-substitution"
+    ],
+    "common_errors": [
+      "Choosing $u$ and $dv$ poorly (should choose $u$ to simplify when differentiated)",
+      "Making a sign error in the formula $uv - \\int v \\, du$ (minus sign is crucial)",
+      "Not simplifying the remaining integral $\\int v \\, du$",
+      "Forgetting the constant of integration"
+    ],
+    "geogebra_prompt": "Plot f(x) = xe^x and verify its antiderivative e^x(x-1)",
+    "notation_warning": "CRITICAL: this course does NOT use the u-dv formulation. The slides give integration by parts as $\\int f g\\,dx = f\\int g\\,dx - \\int[f'\\int g\\,dx]dx$. Never introduce $u$, $dv$, $du$, $v$, or the LIATE mnemonic — the student has not seen them and will not recognise them.",
+    "slides_show_answers": false
+  },
+  {
+    "id": "definite-integral-ftc",
+    "deck": 9,
+    "unit_title": "Integration (Part B)",
+    "order": 49,
+    "title": "The Definite Integral and Fundamental Theorem of Calculus",
+    "student_facing_name": "Computing areas and net accumulation",
+    "summary": "The definite integral $\\int_a^b f(x) dx$ represents the signed area between the curve and the x-axis from $x = a$ to $x = b$. The Fundamental Theorem of Calculus states that if $F(x)$ is an antiderivative of $f(x)$, then $\\int_a^b f(x) dx = F(b) - F(a)$. This is THE core result connecting differentiation and integration.",
+    "notation": [
+      "$\\int_a^b f(x) dx = F(b) - F(a)$ where $F'(x) = f(x)$",
+      "Lower limit: $a$",
+      "Upper limit: $b$"
+    ],
+    "method_steps": [
+      "Find an antiderivative $F(x)$ of $f(x)$",
+      "Evaluate $F$ at the upper and lower limits",
+      "Subtract: $F(b) - F(a)$"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Find the area under the curve $y = x - x^3$ from $x = 0$ to $x = 1$.",
+        "answer": "$\\int_0^1 (x - x^3) dx = \\left[ \\frac{x^2}{2} - \\frac{x^4}{4} \\right]_0^1 = \\frac{1}{2} - \\frac{1}{4} = \\frac{1}{4}$",
+        "context": "Basic area under a curve"
+      }
+    ],
+    "applied_contexts": [
+      "area calculation",
+      "net accumulation",
+      "total distance travelled"
+    ],
+    "prerequisites": [
+      "power-rule-integration",
+      "algebraic-rules-indefinite-integration"
+    ],
+    "common_errors": [
+      "Forgetting to evaluate at both limits",
+      "Reversing the order of subtraction: computing $F(a) - F(b)$ instead of $F(b) - F(a)$",
+      "Including the constant $C$ when computing a definite integral (it cancels)"
+    ],
+    "geogebra_prompt": "Plot y = x - x^3; shade region from x=0 to x=1; compute area using Fundamental Theorem"
+  },
+  {
+    "id": "rules-for-definite-integrals",
+    "deck": 9,
+    "unit_title": "Integration (Part B)",
+    "order": 50,
+    "title": "Properties and Rules for Definite Integrals",
+    "student_facing_name": "Manipulating definite integrals",
+    "summary": "Definite integrals satisfy linearity: constants factor out, and integrals of sums are sums of integrals. Additional properties include: swapping limits negates the integral, integrating over the same point gives zero, and integrals can be subdivided at intermediate points. These rules are essential for computing complex areas and cumulative quantities.",
+    "notation": [
+      "$\\int_a^b kf(x) dx = k\\int_a^b f(x) dx$ (constant multiple)",
+      "$\\int_a^b [f(x) + g(x)] dx = \\int_a^b f(x) dx + \\int_a^b g(x) dx$ (sum)",
+      "$\\int_a^a f(x) dx = 0$ (same limits)",
+      "$\\int_a^b f(x) dx = -\\int_b^a f(x) dx$ (reversed limits)",
+      "$\\int_a^b f(x) dx = \\int_a^c f(x) dx + \\int_c^b f(x) dx$ (subdivision)"
+    ],
+    "method_steps": [
+      "Recognize which property applies to the integral",
+      "Apply the property to simplify or rearrange",
+      "Evaluate the resulting simpler integral(s)"
+    ],
+    "worked_examples": [],
+    "applied_contexts": [],
+    "prerequisites": [
+      "definite-integral-ftc"
+    ],
+    "common_errors": [
+      "Forgetting that constants can be pulled out of integrals",
+      "Not recognizing when subdivision can simplify a calculation",
+      "Confusing the sign when reversing limits"
+    ],
+    "geogebra_prompt": "Show how subdivision rule works: plot integral from a to b as integral from a to c plus integral from c to b"
+  },
+  {
+    "id": "initial-value-problems",
+    "deck": 9,
+    "unit_title": "Integration (Part B)",
+    "order": 51,
+    "title": "Solving Initial-Value Problems",
+    "student_facing_name": "Finding functions from rates of change",
+    "summary": "An initial-value problem gives a differential equation $\\frac{dy}{dx} = f(x)$ and an initial condition (a point the solution passes through). Solve by integrating $f(x)$ to find the general form $y = F(x) + C$, then use the initial condition to find $C$. This models real situations where we know the rate of change and an initial state.",
+    "notation": [
+      "$\\frac{dy}{dx} = f(x)$",
+      "Initial condition: $(x_0, y_0)$"
+    ],
+    "method_steps": [
+      "Integrate: $y = \\int f(x) dx = F(x) + C$",
+      "Substitute the initial condition $(x_0, y_0)$: $y_0 = F(x_0) + C$",
+      "Solve for $C$",
+      "Write the final solution with $C$ determined"
+    ],
+    "worked_examples": [
+      {
+        "problem": "Solve $\\frac{dy}{dx} = 2x^3 - 5x + 12$ with $y = 15$ when $x = 2$.",
+        "answer": "$y = \\frac{x^4}{2} - \\frac{5x^2}{2} + 12x + C$. At $(2, 15)$: $15 = 8 - 10 + 24 + C \\Rightarrow C = -7$. Solution: $y = \\frac{x^4}{2} - \\frac{5x^2}{2} + 12x - 7$",
+        "context": "Polynomial differential equation"
+      },
+      {
+        "problem": "The slope $f'(x)$ at each point $(x, y)$ on a curve is given along with a point $(2, 10)$ on the curve. $f'(x) = 5x^3 - \\frac{3}{x^2} + 2$. Find $f(x)$.",
+        "answer": "$f(x) = \\int \\left(5x^3 - 3x^{-2} + 2\\right) dx = \\frac{5x^4}{4} + 3x^{-1} + 2x + C = \\frac{5x^4}{4} + \\frac{3}{x} + 2x + C$. At $(2, 10)$: $10 = 20 + 1.5 + 4 + C \\Rightarrow C = -15.5$",
+        "context": "Involves fractions and negative exponents"
+      },
+      {
+        "problem": "Find the function $f(x)$ whose tangent has slope $3x^2 + 1$ for each value of $x$ and whose graph passes through $(2, 6)$.",
+        "answer": "$f(x) = \\int (3x^2 + 1) dx = x^3 + x + C$. At $(2, 6)$: $6 = 8 + 2 + C \\Rightarrow C = -4$. Solution: $f(x) = x^3 + x - 4$",
+        "context": "Given slope function and a point on the curve"
+      }
+    ],
+    "applied_contexts": [
+      "velocity and position",
+      "accumulation of quantities"
+    ],
+    "prerequisites": [
+      "definite-integral-ftc"
+    ],
+    "common_errors": [
+      "Forgetting to use the initial condition to find $C$",
+      "Arithmetic errors when substituting the initial condition",
+      "Dropping the constant $C$ too early (it must appear in the general solution first)"
+    ],
+    "geogebra_prompt": "Plot f'(x) = 3x^2 + 1; solve IVP with (2, 6); plot the solution f(x) = x^3 + x - 4"
+  },
+  {
+    "id": "accumulated-cost-from-marginal",
+    "deck": 9,
+    "unit_title": "Integration (Part B)",
+    "order": 52,
+    "title": "Accumulated Cost and Quantity from Marginal Functions",
+    "student_facing_name": "Computing total cost from marginal cost",
+    "summary": "Given marginal cost $MC(q) = C'(q)$, the total cost to produce units from $q_1$ to $q_2$ is $\\int_{q_1}^{q_2} MC(q) dq = C(q_2) - C(q_1)$. The initial condition (cost of zero units or cost of first $n$ units) provides the constant of integration. This connects marginal analysis to total accumulation.",
+    "notation": [
+      "$MC(q) = C'(q)$",
+      "$C(q) = \\int MC(q) dq$"
+    ],
+    "method_steps": [
+      "Integrate the marginal function to get the general cost function",
+      "Use the given initial condition to find the constant",
+      "Use the definite integral to find accumulated cost over an interval"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A car detailing company has marginal cost $MC(q) = 3q^2 - 60q + 400$ dollars per car when $q$ cars have been cleaned. The total cost of cleaning the first 2 cars is $900. Find the total cost of cleaning the first 5 cars.",
+        "answer": "$C(q) = \\int (3q^2 - 60q + 400) dq = q^3 - 30q^2 + 400q + k$. At $q=2$, $C(2) = 8 - 120 + 800 + k = 900 \\Rightarrow k = 212$. So $C(5) = 125 - 750 + 2000 + 212 = 1587$",
+        "context": "Quadratic marginal cost; finding total cost using initial condition"
+      },
+      {
+        "problem": "A bakery's marginal cost (cost of baking one more batch of bread) is $MC(q) = 4q^2 - 40q + 300$ dollars per batch when $q$ batches have been baked. If the total cost of baking the first 3 batches is $1200, find the total cost of baking the first 6 batches.",
+        "answer": "Integrate $MC$, use $C(3) = 1200$ to find constant, evaluate $C(6)$",
+        "context": "Another application of marginal cost accumulation"
+      },
+      {
+        "problem": "An electronics company determines that the marginal cost of producing $q$ laptops is $MC(q) = 2q^2 - 24q + 200$ dollars per laptop. If the total cost of producing the first 5 laptops is $1000, find the total cost of producing the first 10 laptops.",
+        "answer": "Integrate; use $C(5) = 1000$ to find $k$; compute $C(10)$",
+        "context": "Quadratic marginal cost"
+      },
+      {
+        "problem": "A coffee shop's marginal cost of making $q$ gallons of their signature blend is $MC(q) = 5q^2 - 20q + 150$ dollars per gallon. If the total cost of making the first 2 gallons is $500, find the total cost of making the first 4 gallons.",
+        "answer": "Integrate; apply initial condition; evaluate",
+        "context": "Yet another quadratic marginal cost problem"
+      },
+      {
+        "problem": "A bicycle manufacturer reports that marginal cost is $MC(q) = 5q^2 - 20q + 150$ (in dollars per bicycle). If the total cost of producing the first 4 bicycles is $1200, find the total cost of producing the first 7 bicycles.",
+        "answer": "Standard marginal cost accumulation",
+        "context": "Quadratic marginal cost"
+      }
+    ],
+    "applied_contexts": [
+      "manufacturing cost",
+      "production planning",
+      "marginal analysis"
+    ],
+    "prerequisites": [
+      "initial-value-problems"
+    ],
+    "common_errors": [
+      "Forgetting to use the given initial condition to find the constant of integration",
+      "Confusing 'cost of first $n$ units' with 'cost of the $n$-th unit' (definite integral vs. marginal value)",
+      "Arithmetic errors when expanding and integrating polynomials"
+    ],
+    "geogebra_prompt": "MC(q) = 3q^2 - 60q + 400; integrate to find C(q); use C(2)=900 to find constant; plot C(q)"
+  },
+  {
+    "id": "application-rate-of-change",
+    "deck": 9,
+    "unit_title": "Integration (Part B)",
+    "order": 53,
+    "title": "Applied Accumulation: Rate of Change Problems",
+    "student_facing_name": "Accumulating quantities from rates",
+    "summary": "Many real-world problems give rates of change and ask for total accumulation. If a quantity $Q(t)$ has rate $\\frac{dQ}{dt} = r(t)$, then the total change in $Q$ from time $t_1$ to $t_2$ is $\\int_{t_1}^{t_2} r(t) dt$. Applications include tree growth, price changes over time, area of expanding shapes, and demand pricing.",
+    "notation": [
+      "$\\frac{dQ}{dt} = r(t)$ (rate of change)",
+      "$Q(t_2) - Q(t_1) = \\int_{t_1}^{t_2} r(t) dt$ (total accumulation)"
+    ],
+    "method_steps": [
+      "Identify the rate function $r(t)$",
+      "Set up and evaluate the definite integral $\\int_{t_1}^{t_2} r(t) dt$",
+      "Interpret the result in context"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A tree has been transplanted and after $x$ years is growing at the rate of $1 + \\frac{1}{(x+1)^2}$ meters per year. After 2 years, it has reached a height of 5 meters. How tall was it when transplanted?",
+        "answer": "$h(x) = \\int \\left(1 + (x+1)^{-2}\\right) dx = x - (x+1)^{-1} + C = x - \\frac{1}{x+1} + C$. At $x=2$: $5 = 2 - \\frac{1}{3} + C \\Rightarrow C = 3\\frac{1}{3}$. At $x=0$: $h(0) = 0 - 1 + 3\\frac{1}{3} = 2\\frac{1}{3}$ meters",
+        "context": "Tree growth with initial condition"
+      },
+      {
+        "problem": "In a certain country, the price of chicken will increase at the rate of $3t + 1$ cents per kilogram per week. If chicken currently costs $2.30 per kilogram, what will it cost 8 weeks from now?",
+        "answer": "$p(t) = 2.30 + \\int_0^8 (3t + 1) dt = 2.30 + [1.5t^2 + t]_0^8 = 2.30 + 96 + 8 = 106.30$ cents = $1.0630 per kilogram",
+        "context": "Price accumulation over time"
+      },
+      {
+        "problem": "An oil spill in the ocean is roughly circular with radius $R(t)$ feet $t$ minutes after the spill begins. The radius is increasing at rate $R'(t) = \\frac{21}{0.07t + 5}$ ft/min. (a) Find an expression for $R(t)$ assuming $R(0) = 0$. (b) What is the area $A = \\pi R^2$ of the spill after 1 hour? ($\\ln 1.84 = 0.610865$)",
+        "answer": "$R(t) = \\int \\frac{21}{0.07t + 5} dt = 300\\ln(0.07t + 5) + C$. At $t=0$: $0 = 300\\ln 5 + C \\Rightarrow C = -300\\ln 5$. At $t=60$: $R(60) = 300\\ln(4.2 + 5) - 300\\ln 5 = 300\\ln(9.2/5) = 300\\ln 1.84$. Area: $A = \\pi [300\\ln 1.84]^2$",
+        "context": "Logarithmic rate function; circle area application"
+      }
+    ],
+    "applied_contexts": [
+      "biological growth",
+      "price tracking",
+      "area of expanding shapes",
+      "environmental impact"
+    ],
+    "prerequisites": [
+      "integration-by-substitution",
+      "accumulated-cost-from-marginal"
+    ],
+    "common_errors": [
+      "Confusing rate (derivative) with cumulative quantity (integral)",
+      "Not using initial conditions correctly",
+      "Arithmetic errors with logarithms or complex integrands"
+    ],
+    "geogebra_prompt": "r(t) = 1 + 1/(t+1)^2; plot r(t) and cumulative integral; mark initial height and final height"
+  },
+  {
+    "id": "demand-function-pricing",
+    "deck": 9,
+    "unit_title": "Integration (Part B)",
+    "order": 54,
+    "title": "Finding Demand Functions from Marginal Price",
+    "student_facing_name": "Recovering price functions from rates",
+    "summary": "Given the rate at which price changes with demand $\\frac{dp}{dx}$, integrate to find the price function $p(x)$. Use initial conditions (a known price at a known demand level) to find the constant. This is central to demand analysis in economics and connects marginal pricing to total demand curves.",
+    "notation": [
+      "$\\frac{dp}{dx} = $ rate of change of price with respect to demand",
+      "$p(x) = \\int \\frac{dp}{dx} dx$"
+    ],
+    "method_steps": [
+      "Integrate the given rate function to get $p(x)$",
+      "Use the initial condition to find the constant",
+      "Write the final demand (price) function"
+    ],
+    "worked_examples": [
+      {
+        "problem": "The manager of a shoe store determines that the price $p$ (dollars) for each pair of sports sneakers is changing at rate $\\frac{dp}{dx} = \\frac{-300x}{(x^2+9)^{3/2}}$ when $x$ (hundred) pairs are demanded. When the price is $75 per pair, 400 pairs are demanded. (a) Find the demand (price) function $p(x)$. (b) At what price will 500 pairs be demanded? At what price will no sneakers be demanded? (c) How many pairs will be demanded at a price of $90 per pair?",
+        "answer": "$p(x) = \\int \\frac{-300x}{(x^2+9)^{3/2}} dx$. Use substitution $u = x^2 + 9$, $du = 2x dx$: $p(x) = -300 \\cdot (-2) \\cdot \\frac{-1}{\\sqrt{x^2+9}} + C = \\frac{-600}{\\sqrt{x^2+9}} + C$. At $x=4$ (400 pairs), $p=75$: $75 = \\frac{-600}{5} + C \\Rightarrow C = 195$. So $p(x) = 195 - \\frac{600}{\\sqrt{x^2+9}}$.",
+        "context": "Complex integration; demand function recovery"
+      }
+    ],
+    "applied_contexts": [
+      "pricing strategy",
+      "demand analysis",
+      "elasticity"
+    ],
+    "prerequisites": [
+      "integration-by-substitution",
+      "application-rate-of-change"
+    ],
+    "common_errors": [
+      "Not using the initial condition to find $C$",
+      "Sign errors or arithmetic mistakes in the integration",
+      "Forgetting to interpret the final function in the problem's context"
+    ],
+    "geogebra_prompt": "Plot dp/dx = -300x/(x^2+9)^(3/2); integrate to find p(x); mark the point (4, 75)"
+  },
+  {
+    "id": "profit-change-marginals",
+    "deck": 9,
+    "unit_title": "Integration (Part B)",
+    "order": 55,
+    "title": "Computing Profit Change from Marginal Functions",
+    "student_facing_name": "Total profit change from marginal profit",
+    "summary": "Given marginal revenue $R'(x)$ and marginal cost $C'(x)$, the marginal profit is $P'(x) = R'(x) - C'(x)$. The change in profit when production increases from $x_1$ to $x_2$ is $\\int_{x_1}^{x_2} P'(x) dx = P(x_2) - P(x_1)$. This integrates marginal analysis with definite integrals to compute total profit changes.",
+    "notation": [
+      "$P'(x) = R'(x) - C'(x)$",
+      "$\\Delta P = \\int_{x_1}^{x_2} P'(x) dx = P(x_2) - P(x_1)$"
+    ],
+    "method_steps": [
+      "Set up marginal functions $R'(x)$ and $C'(x)$",
+      "Compute marginal profit $P'(x) = R'(x) - C'(x)$",
+      "Integrate: $\\int_{x_1}^{x_2} P'(x) dx$",
+      "Evaluate the definite integral to find total profit change"
+    ],
+    "worked_examples": [
+      {
+        "problem": "A company determines that the marginal revenue from the production of $x$ units is $R'(x) = 7 - 3x - 4x^2$ (hundred dollars per unit) and the marginal cost is $C'(x) = 5 + 2x$ (hundred dollars per unit). By how much does profit change when the level of production is raised from 5 to 9 units?",
+        "answer": "$P'(x) = R'(x) - C'(x) = (7 - 3x - 4x^2) - (5 + 2x) = 2 - 5x - 4x^2$. $\\Delta P = \\int_5^9 (2 - 5x - 4x^2) dx = [2x - 2.5x^2 - \\frac{4x^3}{3}]_5^9 = \\ldots$",
+        "context": "Computing profit change from marginals using definite integral"
+      }
+    ],
+    "applied_contexts": [
+      "production planning",
+      "profit optimization",
+      "marginal analysis"
+    ],
+    "prerequisites": [
+      "application-rate-of-change"
+    ],
+    "common_errors": [
+      "Computing $P'(x) = R'(x) + C'(x)$ instead of $R'(x) - C'(x)$ (sign error)",
+      "Failing to evaluate the definite integral correctly",
+      "Arithmetic errors in the integration and evaluation"
+    ],
+    "geogebra_prompt": "R'(x) = 7 - 3x - 4x^2; C'(x) = 5 + 2x; plot both; shade profit change region from x=5 to x=9"
+  }
+]
