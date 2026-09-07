@@ -1,0 +1,34 @@
+{
+  "name": "calcu-buddy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Calcu-Buddy — AI calculus tutor for MAT142, Ahmedabad University",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run test:tutoring && npm run test:rendering && npm run test:solo",
+    "test:tutoring": "esbuild tests/tutoring.test.ts --bundle --platform=node --format=cjs --alias:@=. --log-level=warning --outfile=.tests/tutoring.cjs && node .tests/tutoring.cjs",
+    "test:rendering": "esbuild tests/rendering.test.tsx --bundle --platform=node --format=cjs --alias:@=. --jsx=automatic --log-level=warning --outfile=.tests/rendering.cjs && node .tests/rendering.cjs",
+    "test:solo": "esbuild tests/solo.test.tsx --bundle --platform=node --format=cjs --alias:@=. --alias:next/navigation=./tests/stubs/next-navigation.ts --jsx=automatic --log-level=warning --outfile=.tests/solo.cjs && node .tests/solo.cjs",
+    "check": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.58.0",
+    "katex": "^0.16.22",
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.0"
+  }
+}

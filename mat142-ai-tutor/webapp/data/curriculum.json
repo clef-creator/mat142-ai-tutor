@@ -1,0 +1,744 @@
+{
+  "course": "MAT142 Introductory Calculus",
+  "institution": "Ahmedabad University",
+  "scope_note": "Phase 1 pilot scope: decks 6 and 7 only (differentiation and its applications).",
+  "decks": [
+    6,
+    7
+  ],
+  "verified_by_faculty": false,
+  "topics": [
+    {
+      "id": "derivative-first-principle-intro",
+      "deck": 6,
+      "unit_title": "Differentiation (Part A)",
+      "order": 31,
+      "title": "The Derivative: Secant and Tangent Lines",
+      "student_facing_name": "Understanding instantaneous rate of change via secants and tangents",
+      "summary": "Students visualize the derivative as the slope of the tangent line, obtained as the limit of slopes of secant lines. A secant passes through two distinct points; a tangent passes through one point and represents the instantaneous rate of change.",
+      "notation": [
+        "secant line",
+        "tangent line",
+        "average rate of change",
+        "instantaneous rate of change"
+      ],
+      "method_steps": [
+        "Draw a secant line through two points on the curve: $(a, f(a))$ and $(a+h, f(a+h))$",
+        "The slope of the secant is $\\frac{f(a+h) - f(a)}{h}$ (average rate of change over the interval $[a, a+h]$)",
+        "As $h \\to 0$, the secant approaches the tangent line at $x = a$",
+        "The slope of the tangent is the derivative $f'(a)$"
+      ],
+      "worked_examples": [],
+      "applied_contexts": [
+        "marginal cost (instantaneous rate of change of cost)",
+        "marginal revenue (instantaneous rate of change of revenue)",
+        "velocity (instantaneous rate of change of position)",
+        "rate of growth (population, bacteria, etc.)"
+      ],
+      "prerequisites": [
+        "slope-and-average-rate-of-change",
+        "limit-concept-and-motivation"
+      ],
+      "common_errors": [
+        "Confusing average rate of change with instantaneous rate of change",
+        "Misunderstanding the secant-to-tangent limit process",
+        "Thinking the tangent must cross the curve only at one point"
+      ],
+      "geogebra_prompt": "f(x) = x^2; Create a secant through (a, f(a)) and (a+h, f(a+h)); use slider to shrink h toward 0",
+      "prereq_in_scope": [],
+      "prereq_outside_scope": [
+        "slope-and-average-rate-of-change",
+        "limit-concept-and-motivation"
+      ]
+    },
+    {
+      "id": "derivative-first-principle-definition",
+      "deck": 6,
+      "unit_title": "Differentiation (Part A)",
+      "order": 32,
+      "title": "The Derivative by First Principle (Limit Definition)",
+      "student_facing_name": "Computing derivatives from the definition",
+      "summary": "The derivative of $f(x)$ at $x = a$ is $f'(a) = \\lim_{h \\to 0} \\frac{f(a+h) - f(a)}{h}$. This is the formal definition and the basis for all derivative rules. Students should be able to apply this definition to simple polynomials, square roots, and rational functions.",
+      "notation": [
+        "$f'(a) = \\lim_{h \\to 0} \\frac{f(a+h) - f(a)}{h}$",
+        "derivative",
+        "first principle"
+      ],
+      "method_steps": [
+        "Write $f(a+h)$ by substituting $(a+h)$ into the function",
+        "Compute $f(a+h) - f(a)$ and simplify",
+        "Form the quotient $\\frac{f(a+h) - f(a)}{h}$",
+        "Simplify (usually by canceling $h$ or rationalizing)",
+        "Take the limit as $h \\to 0$"
+      ],
+      "worked_examples": [
+        {
+          "problem": "For $f(x) = \\frac{x^2}{3} + 5x$, compute the instantaneous rate of change at $x = 2$ using the first principle.",
+          "answer": "$f'(2) = \\frac{4}{3} + 5 = \\frac{19}{3}$",
+          "context": "students should show all steps: $f(2+h) = \\frac{(2+h)^2}{3} + 5(2+h)$, expand, simplify difference quotient, cancel $h$, take limit"
+        },
+        {
+          "problem": "For $f(x) = x^2 + 10x$, compute the slope of the tangent line at $x = 2$ using the first principle.",
+          "answer": "$f'(2) = 14$. Steps: $f(2+h) = (2+h)^2 + 10(2+h) = 4 + 4h + h^2 + 20 + 10h = 24 + 14h + h^2$. $f(2+h) - f(2) = 24 + 14h + h^2 - 24 = 14h + h^2 = h(14 + h)$. $\\frac{f(2+h) - f(2)}{h} = 14 + h$. $\\lim_{h \\to 0} (14 + h) = 14$.",
+          "context": "polynomial expansion and cancellation"
+        },
+        {
+          "problem": "Find the slope of the curve $f(x) = \\sqrt{x + 1}$ at the point $x = 8$ using the first principle.",
+          "answer": "$f'(8) = \\frac{1}{6}$. Steps: $f(8+h) = \\sqrt{9 + h}$. $f(8+h) - f(8) = \\sqrt{9+h} - 3$. Rationalize: $\\frac{\\sqrt{9+h} - 3}{h} \\cdot \\frac{\\sqrt{9+h} + 3}{\\sqrt{9+h} + 3} = \\frac{9 + h - 9}{h(\\sqrt{9+h} + 3)} = \\frac{1}{\\sqrt{9+h} + 3}$. As $h \\to 0$, this approaches $\\frac{1}{6}$.",
+          "context": "rationalization of square root expressions"
+        },
+        {
+          "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = 3x^2 + 8$ at $x = 4$.",
+          "answer": "$f'(4) = 24$. $f(4+h) = 3(4+h)^2 + 8 = 3(16 + 8h + h^2) + 8 = 48 + 24h + 3h^2 + 8 = 56 + 24h + 3h^2$. $f(4+h) - f(4) = 56 + 24h + 3h^2 - 56 = 24h + 3h^2 = h(24 + 3h)$. $\\frac{f(4+h) - f(4)}{h} = 24 + 3h$. $\\lim_{h \\to 0} (24 + 3h) = 24$.",
+          "context": "standard polynomial derivative from first principles"
+        },
+        {
+          "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = \\frac{5}{2 + 5x}$ at $x = 10$.",
+          "answer": "$f'(10) = -\\frac{25}{52^2}$ (after careful algebra). Steps: $f(10+h) = \\frac{5}{2 + 5(10+h)} = \\frac{5}{52 + 5h}$. $f(10+h) - f(10) = \\frac{5}{52 + 5h} - \\frac{5}{52}$. Common denominator: $\\frac{5 \\cdot 52 - 5(52 + 5h)}{52(52 + 5h)} = \\frac{-25h}{52(52 + 5h)}$. Quotient: $\\frac{-25h}{52h(52 + 5h)} = \\frac{-25}{52(52 + 5h)}$. As $h \\to 0$: $\\frac{-25}{52^2}$.",
+          "context": "rational function requiring common denominator manipulation"
+        },
+        {
+          "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = 4x + 5$ at $x = 5$.",
+          "answer": "$f'(5) = 4$. $f(5+h) = 4(5+h) + 5 = 20 + 4h + 5 = 25 + 4h$. $f(5+h) - f(5) = 25 + 4h - 25 = 4h$. $\\frac{f(5+h) - f(5)}{h} = \\frac{4h}{h} = 4$. $\\lim_{h \\to 0} 4 = 4$.",
+          "context": "linear function; derivative is the slope of the line"
+        },
+        {
+          "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = 5 - 7x^2$ at $x = 8$.",
+          "answer": "$f'(8) = -112$. $f(8+h) = 5 - 7(8+h)^2 = 5 - 7(64 + 16h + h^2) = 5 - 448 - 112h - 7h^2 = -443 - 112h - 7h^2$. $f(8+h) - f(8) = -443 - 112h - 7h^2 - (-443) = -112h - 7h^2 = h(-112 - 7h)$. $\\frac{f(8+h) - f(8)}{h} = -112 - 7h$. $\\lim_{h \\to 0} (-112 - 7h) = -112$.",
+          "context": "quadratic with leading negative coefficient"
+        },
+        {
+          "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = \\sqrt{35 - x}$ at $x = 10$.",
+          "answer": "$f'(10) = -\\frac{1}{10}$. $f(10+h) = \\sqrt{25 - h}$. $f(10+h) - f(10) = \\sqrt{25-h} - 5$. Rationalize: $\\frac{(\\sqrt{25-h} - 5)(\\sqrt{25-h} + 5)}{h(\\sqrt{25-h} + 5)} = \\frac{25 - h - 25}{h(\\sqrt{25-h} + 5)} = \\frac{-h}{h(\\sqrt{25-h} + 5)} = \\frac{-1}{\\sqrt{25-h} + 5}$. As $h \\to 0$: $\\frac{-1}{10}$.",
+          "context": "square root under subtraction; requires careful rationalization"
+        },
+        {
+          "problem": "Use the limit definition (first principle) of the derivative to find the derivative of $f(x) = \\frac{3+x}{2-x}$ at $x = 8$.",
+          "answer": "$f'(8) = \\frac{5}{36}$ (after simplification). $f(8+h) = \\frac{11+h}{-6-h}$. $f(8+h) - f(8) = \\frac{11+h}{-6-h} - \\frac{11}{-6} = \\frac{11+h}{-6-h} + \\frac{11}{6}$. Common denominator: $\\frac{6(11+h) + 11(-6-h)}{6(-6-h)} = \\frac{66 + 6h - 66 - 11h}{6(-6-h)} = \\frac{-5h}{6(-6-h)}$. Quotient: $\\frac{-5h}{6h(-6-h)} = \\frac{-5}{6(-6-h)}$. As $h \\to 0$: $\\frac{-5}{-36} = \\frac{5}{36}$.",
+          "context": "rational function with both $x$ in numerator and denominator"
+        }
+      ],
+      "applied_contexts": [
+        "marginal cost, revenue, profit (business)",
+        "velocity, acceleration (physics)",
+        "rate of population change (biology)"
+      ],
+      "prerequisites": [
+        "pc-exponent-radical-rules",
+        "pc-rational-expressions",
+        "limit-concept-and-motivation",
+        "derivative-first-principle-intro"
+      ],
+      "common_errors": [
+        "Failing to fully expand $(a+h)^2$ or $(a+h)^3$ correctly",
+        "Forgetting to divide the entire numerator by $h$, not just part of it",
+        "Not rationalizing square roots; leaving $\\sqrt{a+h} - \\sqrt{a}$ in the quotient",
+        "Not canceling $h$ before taking the limit",
+        "Arithmetic errors in simplifying the difference $f(a+h) - f(a)$"
+      ],
+      "geogebra_prompt": "f(x) = x^2 + 10*x; Secant line with draggable h parameter; watch slope approach tangent as h -> 0",
+      "prereq_in_scope": [
+        "derivative-first-principle-intro"
+      ],
+      "prereq_outside_scope": [
+        "pc-exponent-radical-rules",
+        "pc-rational-expressions",
+        "limit-concept-and-motivation"
+      ]
+    },
+    {
+      "id": "derivative-rules-basic",
+      "deck": 6,
+      "unit_title": "Differentiation (Part A)",
+      "order": 33,
+      "title": "Basic Derivative Rules: Power, Constant, Exponential, Logarithm",
+      "student_facing_name": "Quick rules for finding derivatives",
+      "summary": "Students learn shortcut formulas: constant rule, power rule, exponential rule, natural log rule. These avoid the need for first principles in most cases.",
+      "notation": [
+        "$\\frac{d}{dx}[c] = 0$",
+        "$\\frac{d}{dx}[x^n] = nx^{n-1}$",
+        "$\\frac{d}{dx}[a^x] = a^x \\ln a$",
+        "$\\frac{d}{dx}[e^x] = e^x$",
+        "$\\frac{d}{dx}[\\ln x] = \\frac{1}{x}$"
+      ],
+      "method_steps": [
+        "Identify which rule(s) apply to the function",
+        "Apply the rule(s) to each term",
+        "Simplify the result"
+      ],
+      "worked_examples": [],
+      "applied_contexts": [
+        "quickly computing marginal quantities",
+        "optimizing production or revenue"
+      ],
+      "prerequisites": [
+        "derivative-first-principle-definition"
+      ],
+      "common_errors": [
+        "Forgetting the exponent decrease in the power rule",
+        "Confusing $\\frac{d}{dx}[a^x]$ with $\\frac{d}{dx}[x^a]$",
+        "Forgetting $\\ln a$ in the exponential rule",
+        "Misapplying the power rule to negative or fractional exponents"
+      ],
+      "geogebra_prompt": "y = x^3; Derivative should be 3*x^2",
+      "prereq_in_scope": [
+        "derivative-first-principle-definition"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "derivative-rules-sum-product-quotient",
+      "deck": 6,
+      "unit_title": "Differentiation (Part A)",
+      "order": 34,
+      "title": "Sum, Product, and Quotient Rules",
+      "student_facing_name": "Derivatives of sums, products, and quotients of functions",
+      "summary": "Students learn the sum rule, product rule, and quotient rule. These allow differentiation of more complex expressions by breaking them into simpler parts.",
+      "notation": [
+        "$\\frac{d}{dx}[u + v] = \\frac{du}{dx} + \\frac{dv}{dx}$",
+        "$\\frac{d}{dx}[u \\cdot v] = u \\frac{dv}{dx} + v \\frac{du}{dx}$",
+        "$\\frac{d}{dx}\\left[\\frac{u}{v}\\right] = \\frac{v \\frac{du}{dx} - u \\frac{dv}{dx}}{v^2}$"
+      ],
+      "method_steps": [
+        "For sum/difference: differentiate each term and add/subtract",
+        "For product: use $u \\frac{dv}{dx} + v \\frac{du}{dx}$",
+        "For quotient: use $\\frac{v du - u dv}{v^2}$ or the mnemonic 'low d-high minus high d-low, square the bottom'",
+        "Simplify"
+      ],
+      "worked_examples": [
+        {
+          "problem": "$y = 2x^2 + 3e^x + 5\\ln x + 7\\sqrt{x}$",
+          "answer": "$\\frac{dy}{dx} = 4x + 3e^x + \\frac{5}{x} + \\frac{7}{2\\sqrt{x}}$",
+          "context": "sum rule applied term-by-term"
+        },
+        {
+          "problem": "$y = 5x^6 + 3x + 5x^{3/2} + 7$",
+          "answer": "$\\frac{dy}{dx} = 30x^5 + 3 + \\frac{15}{2}x^{1/2}$",
+          "context": "power rule on each term"
+        },
+        {
+          "problem": "$y = (5x^2 - 2)^2$",
+          "answer": "$\\frac{dy}{dx} = 2(5x^2 - 2) \\cdot 10x = 20x(5x^2 - 2) = 100x^3 - 40x$",
+          "context": "This example is also solvable by expanding or by chain rule (later)"
+        },
+        {
+          "problem": "$y = (2x - 5)^3$",
+          "answer": "$\\frac{dy}{dx} = 3(2x - 5)^2 \\cdot 2 = 6(2x - 5)^2$",
+          "context": "chain rule perspective; can also expand and differentiate"
+        },
+        {
+          "problem": "$y = \\frac{(x^2 - 25)(7x^4 + 2x^2 + 10)}{x - 5}$",
+          "answer": "Students should note $(x^2 - 25) = (x-5)(x+5)$, so the function simplifies to $(x+5)(7x^4 + 2x^2 + 10)$ for $x \\ne 5$. Then apply product rule.",
+          "context": "simplify before differentiating"
+        },
+        {
+          "problem": "$y = \\frac{x^2(x^3 - 64)}{x - 4}$",
+          "answer": "Note $x^3 - 64 = (x-4)(x^2+4x+16)$, so $y = x^2(x^2 + 4x + 16)$ for $x \\ne 4$. Then expand and differentiate.",
+          "context": "cancellation simplifies the problem"
+        }
+      ],
+      "applied_contexts": [
+        "marginal profit, cost, revenue for complex functions",
+        "elasticity calculations"
+      ],
+      "prerequisites": [
+        "derivative-rules-basic"
+      ],
+      "common_errors": [
+        "Applying the product rule when sum rule is appropriate (forgetting linearity)",
+        "Reversing the order in the quotient rule numerator (u dv - v du vs. v du - u dv)",
+        "Forgetting to square the denominator in quotient rule",
+        "Not simplifying or factoring before applying the rule, leading to messy algebra"
+      ],
+      "geogebra_prompt": "y = (x^2 - 2)^2; Compute derivative symbolically",
+      "prereq_in_scope": [
+        "derivative-rules-basic"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "derivative-chain-rule",
+      "deck": 6,
+      "unit_title": "Differentiation (Part A)",
+      "order": 35,
+      "title": "Chain Rule",
+      "student_facing_name": "Derivatives of composite functions",
+      "summary": "The chain rule states: if $y = f(u)$ and $u = g(x)$, then $\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$. This is one of the most important rules and is used extensively in later calculus.",
+      "notation": [
+        "$\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$",
+        "outer function",
+        "inner function"
+      ],
+      "method_steps": [
+        "Identify the outer function and inner function",
+        "Differentiate the outer function with respect to the inner function",
+        "Multiply by the derivative of the inner function",
+        "Simplify"
+      ],
+      "worked_examples": [
+        {
+          "problem": "$y = (9x^2 - 5x + 100)^3$",
+          "answer": "$\\frac{dy}{dx} = 3(9x^2 - 5x + 100)^2 \\cdot (18x - 5)$",
+          "context": "outer function is 'cube'; inner is the polynomial"
+        },
+        {
+          "problem": "$y = \\sqrt[3]{7x^2 - 5}$",
+          "answer": "$\\frac{dy}{dx} = \\frac{1}{3}(7x^2 - 5)^{-2/3} \\cdot 14x = \\frac{14x}{3(7x^2 - 5)^{2/3}}$",
+          "context": "cube root means exponent 1/3; apply power rule to outer function"
+        },
+        {
+          "problem": "$y = e^{5x^2 - 3x + 2}$",
+          "answer": "$\\frac{dy}{dx} = e^{5x^2 - 3x + 2} \\cdot (10x - 3)$",
+          "context": "derivative of $e^u$ is $e^u$ times the derivative of $u$"
+        },
+        {
+          "problem": "$y = \\ln(7x^2 - 5)$",
+          "answer": "$\\frac{dy}{dx} = \\frac{14x}{7x^2 - 5}$",
+          "context": "derivative of $\\ln u$ is $\\frac{1}{u}$ times the derivative of $u$"
+        },
+        {
+          "problem": "$y = 2\\ln(x^3 + 2x^2 + 5x + 1)$",
+          "answer": "$\\frac{dy}{dx} = 2 \\cdot \\frac{3x^2 + 4x + 5}{x^3 + 2x^2 + 5x + 1}$",
+          "context": "chain rule with logarithm"
+        }
+      ],
+      "applied_contexts": [
+        "growth models with exponential and logarithmic components",
+        "compound rate changes"
+      ],
+      "prerequisites": [
+        "function-composition",
+        "derivative-rules-sum-product-quotient"
+      ],
+      "common_errors": [
+        "Forgetting to multiply by the derivative of the inner function",
+        "Misidentifying which is the outer and which is the inner function",
+        "Applying the chain rule when not needed (e.g., $(2x)^2$ is not a composition)"
+      ],
+      "geogebra_prompt": "y = (9*x^2 - 5*x + 100)^3; Verify derivative by numerical differentiation",
+      "prereq_in_scope": [
+        "derivative-rules-sum-product-quotient"
+      ],
+      "prereq_outside_scope": [
+        "function-composition"
+      ]
+    },
+    {
+      "id": "derivative-complex-examples",
+      "deck": 6,
+      "unit_title": "Differentiation (Part A)",
+      "order": 36,
+      "title": "Differentiation of Complex Functions",
+      "student_facing_name": "Combining multiple rules to differentiate complicated expressions",
+      "summary": "Students practice combining sum, product, quotient, and chain rules on functions involving polynomials, exponentials, logarithms, and roots. This builds fluency and confidence.",
+      "notation": [
+        "all previous notation"
+      ],
+      "method_steps": [
+        "Identify the dominant structure (sum, product, quotient, or composition)",
+        "Apply the appropriate rule(s) and note each sub-rule used",
+        "Simplify at each step if possible"
+      ],
+      "worked_examples": [
+        {
+          "problem": "$y = 5x \\ln x$",
+          "answer": "$\\frac{dy}{dx} = 5 \\ln x + 5x \\cdot \\frac{1}{x} = 5 \\ln x + 5$",
+          "context": "product rule"
+        },
+        {
+          "problem": "$y = 7^x x^7$",
+          "answer": "$\\frac{dy}{dx} = 7^x \\ln 7 \\cdot x^7 + 7^x \\cdot 7x^6 = 7^x(x^7 \\ln 7 + 7x^6)$",
+          "context": "product rule on exponential and power"
+        },
+        {
+          "problem": "$y = e^x \\ln x \\cdot x^5$",
+          "answer": "This is a product of three functions; apply product rule twice or regroup. $\\frac{dy}{dx} = e^x \\ln x \\cdot x^5 + e^x \\cdot \\frac{1}{x} \\cdot x^5 + e^x \\ln x \\cdot 5x^4$.",
+          "context": "triple product rule"
+        },
+        {
+          "problem": "$y = e^x 3^x x^3$",
+          "answer": "$\\frac{dy}{dx} = e^x 3^x \\ln 3 \\cdot x^3 + e^x \\cdot 3^x \\cdot x^3 \\ln e + e^x 3^x \\cdot 3x^2 = e^x 3^x (x^3 \\ln 3 + x^3 + 3x^2)$",
+          "context": "carefully apply product rule multiple times"
+        },
+        {
+          "problem": "$y = \\frac{2^x}{x^2}$",
+          "answer": "$\\frac{dy}{dx} = \\frac{2^x \\ln 2 \\cdot x^2 - 2^x \\cdot 2x}{x^4} = \\frac{2^x(x^2 \\ln 2 - 2x)}{x^4} = \\frac{2^x(x \\ln 2 - 2)}{x^3}$",
+          "context": "quotient rule"
+        },
+        {
+          "problem": "$y = \\frac{e^x}{\\ln x}$",
+          "answer": "$\\frac{dy}{dx} = \\frac{e^x \\ln x - e^x \\cdot \\frac{1}{x}}{(\\ln x)^2} = \\frac{e^x(\\ln x - \\frac{1}{x})}{(\\ln x)^2} = \\frac{e^x(x \\ln x - 1)}{x(\\ln x)^2}$",
+          "context": "quotient rule with exponential and logarithm"
+        },
+        {
+          "problem": "$y = \\frac{5 - \\ln x}{x^5}$",
+          "answer": "$\\frac{dy}{dx} = \\frac{-\\frac{1}{x} \\cdot x^5 - (5 - \\ln x) \\cdot 5x^4}{x^{10}} = \\frac{-x^4 - 5x^4(5 - \\ln x)}{x^{10}} = \\frac{-x^4(1 + 5(5 - \\ln x))}{x^{10}} = \\frac{-(26 - 5\\ln x)}{x^6}$",
+          "context": "quotient rule with logarithm and power"
+        },
+        {
+          "problem": "$y = \\frac{2x^2 + 5}{3 - 5x^2}$",
+          "answer": "$\\frac{dy}{dx} = \\frac{4x(3 - 5x^2) - (2x^2 + 5)(-10x)}{(3 - 5x^2)^2} = \\frac{12x - 20x^3 + 20x^3 + 50x}{(3 - 5x^2)^2} = \\frac{62x}{(3 - 5x^2)^2}$",
+          "context": "quotient rule simplifying nicely"
+        }
+      ],
+      "applied_contexts": [
+        "complex economic models",
+        "optimization in multi-factor systems"
+      ],
+      "prerequisites": [
+        "derivative-rules-sum-product-quotient"
+      ],
+      "common_errors": [
+        "Losing track of which rule to apply in multi-layered expressions",
+        "Arithmetic errors in combining terms",
+        "Not fully simplifying the final answer",
+        "Applying rules in the wrong order"
+      ],
+      "geogebra_prompt": "y = (5-ln(x))/x^5; Compute and plot derivative",
+      "prereq_in_scope": [
+        "derivative-rules-sum-product-quotient"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "second-order-derivatives",
+      "deck": 7,
+      "unit_title": "Differentiation (Part B)",
+      "order": 37,
+      "title": "Second and Higher-Order Derivatives",
+      "student_facing_name": "Taking derivatives of derivatives",
+      "summary": "A second-order derivative is the derivative of the first derivative: $\\frac{d^2y}{dx^2} = \\frac{d}{dx}\\left(\\frac{dy}{dx}\\right)$. Third-order and higher derivatives follow the same pattern. These describe rates of change of rates of change and are essential for understanding concavity and testing for maxima and minima.",
+      "notation": [
+        "$\\frac{dy}{dx}$",
+        "$\\frac{d^2y}{dx^2}$",
+        "$\\frac{d^3y}{dx^3}$",
+        "$f'(x)$",
+        "$f''(x)$"
+      ],
+      "method_steps": [
+        "Find the first derivative $f'(x)$",
+        "Differentiate $f'(x)$ to obtain $f''(x)$",
+        "Repeat if higher orders are required"
+      ],
+      "worked_examples": [],
+      "applied_contexts": [],
+      "prerequisites": [
+        "derivative-first-principle-definition",
+        "derivative-rules-basic"
+      ],
+      "common_errors": [
+        "Forgetting to apply the power rule completely when taking second derivatives",
+        "Confusing notation: $f''$ means derivative of $f'$, not squaring $f$"
+      ],
+      "geogebra_prompt": "Plot y = x^3 - 3x^2 + 1, then plot its first derivative, then its second derivative to see how concavity changes",
+      "prereq_in_scope": [
+        "derivative-first-principle-definition",
+        "derivative-rules-basic"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "second-deriv-test-maxima-minima",
+      "deck": 7,
+      "unit_title": "Differentiation (Part B)",
+      "order": 38,
+      "title": "Second-Derivative Test for Maxima and Minima",
+      "student_facing_name": "Using the second derivative to find max and min",
+      "summary": "To find relative extrema: (1) Solve $f'(x) = 0$ to find critical points; (2) Evaluate $f''(x)$ at each critical point. If $f''(a) < 0$, then $x = a$ gives a relative maximum. If $f''(a) > 0$, then $x = a$ gives a relative minimum. This is THE method taught in this course.",
+      "notation": [
+        "$f'(x) = 0$",
+        "$f''(a) < 0$ (maximum)",
+        "$f''(a) > 0$ (minimum)"
+      ],
+      "method_steps": [
+        "Find $f'(x)$ and set it equal to zero",
+        "Solve for critical points (stationary values)",
+        "Find $f''(x)$",
+        "Evaluate $f''$ at each critical point",
+        "If $f''< 0$ at that point, it is a maximum; if $f'' > 0$, it is a minimum",
+        "(Optional) Calculate the actual maximum or minimum value by substituting back into $f(x)$"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Investigate the maxima and minima of $y = 2x^3 + 3x^2 - 36x + 10$",
+          "answer": "Maximum at $x = -3$, $y_\\text{max} = 91$; Minimum at $x = 2$, $y_\\text{min} = -34$",
+          "context": "Pure optimization problem"
+        },
+        {
+          "problem": "Investigate the maxima and minima of $y = 2x^3 + 9x^2 - 60x + 5$",
+          "answer": "Two critical points to classify",
+          "context": "Pure optimization problem"
+        },
+        {
+          "problem": "Investigate the maxima and minima of $y = 2x^3 - 21x^2 + 60x - 8$",
+          "answer": "Two critical points to classify",
+          "context": "Pure optimization problem"
+        }
+      ],
+      "applied_contexts": [
+        "economics",
+        "business",
+        "manufacturing"
+      ],
+      "prerequisites": [
+        "second-order-derivatives"
+      ],
+      "common_errors": [
+        "Using first-derivative sign test instead of second-derivative test (wrong method for this course)",
+        "Forgetting to check that $f'(x) = 0$ before applying the second derivative test",
+        "Confusing the inequality: $f'' < 0$ means maximum, $f'' > 0$ means minimum"
+      ],
+      "geogebra_prompt": "f(x) = 2x^3 + 3x^2 - 36x + 10; find critical points, plot f''(x), mark the max and min",
+      "prereq_in_scope": [
+        "second-order-derivatives"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "optimization-cost-problems",
+      "deck": 7,
+      "unit_title": "Differentiation (Part B)",
+      "order": 39,
+      "title": "Optimization: Cost and Production Problems",
+      "student_facing_name": "Minimizing cost and maximizing production efficiency",
+      "summary": "Apply the second-derivative test to real-world cost functions to find production levels that minimize unit cost or total cost. These problems are central to the course's business focus and include overhead costs, per-unit material costs, and labour costs as polynomials in production quantity.",
+      "notation": [
+        "$C(x) = $ total cost",
+        "$x = $ units produced"
+      ],
+      "method_steps": [
+        "Set up the cost function $C(x)$ (may involve fixed costs, variable costs per unit, and higher-order terms)",
+        "Find $C'(x)$ and solve $C'(x) = 0$",
+        "Verify the critical point is a minimum using $C''(x) > 0$",
+        "Calculate the minimum cost and/or optimal production quantity"
+      ],
+      "worked_examples": [
+        {
+          "problem": "If the cost function of a commodity is $C(x) = \\frac{x^2}{25} - 6x + 500$, how many units should be produced for minimum cost? Find the minimum cost.",
+          "answer": "$x = 75$ units for minimum cost of $C(75) = 225 - 450 + 500 = 275$",
+          "context": "Commodity production: minimize total cost"
+        },
+        {
+          "problem": "The manufacturing cost of an item consists of Rs. 1200 as overhead cost, material cost of Rs. 4 per item, and labour cost of $\\frac{3x^2}{256}$ for $x$ items produced. Find how many items should be produced to have the average cost as minimum.",
+          "answer": "Minimize average cost by solving $\\frac{d}{dx}\\left[\\frac{1200 + 4x + \\frac{3x^2}{256}}{x}\\right] = 0$",
+          "context": "Manufacturing with fixed overhead, per-unit material, and production-dependent labour"
+        }
+      ],
+      "applied_contexts": [
+        "manufacturing cost minimization",
+        "production planning",
+        "overhead and labour costs in rupees"
+      ],
+      "prerequisites": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "common_errors": [
+        "Forgetting to include fixed (overhead) costs in the cost function",
+        "Minimizing total cost when the problem asks for average cost (or vice versa)",
+        "Not checking the second derivative to confirm it is a minimum"
+      ],
+      "geogebra_prompt": "C(x) = x^2/25 - 6x + 500; plot C(x), C'(x), and mark the minimum",
+      "prereq_in_scope": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "optimization-revenue-profit",
+      "deck": 7,
+      "unit_title": "Differentiation (Part B)",
+      "order": 40,
+      "title": "Optimization: Revenue and Profit Problems",
+      "student_facing_name": "Maximizing revenue and profit",
+      "summary": "Apply optimization to revenue and profit functions. Revenue often decreases as price increases (due to elasticity), and profit is revenue minus cost. Use the second-derivative test to find production/pricing levels that maximize revenue or profit.",
+      "notation": [
+        "$R(x) = $ total revenue",
+        "$P(x) = R(x) - C(x) = $ profit",
+        "$x = $ units sold or produced"
+      ],
+      "method_steps": [
+        "Set up the revenue function $R(x)$ (may be quadratic or higher degree, often with a negative leading coefficient to reflect elasticity)",
+        "Find $R'(x)$ and solve $R'(x) = 0$",
+        "Verify using $R''(x) < 0$ that the critical point is a maximum",
+        "Calculate maximum revenue, or if a cost function is given, calculate maximum profit"
+      ],
+      "worked_examples": [
+        {
+          "problem": "A company's total revenue is $R(x) = 40,000,000 - x(2000 - x)^2$. What number of units sold maximizes total revenue? What is the maximum total revenue? If 2500 units are sold, what is the total revenue?",
+          "answer": "Find $R'(x) = 0$ to locate maximum revenue",
+          "context": "Revenue function with elasticity; at higher quantities, revenue declines"
+        },
+        {
+          "problem": "A company has $C(x) = 100 + 0.015x^2$ and $R(x) = 3x$. Find the production rate that maximizes profit. What is the maximum profit?",
+          "answer": "$P(x) = R(x) - C(x) = 3x - 100 - 0.015x^2$. Solve $P'(x) = 0$ and verify $P'' < 0$.",
+          "context": "Linear revenue, quadratic cost; simple profit maximization"
+        }
+      ],
+      "applied_contexts": [
+        "revenue maximization",
+        "profit maximization",
+        "price elasticity",
+        "demand and supply"
+      ],
+      "prerequisites": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "common_errors": [
+        "Confusing revenue (price times quantity) with profit (revenue minus cost)",
+        "Not verifying a critical point is a maximum (using second derivative)",
+        "Arithmetic errors when setting $R'(x) = 0$ or expanding $(ax + b)^n$ terms"
+      ],
+      "geogebra_prompt": "C(x) = 100 + 0.015x^2; R(x) = 3x; P(x) = R(x) - C(x); plot all three and mark max profit",
+      "prereq_in_scope": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "marginal-analysis-economics",
+      "deck": 7,
+      "unit_title": "Differentiation (Part B)",
+      "order": 41,
+      "title": "Marginal Analysis in Economics",
+      "student_facing_name": "Understanding marginal cost, revenue, and profit",
+      "summary": "Marginal cost, marginal revenue, and marginal profit are the derivatives of cost, revenue, and profit functions. The marginal value at $x = k$ approximates the actual change in the total quantity when production increases from $k$ to $k+1$ units. Marginal analysis connects rates of change to real economic quantities.",
+      "notation": [
+        "$MC = C'(x)$",
+        "$MR = R'(x)$",
+        "$MP = P'(x)$",
+        "$C(k+1) - C(k)$ (actual incremental cost)"
+      ],
+      "method_steps": [
+        "Find $C'(x)$, $R'(x)$, and $P'(x)$ as the marginal functions",
+        "Evaluate the derivative at a specific production level $k$ to estimate the cost/revenue/profit of the next unit",
+        "Compare the marginal value to the actual incremental value $C(k+1) - C(k)$ to show how close the derivative approximation is"
+      ],
+      "worked_examples": [
+        {
+          "problem": "A manufacturer estimates that when $x$ units of a commodity are produced, total cost will be $C(x) = \\frac{1}{8}x^2 + 3x + 98$ dollars. (a) Find $C'(x)$ and compute $C'(8)$. (b) Find $C(9) - C(8)$. (c) Is $C'(8)$ close to $C(9) - C(8)$?",
+          "answer": "$C'(x) = \\frac{1}{4}x + 3$; $C'(8) = 5$; $C(9) - C(8) = 5.125$; yes, very close",
+          "context": "Demonstrates how marginal cost approximates actual incremental cost"
+        },
+        {
+          "problem": "A manufacturer estimates that when $x$ units are produced, all units will be sold when price is $p(x) = \\frac{1}{3}(75 - x)$ dollars per unit. (a) Find the marginal revenue function and use it to estimate revenue from selling the ninth unit. (b) What is the actual revenue from selling the ninth unit? (c) How close is marginal revenue to actual?",
+          "answer": "$R(x) = p(x) \\cdot x = \\frac{1}{3}(75 - x) \\cdot x$; compute $R'(x)$, then $R'(8)$ and $R(9) - R(8)$",
+          "context": "Marginal revenue with price-dependent demand"
+        },
+        {
+          "problem": "A manufacturer estimates $C(x) = \\frac{1}{8}x^2 + 3x + 98$ and $p(x) = \\frac{1}{3}(75 - x)$. (a) Find the marginal profit function and estimate profit from selling the ninth unit. (b) What is the actual profit? (c) Compare.",
+          "answer": "$P'(x) = R'(x) - C'(x)$; compute $P'(8)$ and $P(9) - P(8)$",
+          "context": "Marginal profit combines marginal revenue and marginal cost"
+        }
+      ],
+      "applied_contexts": [
+        "pricing and demand",
+        "production planning",
+        "unit cost analysis",
+        "incremental business decisions"
+      ],
+      "prerequisites": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "common_errors": [
+        "Confusing marginal (derivative) with total (function value)",
+        "Forgetting that marginal is an approximation and will not exactly equal the actual incremental change",
+        "Computing $C(k) - C(k+1)$ instead of $C(k+1) - C(k)$ (sign error)"
+      ],
+      "geogebra_prompt": "C(x) = x^2/8 + 3x + 98; plot C(x) and C'(x); mark x=8 and show how C'(8) approximates the slope",
+      "prereq_in_scope": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "marginal-approach-to-profit-max",
+      "deck": 7,
+      "unit_title": "Differentiation (Part B)",
+      "order": 42,
+      "title": "Marginal Approach to Profit Maximization",
+      "student_facing_name": "Finding max profit using marginals",
+      "summary": "Profit is maximized when marginal revenue equals marginal cost: $MR = MC$, or equivalently $R'(x) = C'(x)$. This is a key principle in economics: at the optimal production level, the revenue from one more unit equals the cost of producing one more unit.",
+      "notation": [
+        "$R'(x) = C'(x)$",
+        "$MR = MC$",
+        "$P'(x) = 0$"
+      ],
+      "method_steps": [
+        "Set up cost and revenue functions",
+        "Find $C'(x)$ and $R'(x)$",
+        "Solve $R'(x) = C'(x)$",
+        "Evaluate profit $P(x) = R(x) - C(x)$ at the solution to find maximum profit"
+      ],
+      "worked_examples": [
+        {
+          "problem": "The total cost and revenue functions for a product are $C(q) = 40,000 + 25q + 0.002q^2$ and $R(q) = 75q - 0.008q^2$. Using the marginal approach, determine the profit-maximizing level of output and the maximum profit.",
+          "answer": "$R'(q) = 75 - 0.016q$; $C'(q) = 25 + 0.004q$; solve $75 - 0.016q = 25 + 0.004q$ to find $q$, then compute profit",
+          "context": "Standard profit maximization with cost and revenue functions"
+        },
+        {
+          "problem": "A manufacturer has developed solar collection panels. Demand: $q = 100,000 - 200p$. Cost: $C = 150,000 + 100q + 0.003q^2$. (a) Formulate profit as a function of $q$. (b) Using the marginal approach, determine the profit-maximizing output level.",
+          "answer": "Express revenue as $R = p \\cdot q$ where $p = \\frac{100,000 - q}{200}$; form $P(q)$; solve $P'(q) = 0$",
+          "context": "Demand-based pricing; requires expressing price as a function of quantity demanded"
+        }
+      ],
+      "applied_contexts": [
+        "production optimization",
+        "pricing strategy",
+        "supply chain",
+        "manufacturing management"
+      ],
+      "prerequisites": [
+        "marginal-analysis-economics"
+      ],
+      "common_errors": [
+        "Solving $MR = MC$ but forgetting to verify it gives a maximum (not minimum)",
+        "Arithmetic errors when equating the derivatives and solving for $q$",
+        "Confusing demand function $q(p)$ with inverse demand $p(q)$"
+      ],
+      "geogebra_prompt": "C(q) = 40000 + 25q + 0.002q^2; R(q) = 75q - 0.008q^2; plot C'(q) and R'(q); mark their intersection",
+      "prereq_in_scope": [
+        "marginal-analysis-economics"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "increasing-decreasing-intervals",
+      "deck": 7,
+      "unit_title": "Differentiation (Part B)",
+      "order": 43,
+      "title": "Intervals of Increase and Decrease",
+      "student_facing_name": "Where functions go up and down",
+      "summary": "A function is increasing on an interval where $f'(x) > 0$ and decreasing where $f'(x) < 0$. This tells us the behavior of a function between critical points and is useful for sketching curves and understanding real-world behavior.",
+      "notation": [
+        "$f'(x) > 0$ (increasing)",
+        "$f'(x) < 0$ (decreasing)",
+        "Critical point: $f'(x) = 0$"
+      ],
+      "method_steps": [
+        "Find $f'(x)$",
+        "Solve $f'(x) = 0$ to find critical points",
+        "Create a sign chart for $f'(x)$ by testing the sign in each interval between critical points",
+        "Determine intervals where $f'(x) > 0$ (increasing) and where $f'(x) < 0$ (decreasing)"
+      ],
+      "worked_examples": [],
+      "applied_contexts": [
+        "trend analysis",
+        "business metrics",
+        "production efficiency over time"
+      ],
+      "prerequisites": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "common_errors": [
+        "Forgetting to check signs in all regions separated by critical points",
+        "Claiming a function increases/decreases at a single point (intervals only)",
+        "Sign errors when evaluating test points in $f'(x)$"
+      ],
+      "geogebra_prompt": "f(x) = x^3 - 3x^2 - 9x + 5; plot f(x), f'(x); mark critical points and shade increasing/decreasing regions",
+      "prereq_in_scope": [
+        "second-deriv-test-maxima-minima"
+      ],
+      "prereq_outside_scope": []
+    }
+  ]
+}
