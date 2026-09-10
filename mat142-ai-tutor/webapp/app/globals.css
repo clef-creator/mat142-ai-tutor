@@ -73,11 +73,11 @@ a { color: var(--maroon); }
   outline: none; border-color: var(--maroon); box-shadow: 0 0 0 3px var(--maroon-tint);
 }
 .btn {
-  width: 100%; margin-top: 14px; background: var(--maroon); color: #fff;
+  width: 100%; margin-top: 14px; background: #0d9488; color: #fff;
   border: 0; border-radius: 8px; padding: 12px 20px; font: inherit;
   font-weight: 600; cursor: pointer;
 }
-.btn:hover { background: var(--maroon-dk); }
+.btn:hover { background: #0f766e; }
 .btn:disabled { opacity: 0.55; cursor: default; }
 .notice { margin-top: 16px; border-radius: 8px; padding: 12px 14px; font-size: 13.5px; }
 .notice.ok { background: var(--ok-bg); color: var(--ok); }
@@ -195,10 +195,10 @@ a { color: var(--maroon); }
 }
 .inputrow textarea:focus { outline: none; border-color: var(--maroon); box-shadow: 0 0 0 3px var(--maroon-tint); }
 .inputrow button {
-  background: var(--maroon); color: #fff; border: 0; border-radius: 8px;
+  background: #0d9488; color: #fff; border: 0; border-radius: 8px;
   padding: 11px 20px; font: inherit; font-weight: 600; cursor: pointer;
 }
-.inputrow button:hover { background: var(--maroon-dk); }
+.inputrow button:hover { background: #0f766e; }
 .inputrow button:disabled { opacity: 0.5; cursor: default; }
 .compfoot {
   display: flex; gap: 12px; margin-top: 9px; font-size: 12.5px;
