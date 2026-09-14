@@ -94,9 +94,23 @@ export default function TutorClient({
   const messagesRef = useRef<ChatMessage[]>(existingMessages);
   useEffect(() => { messagesRef.current = messages; }, [messages]);
 
-  /** Streams one reply, appending deltas as they arrive. */
+  /**
+   * Streams one reply, appending deltas as they arrive.
+   *
+   * The contract with the solo endpoint is that `history` is the conversation
+   * *before* this turn and `message` is the new thing being said; the server
+   * joins them. The screen has already added the student's message to the
+   * thread by the time this runs, so callers pass the history they captured
+   * beforehand — otherwise the message would travel twice and the model would
+   * be billed for reading it twice.
+   */
   const run = useCallback(
-    async (payload: { sessionId: string; message?: string; opening?: boolean }) => {
+    async (payload: {
+      sessionId: string;
+      message?: string;
+      opening?: boolean;
+      history?: ChatMessage[];
+    }) => {
       setBusy(true);
       setError(null);
       setStreaming('');
@@ -110,7 +124,7 @@ export default function TutorClient({
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 ...solo.context(),
-                history: messagesRef.current,
+                history: payload.history ?? messagesRef.current,
                 message: payload.message,
                 opening: payload.opening,
               }),
@@ -118,7 +132,11 @@ export default function TutorClient({
           : await fetch('/api/chat', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload),
+              body: JSON.stringify({
+                sessionId: payload.sessionId,
+                message: payload.message,
+                opening: payload.opening,
+              }),
             });
 
         if (!res.ok) {
@@ -191,12 +209,16 @@ export default function TutorClient({
     const text = input.trim();
     if (!text || busy || !sessionId) return;
 
-    const next: ChatMessage[] = [...messagesRef.current, { role: 'user', content: text }];
+    // What was said before this turn, captured before the screen is updated.
+    // The new message is sent separately, so it must not also be in here.
+    const priorHistory = messagesRef.current;
+
+    const next: ChatMessage[] = [...priorHistory, { role: 'user', content: text }];
     messagesRef.current = next;
     setMessages(next);
     solo?.persist(next);
     setInput('');
-    await run({ sessionId, message: text });
+    await run({ sessionId, message: text, history: priorHistory });
   }
 
   async function endSession() {
