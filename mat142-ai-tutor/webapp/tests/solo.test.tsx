@@ -23,6 +23,7 @@ import {
 } from '@/lib/solo-store';
 import { topics } from '@/lib/curriculum';
 import { pickTopic, choiceForTopic } from '@/lib/picker';
+import { parseSignals, unassessedSignals } from '@/lib/signals';
 
 let failures = 0;
 function check(name: string, cond: boolean, detail = '') {
@@ -217,11 +218,97 @@ function jumpChecks() {
     Boolean(unknown.topic?.id));
 }
 
+/* ------------------------------------------------------------------ */
+/* Not guessing about a student                                         */
+/* ------------------------------------------------------------------ */
+
+/**
+ * "Shaky" is a judgement about a student, and a shaky topic is put in front of
+ * them again ahead of everything else. So a shaky mark that nobody actually
+ * made keeps a student on a topic they may already have finished, and makes
+ * them look stuck to the teaching team. When the summary cannot be made or
+ * comes back malformed, nothing must be claimed.
+ */
+function assessmentChecks() {
+  const name = 'the chain rule';
+
+  // A good answer is read properly.
+  const good = parseSignals(
+    'Here you go: {"outcome":"steady","summary":"Got there with little help.",' +
+      '"sticking_point":null,"asked_for_answers":false,"self_critical":true}',
+    name,
+  );
+  check('a proper summary is accepted', good.assessed && good.outcome === 'steady');
+  check('a flag that is set is kept', good.self_critical === true);
+
+  // Everything else is refused rather than turned into "shaky".
+  const malformed: [string, string][] = [
+    ['nothing resembling an answer', 'The session went fine, I think.'],
+    ['broken JSON', '{"outcome":"steady", "summary": '],
+    ['a missing verdict', '{"summary":"Worked through two problems."}'],
+    ['a verdict that is not one of the two words', '{"outcome":"unsure","summary":"Hard to say."}'],
+    ['a missing summary', '{"outcome":"shaky"}'],
+    ['an empty summary', '{"outcome":"shaky","summary":"   "}'],
+    ['a refusal', '{"error":"I cannot summarise this conversation."}'],
+    ['an empty object', '{}'],
+  ];
+  for (const [what, text] of malformed) {
+    const s = parseSignals(text, name);
+    check(`no judgement is made from ${what}`, s.assessed === false && s.reason === 'malformed');
+  }
+
+  // A flag must never be raised by a value that is merely truthy.
+  const sloppy = parseSignals(
+    '{"outcome":"shaky","summary":"Needed a lot of help.","asked_for_answers":"yes"}',
+    name,
+  );
+  check('a flag is only raised by a real true', sloppy.assessed && sloppy.asked_for_answers === false);
+
+  // And the provider failing is its own thing, not a verdict.
+  const failed = unassessedSignals(name, 'provider_error');
+  check('a failed summary is recorded as unassessed', failed.assessed === false);
+  check('a session that barely started is recorded as unassessed',
+    unassessedSignals(name, 'too_short').assessed === false);
+
+  /* --- and none of that may touch what is already known -------------- */
+
+  const store = fakeStorage();
+  (globalThis as { window?: unknown }).window = { localStorage: store };
+
+  const id = topics[0].id;
+  let state: SoloState = markStarted({ ...emptyState, name: 'Juhi' }, id);
+  state = applyOutcome(state, id, 'steady', 'Solid on this now.', null);
+  check('a real assessment is recorded', state.progress[0].status === 'steady');
+
+  const before = state.progress[0];
+  const afterFailure = applyOutcome(state, id, 'shaky', `Worked on ${name}.`, null, false);
+  const row = afterFailure.progress[0];
+
+  check('a failed summary does not turn a steady student shaky', row.status === 'steady');
+  check('a failed summary does not count as another attempt', row.attempts === before.attempts);
+  check('a failed summary does not move the tutor off the topic',
+    pickTopic(afterFailure.progress).topic.id === pickTopic(state.progress).topic.id);
+  check('the session still closes', afterFailure.open === null);
+  check('the date still moves, so nobody looks absent', Boolean(row.last_worked_at));
+
+  // A real sticking point from last time must not be erased by a failure.
+  let withNote = applyOutcome(markStarted(emptyState, id), id, 'shaky', 'Stuck.', 'forgets the inner function');
+  withNote = applyOutcome(withNote, id, 'shaky', `Worked on ${name}.`, null, false);
+  check('a failed summary keeps last time\u2019s sticking point',
+    withNote.progress[0].note === 'forgets the inner function');
+
+  // Retrying the assessment afterwards must land normally.
+  const retried = applyOutcome(afterFailure, id, 'shaky', 'Lost it on the quotient rule.', 'sign slips');
+  check('the assessment can still be made later', retried.progress[0].status === 'shaky');
+  check('and then it counts once', retried.progress[0].attempts === before.attempts + 1);
+}
+
 async function main() {
   await accessChecks();
   storeChecks();
   screenChecks();
   jumpChecks();
+  assessmentChecks();
 
   console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) failed.`);
   process.exit(failures === 0 ? 0 : 1);

@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { getTopic } from '@/lib/curriculum';
 import { isSoloMode } from '@/lib/mode';
 import { ACCESS_COOKIE, hasAccess } from '@/lib/access';
-import { MIN_MESSAGES_TO_SUMMARISE, summariseSession } from '@/lib/signals';
+import { summariseSession } from '@/lib/signals';
 import type { ChatMessage } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -45,25 +45,18 @@ export async function POST(req: Request) {
     .slice(-MAX_HISTORY)
     .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_MESSAGE_CHARS) }));
 
-  if (history.length < MIN_MESSAGES_TO_SUMMARISE) {
-    return NextResponse.json({
-      ok: true,
-      tooShort: true,
-      signals: {
-        outcome: 'shaky',
-        summary: 'Session ended almost immediately.',
-        sticking_point: null,
-        asked_for_answers: false,
-        self_critical: false,
-      },
-    });
-  }
-
+  // A session too short to judge, a summary that fails and a summary that comes
+  // back malformed are all the same thing to the browser: signals with
+  // `assessed: false`, which it must not write over what it already knows.
   const signals = await summariseSession({
     topicTitle: topic.title,
     topicName: topic.student_facing_name,
     history,
   });
 
-  return NextResponse.json({ ok: true, signals });
+  return NextResponse.json({
+    ok: true,
+    tooShort: signals.reason === 'too_short',
+    signals,
+  });
 }

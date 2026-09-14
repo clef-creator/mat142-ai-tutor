@@ -122,6 +122,11 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
             let outcome: 'steady' | 'shaky' = 'shaky';
             let summary = `Worked on ${getTopic(topicId)?.student_facing_name ?? topicId}.`;
             let sticking: string | null = null;
+            // Nothing has been judged until the server says it has. If the
+            // request never arrives, or comes back without a real assessment,
+            // the session still closes but what is recorded about the student
+            // stays as it was.
+            let assessed = false;
 
             try {
               const res = await fetch('/api/solo/end', {
@@ -130,10 +135,14 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
                 body: JSON.stringify({ history: messages, topicId }),
               });
               const data = await res.json();
-              if (res.ok && data.signals) {
+              if (res.ok && data.signals?.assessed === true) {
                 outcome = data.signals.outcome === 'steady' ? 'steady' : 'shaky';
                 summary = data.signals.summary ?? summary;
                 sticking = data.signals.sticking_point ?? null;
+                assessed = true;
+              } else if (res.ok && typeof data.signals?.summary === 'string') {
+                // No judgement, but the note for next time is still worth having.
+                summary = data.signals.summary;
               }
             } catch {
               // Keep whatever we can rather than losing the session entirely.
@@ -145,6 +154,7 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
               outcome,
               summary,
               sticking,
+              assessed,
             );
 
             const nextChoice = pickTopic(ended.progress);

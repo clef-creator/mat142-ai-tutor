@@ -91,13 +91,22 @@ export function clearState(): void {
   }
 }
 
-/** Records the outcome of a finished session against its topic. */
+/**
+ * Records the outcome of a finished session against its topic.
+ *
+ * `assessed` says whether `outcome` is a judgement that was actually made. When
+ * it is false — the summary failed, came back malformed, or the session was too
+ * short to read — what is already recorded for the topic is kept as it is. The
+ * session still closes and the date still moves, because the student really did
+ * sit down and work; but nothing is learned about them, so nothing is claimed.
+ */
 export function applyOutcome(
   state: SoloState,
   topicId: string,
   outcome: TopicStatus,
   summary: string,
   stickingPoint: string | null,
+  assessed = true,
 ): SoloState {
   const now = new Date().toISOString();
   const existing = state.progress.find((p) => p.topic_id === topicId);
@@ -107,10 +116,15 @@ export function applyOutcome(
     {
       student_id: 'local',
       topic_id: topicId,
-      status: outcome,
-      attempts: (existing?.attempts ?? 0) + 1,
+      // Without a judgement, leave the standing one alone.
+      status: assessed ? outcome : existing?.status ?? 'shaky',
+      // `attempts` is what "repeatedly stuck on this" will be read from, so a
+      // session nobody could judge must not push a student towards that flag.
+      // It also means the assessment can be tried again without counting twice.
+      attempts: (existing?.attempts ?? 0) + (assessed ? 1 : 0),
       last_worked_at: now,
-      note: stickingPoint,
+      // A made-up null would erase a real sticking point from last time.
+      note: assessed ? stickingPoint : existing?.note ?? null,
     } as ProgressRow,
   ];
 
