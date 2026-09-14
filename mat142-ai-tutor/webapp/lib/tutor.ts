@@ -47,7 +47,15 @@ export function streamTutorReply(opts: {
             // tenth of the input rate to re-read it. Without this the project
             // costs roughly four times as much.
             { type: 'text', text: buildStaticPrompt(), cache_control: { type: 'ephemeral' } },
-            { type: 'text', text: opts.sessionPrompt },
+            // Also cached. This block holds the student's situation and the
+            // teaching material for today's topic, and is rebuilt identically
+            // on every turn of a session, so from the second turn onwards it is
+            // read at a tenth of the rate rather than paid for in full.
+            {
+              type: 'text',
+              text: opts.sessionPrompt,
+              cache_control: { type: 'ephemeral' },
+            },
           ],
           messages: messages.map((m) => ({ role: m.role, content: m.content })),
         });
