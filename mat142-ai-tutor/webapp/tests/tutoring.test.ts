@@ -1,6 +1,6 @@
 import { pickTopic, choiceForTopic } from '@/lib/picker';
 import { topics, getTopic } from '@/lib/curriculum';
-import { buildStaticPrompt, buildSessionPrompt } from '@/lib/prompt';
+import { buildStaticPrompt, buildSessionPrompt, buildTopicMaterial } from '@/lib/prompt';
 import type { ProgressRow } from '@/lib/types';
 
 let failures = 0;
@@ -145,6 +145,114 @@ withWarning.forEach((t) => {
   });
   check(`notation warning reaches the tutor for ${t.id}`, p.includes(t.notation_warning!));
 });
+
+// ---- the cached block must not grow with the course ------------------------
+// The static prompt is re-read on every turn of every session, so its cost
+// scales with the size of the course. Teaching material belongs in the session
+// block, which holds one topic. If this regresses, the bill does too.
+const materialMarkers = topics.filter((t) =>
+  staticPrompt.includes(t.summary),
+);
+check(
+  'no topic summary is in the cached block',
+  materialMarkers.length === 0,
+  materialMarkers.map((t) => t.id).join(', '),
+);
+const exampleInStatic = topics.filter((t) =>
+  t.worked_examples.some((e) => staticPrompt.includes(e.problem)),
+);
+check(
+  'no worked example is in the cached block',
+  exampleInStatic.length === 0,
+  exampleInStatic.map((t) => t.id).join(', '),
+);
+check(
+  'the cached block still lists every topic by name',
+  topics.every((t) => staticPrompt.includes(t.title)),
+);
+// A rough ceiling. What this really guards is material leaking back into the
+// cached block, and the two checks above are the precise version of that; this
+// is the tripwire for anything that slips past them. The block holds teaching
+// instructions plus one line per topic, so it grows a little with the course
+// and a little when the instructions gain a section — both legitimate. If this
+// ever fails, look first for a summary or a worked example that has crept in,
+// and only raise the number once satisfied that is not what happened.
+check(
+  'the cached block stays small',
+  staticPrompt.length < 16000,
+  `${staticPrompt.length} chars`,
+);
+
+// ---- the same topic must not always open the same way ----------------------
+// A tutor handed a numbered list reaches for entry one, so the worked examples
+// are rotated by session number. Without this, a student coming back to a topic
+// met the identical opening question every time.
+const multi = topics.find((t) => t.worked_examples.length > 1)!;
+const firstVisit = buildTopicMaterial(multi, 0);
+const secondVisit = buildTopicMaterial(multi, 1);
+check('a revisited topic leads with a different example', firstVisit !== secondVisit, multi.id);
+check(
+  'rotating loses no examples',
+  multi.worked_examples.every((e) => secondVisit.includes(e.problem)),
+);
+check('rotating is stable for the same session number', buildTopicMaterial(multi, 1) === secondVisit);
+check(
+  'rotation wraps rather than running off the end',
+  buildTopicMaterial(multi, multi.worked_examples.length) === firstVisit,
+);
+
+// The instructions that make the tutor vary problems at all.
+check(
+  'the tutor is told to vary practice problems',
+  /do not hand the same problems back/i.test(staticPrompt),
+);
+check(
+  'the tutor is told to derive its own answers first',
+  /before you offer the problem/i.test(staticPrompt),
+);
+check(
+  "the tutor may not pass its own problems off as the lecturer's",
+  /never say or imply that something you made up came from the slides/i.test(staticPrompt),
+);
+
+// ---- the session block carries exactly one topic's material ----------------
+const deep = topics.find((t) => t.prereq_in_scope.length > 0 && t.worked_examples.length > 0);
+if (deep) {
+  const p = buildSessionPrompt({
+    studentName: null,
+    choice: choiceForTopic(deep.id, []),
+    progress: [],
+    lastSummary: null,
+    lastTopicId: null,
+    sessionNumber: 1,
+  });
+
+  check("today's topic arrives in full", p.includes(deep.summary));
+  check(
+    "today's worked examples arrive",
+    deep.worked_examples.every((e) => p.includes(e.problem)),
+  );
+
+  const under = deep.prereq_in_scope.map((id) => getTopic(id)!).filter(Boolean);
+  check(
+    'the topic underneath arrives in summary',
+    under.every((u) => p.includes(u.summary)),
+    under.map((u) => u.id).join(', '),
+  );
+  check(
+    "the topic underneath does not bring its worked examples",
+    under.every((u) => u.worked_examples.every((e) => !p.includes(e.problem))),
+  );
+
+  const unrelated = topics.filter(
+    (t) => t.id !== deep.id && !deep.prereq_in_scope.includes(t.id) && p.includes(t.summary),
+  );
+  check(
+    'no unrelated topic material is sent',
+    unrelated.length === 0,
+    unrelated.map((t) => t.id).join(', '),
+  );
+}
 
 // ---- every topic can open a session ---------------------------------------
 topics.forEach((t) => {

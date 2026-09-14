@@ -1,23 +1,51 @@
-import { curriculum, outOfScopePrerequisites, topicName } from './curriculum';
+import { curriculum, getTopic, outOfScopePrerequisites, topicName } from './curriculum';
 import type { Choice } from './picker';
 import type { ProgressRow, Topic } from './types';
 
 /**
  * The tutor's instructions, in two parts.
  *
- * Part one is identical for every student and every session, so it is sent
- * first and marked for caching — the API then charges a tenth of the normal
- * rate to re-read it on each turn. That is not a micro-optimisation: without
- * it this project costs roughly four times as much.
+ * Part one is how to teach, plus a one-line index of the whole course. It is
+ * identical for every student and every session, so it is sent first and marked
+ * for caching — the API then charges a tenth of the normal rate to re-read it
+ * on each turn. That is not a micro-optimisation: without it this project costs
+ * roughly four times as much.
  *
- * Part two is the student's own situation and changes every session.
+ * Part two is this student's situation and the full teaching material for the
+ * one topic they are actually working on. It is fixed for the length of a
+ * session, so it is cached too.
+ *
+ * The teaching material used to live in part one, all topics at once. That was
+ * affordable at thirteen topics and is not at the size of the whole course: the
+ * block is re-read on every single turn, so its cost scales with the number of
+ * topics in the course rather than with the number the student ever sees. A
+ * student works on one topic per session, so one topic is what gets sent.
  */
 
-function renderTopic(t: Topic): string {
+/**
+ * Rotate a list by `by` places, leaving it otherwise intact.
+ *
+ * Used on the worked examples. A tutor handed a numbered list reaches for the
+ * first entry, so a student who comes back to a topic met the same opening
+ * question every time. Rotating by the session number changes which example
+ * leads without hiding any of them, and without introducing randomness — the
+ * block has to be rebuilt byte-identically on every turn of a session or it
+ * stops being cacheable, which costs real money.
+ */
+function rotated<T>(items: T[], by: number): T[] {
+  if (items.length < 2) return items;
+  const n = ((by % items.length) + items.length) % items.length;
+  return [...items.slice(n), ...items.slice(0, n)];
+}
+
+function renderTopic(t: Topic, exampleOffset = 0): string {
   const lines: string[] = [];
   lines.push(`## ${t.title}`);
   lines.push(`Student-facing name: ${t.student_facing_name}`);
-  lines.push(`Unit: ${t.unit_title} (lecture deck ${t.deck})`);
+  // Deliberately no deck number here. The course is five units, and a unit
+  // spans several lecture days rather than one file, so a number would only
+  // invite the tutor to quote a wrong one at a student.
+  lines.push(`Unit: ${t.unit_title}`);
   lines.push('');
   lines.push(t.summary);
 
@@ -40,8 +68,10 @@ function renderTopic(t: Topic): string {
 
   if (t.worked_examples.length) {
     lines.push('');
-    lines.push('Worked examples from the lecture slides:');
-    t.worked_examples.forEach((e, i) => {
+    lines.push(
+      'Worked examples from the lecture slides. Demonstrate with these; for practice, vary them:',
+    );
+    rotated(t.worked_examples, exampleOffset).forEach((e, i) => {
       lines.push(`${i + 1}. Problem: ${e.problem}`);
       lines.push(`   Answer: ${e.answer}`);
       if (e.context) lines.push(`   Note: ${e.context}`);
@@ -60,6 +90,75 @@ function renderTopic(t: Topic): string {
   }
 
   return lines.join('\n');
+}
+
+/**
+ * A topic the student is expected to have already met, rendered short.
+ *
+ * Dropping back to the thing underneath is the tutor's most-used move, so the
+ * topics immediately below today's are included — but without their worked
+ * examples, which are the bulk of a topic and are not what a two-minute detour
+ * needs.
+ */
+function renderTopicBriefly(t: Topic): string {
+  const lines: string[] = [];
+  lines.push(`## ${t.title} (${t.student_facing_name})`);
+  lines.push(t.summary);
+
+  if (t.notation_warning) {
+    lines.push('');
+    lines.push(`NOTATION WARNING: ${t.notation_warning}`);
+  }
+
+  if (t.notation.length) {
+    lines.push('');
+    lines.push(`Notation: ${t.notation.join('; ')}`);
+  }
+
+  if (t.method_steps.length) {
+    lines.push('');
+    lines.push('Method as taught:');
+    t.method_steps.forEach((s, i) => lines.push(`${i + 1}. ${s}`));
+  }
+
+  if (t.common_errors.length) {
+    lines.push('');
+    lines.push('Mistakes students make here:');
+    t.common_errors.forEach((c) => lines.push(`- ${c}`));
+  }
+
+  return lines.join('\n');
+}
+
+/**
+ * Everything the tutor needs to teach one topic: that topic in full, and the
+ * topics directly underneath it in short.
+ */
+export function buildTopicMaterial(topic: Topic, exampleOffset = 0): string {
+  const parts: string[] = [];
+
+  parts.push('# Material for this topic');
+  parts.push('');
+  parts.push(renderTopic(topic, exampleOffset));
+
+  const under = topic.prereq_in_scope
+    .map((id) => getTopic(id))
+    .filter((t): t is Topic => Boolean(t));
+
+  if (under.length) {
+    parts.push('');
+    parts.push('---');
+    parts.push('');
+    parts.push(
+      '# Underneath this topic',
+      '',
+      'The student should already have met these. They are here so you can drop back into one mid-session without guessing at how it was taught.',
+      '',
+    );
+    parts.push(under.map(renderTopicBriefly).join('\n\n'));
+  }
+
+  return parts.join('\n');
 }
 
 /** Stable across all students and sessions. Cached. */
@@ -118,6 +217,22 @@ If asked about something genuinely outside this unit, say so simply, answer brie
 
 If you are not certain of an answer, say so and work it out with the student step by step rather than asserting it.
 
+# Practice problems
+
+The worked examples you are given come from the lecture slides. They are how this course teaches the method, so lean on them when you are demonstrating one — the student should recognise the style from class.
+
+For practice, do not hand the same problems back. Build your own, using a slide example as the pattern and changing the numbers, so a student who works a topic twice never meets the identical question twice. Do not open two sessions on the same topic with the same question.
+
+When you make one up:
+
+- Keep the shape of the slide example. Same rule being practised, same kind of function, same notation. You are varying the numbers, not inventing a new kind of question.
+- Keep the numbers small and whole where you can, so the arithmetic never becomes the obstacle.
+- Aim it at this student. If they keep losing a minus sign, put one where it matters. If fractional powers are the block, use one.
+- Work the answer out yourself, step by step, before you offer the problem. Do not state an answer you have not actually derived. If it comes out ugly, change the numbers and start again rather than pressing on.
+- If you are unsure whether your own answer is right, say so and work it through with the student instead of asserting it.
+
+A problem you invented is yours, not the lecturer's. Never say or imply that something you made up came from the slides or from class.
+
 # Graded work
 
 If a student pastes in what looks like an assignment or quiz question, do not answer it and do not lecture them about integrity. Teach the same method on a different problem you make up, and say what you are doing: "I'm not going to do that one with you, but here's the same idea on a different function."
@@ -141,9 +256,9 @@ ${curriculum.topics.map((t, i) => `${i + 1}. ${t.title} — ${t.student_facing_n
 Skills the course assumes students already have, which you may drop back to at any time:
 ${Object.entries(outOfScopePrerequisites).map(([, d]) => `- ${d}`).join('\n')}
 
-# Full topic material
+That list above is an index, not your material. Below the student's details you are given the lecture material for today's topic in full, and a short version of the topics directly underneath it. Those are the ones you can teach from the slides.
 
-${curriculum.topics.map(renderTopic).join('\n\n---\n\n')}
+For any other topic on the list you know the name and where it sits in the course, and nothing more. You can still answer a passing question about one from ordinary calculus knowledge — but do not claim or imply that it is how this course presented it, and do not invent a worked example and attribute it to the lectures. If a student wants to work properly on a different topic, say so plainly and tell them to end this session and start a new one on it; you will have the lecture material for it then.
 `;
 }
 
@@ -194,8 +309,16 @@ export function buildSessionPrompt(args: {
   parts.push(`Why this one: ${choice.because}`);
   parts.push('');
   parts.push(
-    'Open the session yourself. Name the topic, give the one-line reason it is today\'s topic, and ask a first question that is easy enough to answer — a warm-up on something they already know, or the simplest possible case of the new idea. Do not ask what they would like to work on, and do not present a menu of options. They may ask to change topic at any point and you should agree readily, but the opening move is yours.',
+    'Open the session yourself. Name the topic, give the one-line reason it is today\'s topic, and ask a first question that is easy enough to answer — a warm-up on something they already know, or the simplest possible case of the new idea. Do not ask what they would like to work on, and do not present a menu of options. The opening move is yours.',
   );
+  parts.push(
+    'Make the opening question your own rather than reading the first slide example back. If this student has been on this topic before, or the note above says what they were working on, pick something different from last time and aim it at what tripped them up.',
+  );
+
+  parts.push('');
+  // Which slide example leads is rotated by the session number, so a student
+  // coming back to a topic does not meet the same opening question again.
+  parts.push(buildTopicMaterial(choice.topic, Math.max(0, sessionNumber - 1)));
 
   return parts.join('\n');
 }
