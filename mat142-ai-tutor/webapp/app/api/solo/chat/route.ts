@@ -6,6 +6,7 @@ import { getTopic } from '@/lib/curriculum';
 import { streamTutorReply, STREAM_HEADERS } from '@/lib/tutor';
 import { isSoloMode } from '@/lib/mode';
 import { ACCESS_COOKIE, hasAccess } from '@/lib/access';
+import { cleanHistory, joinTurn } from '@/lib/conversation';
 import type { ChatMessage, ProgressRow } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -73,9 +74,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const cleanHistory: ChatMessage[] = history
-    .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
-    .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_MESSAGE_CHARS) }));
+  const clean: ChatMessage[] = cleanHistory(history, MAX_MESSAGE_CHARS);
 
   const progress = Array.isArray(body.progress) ? body.progress : [];
 
@@ -88,8 +87,10 @@ export async function POST(req: Request) {
     sessionNumber: Math.max(1, Math.min(999, Number(body.sessionNumber) || 1)),
   });
 
-  const outbound = [...cleanHistory];
-  if (message) outbound.push({ role: 'user', content: message });
+  // `history` is what was said before this turn; `message` is the new thing.
+  // See lib/conversation.ts — joining them is done in one place so the new
+  // message cannot end up in the model's input twice.
+  const outbound = joinTurn(clean, message);
 
   return new Response(
     streamTutorReply({ sessionPrompt, messages: outbound }),
