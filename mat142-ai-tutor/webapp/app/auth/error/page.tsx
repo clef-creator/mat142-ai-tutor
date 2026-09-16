@@ -6,6 +6,7 @@ const REASONS: Record<string, string> = {
   expired: 'That link has already been used, or it expired. Sign-in links last one hour and work once.',
   domain: 'Only Ahmedabad University addresses can be used to sign in.',
   'not-on-list': 'That address is not on the pilot list. If you think it should be, contact your instructor.',
+  'enrollment-inactive': 'Your access to this pilot is no longer active. Contact your instructor if you think this is a mistake.',
 };
 
 export default async function AuthError({

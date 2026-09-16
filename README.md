@@ -163,7 +163,9 @@ set display_name = excluded.display_name;
 
 Store emails in lowercase. On a successful callback, the app checks the email domain and allowlist, then creates or updates the `students` record linked to `auth.users`.
 
-The schema is a baseline, not a completed production migration system. Review the [access-control](https://github.com/clef-creator/mat142-ai-tutor/issues/5) and [enrollment](https://github.com/clef-creator/mat142-ai-tutor/issues/6) issues before using real student data. Adding rows to the faculty tables does not create a working professor login flow.
+Enrollment remains active only while the signed-in email is present in `allowed_students` and its `students` row matches the authenticated user. Removing an allowlist row revokes the next tutor page or API request even when the browser still has a valid login and an open session. Reapply the checked-in schema changes to existing Supabase projects so the same rule protects direct database reads.
+
+The schema is a baseline, not a completed production migration system. Review the remaining [access-control work](https://github.com/clef-creator/mat142-ai-tutor/issues/5) before using real student data. Adding rows to the faculty tables does not create a working professor login flow.
 
 ## Configuration reference
 
@@ -230,6 +232,7 @@ Or run all three with `npm run check`.
 | `test:tutoring` | Curriculum structure, topic selection, prompt construction |
 | `test:rendering` | LaTeX, currency, malformed formulas and partial streamed text |
 | `test:solo` | Shared-code helpers, browser storage and rendered solo/account differences |
+| `test:enrollment` | Active-enrollment checks and revoked users with existing sessions |
 
 These tests do not establish live model quality, Supabase permission correctness or end-to-end account behavior. That coverage is tracked in [#24](https://github.com/clef-creator/mat142-ai-tutor/issues/24).
 

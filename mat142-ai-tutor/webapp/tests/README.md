@@ -30,3 +30,8 @@ begin with a digit.
 
 It also checks that a reply still renders correctly when only half of it has
 arrived, since replies stream in a few characters at a time.
+
+**`enrollment.test.ts`** checks account-mode authorization. It models a student
+whose browser still has a valid login and an open tutoring session after their
+address is removed from the pilot allow-list. Session start, chat and session
+end must all return `403` before reading session data or calling either model.

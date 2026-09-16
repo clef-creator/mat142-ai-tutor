@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { findActiveStudentEnrollment } from '@/lib/enrollment';
 import { pickTopic, choiceForTopic } from '@/lib/picker';
 import { topics } from '@/lib/curriculum';
 import { isSoloMode, soloModeReady } from '@/lib/mode';
@@ -20,12 +21,8 @@ export default async function TutorPage() {
   if (!user) redirect('/');
 
   const admin = createAdminClient();
-
-  const { data: student } = await admin
-    .from('students')
-    .select('display_name, email')
-    .eq('id', user.id)
-    .maybeSingle();
+  const enrollment = await findActiveStudentEnrollment(admin, user);
+  if (!enrollment) redirect('/auth/error?reason=enrollment-inactive');
 
   const { data: progressRows } = await admin
     .from('progress')
@@ -64,8 +61,8 @@ export default async function TutorPage() {
   const statusMap: Record<string, string> = {};
   progress.forEach((p) => { statusMap[p.topic_id] = p.status; });
 
-  const email = student?.email ?? user.email ?? '';
-  const name = student?.display_name ?? email.split('@')[0];
+  const email = enrollment.email;
+  const name = enrollment.displayName ?? email.split('@')[0];
 
   return (
     <>
