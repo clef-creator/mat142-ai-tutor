@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { findAllowedStudent } from '@/lib/enrollment';
 import { isSoloMode } from '@/lib/mode';
 
 /** Where the emailed link lands. Exchanges the one-time code for a session,
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/auth/error?reason=expired`);
   }
 
-  const email = data.user.email.toLowerCase();
+  const email = data.user.email.trim().toLowerCase();
   const domain = process.env.ALLOWED_EMAIL_DOMAIN ?? 'ahduni.edu.in';
 
   if (!email.endsWith('@' + domain)) {
@@ -33,11 +34,7 @@ export async function GET(request: NextRequest) {
 
   // The allow-list is what keeps the pilot at fifteen students.
   const admin = createAdminClient();
-  const { data: allowed } = await admin
-    .from('allowed_students')
-    .select('email, display_name')
-    .eq('email', email)
-    .maybeSingle();
+  const allowed = await findAllowedStudent(admin, email);
 
   if (!allowed) {
     await supabase.auth.signOut();

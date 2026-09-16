@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import {
+  findActiveStudentEnrollment,
+  INACTIVE_ENROLLMENT_ERROR,
+  INACTIVE_ENROLLMENT_MESSAGE,
+} from '@/lib/enrollment';
 import { pickTopic } from '@/lib/picker';
 import { isSoloMode } from '@/lib/mode';
 import type { ProgressRow } from '@/lib/types';
@@ -18,6 +23,13 @@ export async function POST() {
   if (!user) return NextResponse.json({ error: 'Not signed in' }, { status: 401 });
 
   const admin = createAdminClient();
+  const enrollment = await findActiveStudentEnrollment(admin, user);
+  if (!enrollment) {
+    return NextResponse.json(
+      { error: INACTIVE_ENROLLMENT_ERROR, message: INACTIVE_ENROLLMENT_MESSAGE },
+      { status: 403 },
+    );
+  }
 
   // Resume rather than duplicate if one is already open.
   const { data: open } = await admin

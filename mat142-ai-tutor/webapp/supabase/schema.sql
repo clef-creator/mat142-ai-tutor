@@ -150,14 +150,32 @@ returns boolean
 language sql stable security definer set search_path = public
 as $$ select exists (select 1 from public.faculty f where f.id = auth.uid()) $$;
 
+-- A valid Supabase session is not, by itself, an active enrollment. This
+-- function is used by student-facing RLS policies so removing an address from
+-- allowed_students revokes direct database reads as well as application routes.
+create or replace function public.has_active_student_enrollment()
+returns boolean
+language sql stable security definer set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.students st
+    join public.allowed_students allowed
+      on lower(allowed.email) = lower(st.email)
+    where st.id = auth.uid()
+      and lower(st.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  )
+$$;
+
 -- --- students ---------------------------------------------------------------
 drop policy if exists "student reads own record" on public.students;
 create policy "student reads own record" on public.students
-  for select using (id = auth.uid());
+  for select using (id = auth.uid() and public.has_active_student_enrollment());
 
 drop policy if exists "student updates own record" on public.students;
 create policy "student updates own record" on public.students
-  for update using (id = auth.uid());
+  for update using (id = auth.uid() and public.has_active_student_enrollment())
+  with check (id = auth.uid() and public.has_active_student_enrollment());
 
 drop policy if exists "faculty read student roster" on public.students;
 create policy "faculty read student roster" on public.students
@@ -166,7 +184,9 @@ create policy "faculty read student roster" on public.students
 -- --- progress ---------------------------------------------------------------
 drop policy if exists "student reads own progress" on public.progress;
 create policy "student reads own progress" on public.progress
-  for select using (student_id = auth.uid());
+  for select using (
+    student_id = auth.uid() and public.has_active_student_enrollment()
+  );
 
 drop policy if exists "faculty read progress" on public.progress;
 create policy "faculty read progress" on public.progress
@@ -175,7 +195,9 @@ create policy "faculty read progress" on public.progress
 -- --- sessions ---------------------------------------------------------------
 drop policy if exists "student reads own sessions" on public.sessions;
 create policy "student reads own sessions" on public.sessions
-  for select using (student_id = auth.uid());
+  for select using (
+    student_id = auth.uid() and public.has_active_student_enrollment()
+  );
 
 drop policy if exists "faculty read sessions" on public.sessions;
 create policy "faculty read sessions" on public.sessions
@@ -187,7 +209,9 @@ create policy "faculty read sessions" on public.sessions
 -- ever find yourself writing it, stop and re-read the privacy note in README.
 drop policy if exists "student reads own messages" on public.messages;
 create policy "student reads own messages" on public.messages
-  for select using (student_id = auth.uid());
+  for select using (
+    student_id = auth.uid() and public.has_active_student_enrollment()
+  );
 
 -- --- usage ------------------------------------------------------------------
 drop policy if exists "faculty read usage" on public.usage_daily;

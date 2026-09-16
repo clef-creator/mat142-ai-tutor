@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
+import {
+  findActiveStudentEnrollment,
+  INACTIVE_ENROLLMENT_ERROR,
+  INACTIVE_ENROLLMENT_MESSAGE,
+} from '@/lib/enrollment';
 import { buildSessionPrompt } from '@/lib/prompt';
 import { choiceForTopic } from '@/lib/picker';
 import { streamTutorReply, STREAM_HEADERS } from '@/lib/tutor';
@@ -36,6 +41,13 @@ export async function POST(req: Request) {
   if (!opening && !message) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
 
   const admin = createAdminClient();
+  const enrollment = await findActiveStudentEnrollment(admin, user);
+  if (!enrollment) {
+    return NextResponse.json(
+      { error: INACTIVE_ENROLLMENT_ERROR, message: INACTIVE_ENROLLMENT_MESSAGE },
+      { status: 403 },
+    );
+  }
 
   // --- the session must belong to this student, and still be open -----------
   const { data: session } = await admin
