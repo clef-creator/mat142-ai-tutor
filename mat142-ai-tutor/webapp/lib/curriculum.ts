@@ -17,17 +17,30 @@ export function topicName(id: string): string {
 }
 
 /**
- * Prerequisites that sit outside the piloted decks — algebra and earlier
- * calculus the course assumes students already have. The tutor is allowed to
- * drop back to these mid-session, which for this cohort is often the whole
- * point, but it cannot run a full session on one because we have no slide
- * material for them in scope.
+ * Plain-English names for the skills the course assumes students arrive with.
+ *
+ * These are not topics. There are no slides for them, so the tutor cannot run a
+ * session on one — but it is told it may drop back into any of them mid-session,
+ * which for this cohort is very often the actual lesson.
  */
-export const outOfScopePrerequisites: Record<string, string> = {
-  'function-composition': 'writing one function inside another, such as f(g(x))',
-  'limit-concept-and-motivation': 'what a limit means',
-  'slope-and-average-rate-of-change': 'slope between two points, and average rate of change',
+const PRECALCULUS_NAMES: Record<string, string> = {
   'pc-exponent-radical-rules': 'the rules for powers and roots',
-  'pc-rational-expressions': 'simplifying algebraic fractions',
   'pc-factoring': 'factoring',
+  'pc-function-notation': 'reading and using function notation such as $f(x)$',
+  'pc-order-of-operations': 'order of operations',
+  'pc-rational-expressions': 'simplifying algebraic fractions',
+  'pc-sign-rules': 'handling signs, especially a minus sign in front of a bracket',
+  'pc-slope-coordinate-geometry': 'slope, straight lines and coordinates',
+  'pc-solving-equations': 'solving equations, including quadratics',
 };
+
+/**
+ * Derived from the curriculum rather than hand-maintained, because a list kept
+ * by hand goes stale the moment the course widens. Every id a topic declares as
+ * out of scope appears here exactly once, in a stable order.
+ */
+export const outOfScopePrerequisites: Record<string, string> = Object.fromEntries(
+  [...new Set(topics.flatMap((t) => t.prereq_outside_scope))]
+    .sort()
+    .map((id) => [id, PRECALCULUS_NAMES[id] ?? id.replace(/^pc-/, '').replace(/-/g, ' ')]),
+);

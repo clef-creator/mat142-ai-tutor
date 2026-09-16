@@ -1,32 +1,1310 @@
 {
   "course": "MAT142 Introductory Calculus",
   "institution": "Ahmedabad University",
-  "scope_note": "Phase 1 pilot scope: decks 6 and 7 only (differentiation and its applications).",
+  "scope_note": "Built from the 22 lecture decks (607 slides) supplied by the MAT142 faculty member, de-duplicated across lectures and sequenced against the Monsoon 2025 course outline. Five units matching his five folders. Topics he does not teach are absent: the Mean Value Theorem, related rates, linearization and differentials, Newton's method, concavity and curve sketching as a topic in its own right, sigma notation (his slide reads \"Sec. 5.2 (Omit)\"), integration by parts, and area between curves. Awaiting faculty verification.",
   "decks": [
-    6,
-    7
+    1,
+    2,
+    3,
+    4,
+    5
   ],
   "verified_by_faculty": false,
   "topics": [
     {
-      "id": "derivative-first-principle-intro",
-      "deck": 6,
-      "unit_title": "Differentiation (Part A)",
-      "order": 31,
-      "title": "The Derivative: Secant and Tangent Lines",
-      "student_facing_name": "Understanding instantaneous rate of change via secants and tangents",
-      "summary": "Students visualize the derivative as the slope of the tangent line, obtained as the limit of slopes of secant lines. A secant passes through two distinct points; a tangent passes through one point and represents the instantaneous rate of change.",
+      "id": "what-is-a-function",
+      "title": "What is a Function?",
+      "student_facing_name": "What a function is, and how to spot one",
+      "summary": "A function is a rule that gives exactly one output for each input. The lecture introduces the four ways a function gets written down — a formula, a table, a graph, and a description in words — and the vertical line test, which decides whether a curve on the page is the graph of a function at all. Piecewise-defined functions are introduced here too: one function whose rule changes depending on which part of the domain the input falls in.",
       "notation": [
-        "secant line",
-        "tangent line",
-        "average rate of change",
-        "instantaneous rate of change"
+        "$f(x)$",
+        "$y = f(x)$",
+        "domain",
+        "range",
+        "independent and dependent variable"
       ],
       "method_steps": [
-        "Draw a secant line through two points on the curve: $(a, f(a))$ and $(a+h, f(a+h))$",
-        "The slope of the secant is $\\frac{f(a+h) - f(a)}{h}$ (average rate of change over the interval $[a, a+h]$)",
-        "As $h \\to 0$, the secant approaches the tangent line at $x = a$",
-        "The slope of the tangent is the derivative $f'(a)$"
+        "Identify the input (independent variable) and the output (dependent variable)",
+        "Check the defining condition: does every allowed input give exactly one output?",
+        "For a graph, apply the vertical line test — if any vertical line meets the curve twice, it is not a function",
+        "State the domain: the set of inputs the rule actually accepts",
+        "For a piecewise function, decide which piece the input falls in before evaluating"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Is the circle $x^2 + y^2 = 1$ the graph of a function of $x$?",
+          "answer": "No.",
+          "context": "the vertical line $x = 0$ meets it at $y = 1$ and $y = -1$, so one input gives two outputs. The lecture notes that the upper half alone, $y = \\sqrt{1 - x^2}$, is a function."
+        },
+        {
+          "problem": "For $C(q) = q^3 - 30q^2 + 500q + 200$, find $C(10)$.",
+          "answer": "$C(10) = 1000 - 3000 + 5000 + 200 = 3200$",
+          "context": "straight substitution; this is the cost function used repeatedly later in the course"
+        }
+      ],
+      "applied_contexts": [
+        "the shape of the Gateway Arch as a function",
+        "the cable of a suspension bridge as a near-parabola",
+        "cost as a function of quantity produced"
+      ],
+      "prerequisites": [
+        "pc-function-notation",
+        "pc-order-of-operations"
+      ],
+      "common_errors": [
+        "Thinking two different inputs may not share an output — that is allowed; it is two outputs from one input that is forbidden",
+        "Applying a horizontal line test instead of a vertical one",
+        "Evaluating a piecewise function with the wrong piece",
+        "Confusing the range (outputs actually reached) with the codomain"
+      ],
+      "geogebra_prompt": "Drag a point along the graph of $y = f(x)$ and watch the input arrow on the $x$-axis and the output arrow on the $y$-axis move together",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 1,
+      "prereq_in_scope": [],
+      "prereq_outside_scope": [
+        "pc-function-notation",
+        "pc-order-of-operations"
+      ]
+    },
+    {
+      "id": "elementary-function-families",
+      "title": "The Elementary Functions",
+      "student_facing_name": "The families of functions used all term",
+      "summary": "A tour of the function families the rest of the course is built from: linear, power, polynomial, rational, algebraic, trigonometric, exponential and logarithmic. The point is recognition — being able to look at a formula and know what shape to expect, and to look at a graph and name the family.",
+      "notation": [
+        "linear $f(x) = mx + b$",
+        "power $f(x) = x^a$",
+        "polynomial $f(x) = a_n x^n + \\dots + a_0$",
+        "rational $f(x) = p(x)/q(x)$",
+        "$e^x$, $a^x$, $\\ln(x)$"
+      ],
+      "method_steps": [
+        "Look at how $x$ appears: to a fixed power, in a denominator, under a root, or in an exponent",
+        "Linear: degree one, straight line, constant slope",
+        "Power: a single term $x^a$; the sign and size of $a$ set the shape",
+        "Polynomial: a finite sum of whole-number powers, defined for every $x$",
+        "Rational: one polynomial over another, undefined where the bottom is zero",
+        "Algebraic: built from these with roots as well",
+        "Exponential: $x$ in the exponent, growth or decay; logarithmic: its inverse"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Name the family: $f(x) = \\frac{x^4 + x^2 - 1}{x^2 + 5}$.",
+          "answer": "Rational — a polynomial divided by a polynomial.",
+          "context": "and since $x^2 + 5$ is never zero, this one is defined for every $x$"
+        }
+      ],
+      "applied_contexts": [
+        "cost and revenue as polynomials",
+        "exponential growth and decay",
+        "rational functions in purification-cost models"
+      ],
+      "prerequisites": [
+        "what-is-a-function",
+        "pc-exponent-radical-rules"
+      ],
+      "common_errors": [
+        "Calling $x^2$ exponential — the variable is in the base, not the exponent",
+        "Forgetting that a rational function is undefined where the denominator vanishes",
+        "Treating $\\sqrt{x}$ as a polynomial"
+      ],
+      "geogebra_prompt": "Type any formula into a plotter and compare the shapes of $x$, $x^2$, $1/x$, $\\sqrt{x}$ and $e^x$ on the same axes",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 2,
+      "prereq_in_scope": [
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": [
+        "pc-exponent-radical-rules"
+      ]
+    },
+    {
+      "id": "increasing-decreasing-functions",
+      "title": "Increasing and Decreasing Functions",
+      "student_facing_name": "When a function rises and when it falls",
+      "summary": "A function is increasing on an interval if larger inputs always give larger outputs there, and decreasing if larger inputs always give smaller outputs. This is defined here purely from the graph and from inequalities — no calculus yet. The same words come back much later as the First Derivative Test, so the vocabulary is worth getting right now.",
+      "notation": [
+        "increasing on $(a,b)$: $x_1 < x_2 \\Rightarrow f(x_1) < f(x_2)$",
+        "decreasing on $(a,b)$: $x_1 < x_2 \\Rightarrow f(x_1) > f(x_2)$"
+      ],
+      "method_steps": [
+        "Pick the interval you are describing — a function is rarely increasing everywhere",
+        "Take any two inputs $x_1 < x_2$ inside it",
+        "Compare $f(x_1)$ and $f(x_2)$",
+        "If the output always rises, it is increasing there; if it always falls, decreasing",
+        "Read this off the graph left to right: uphill is increasing, downhill is decreasing"
+      ],
+      "worked_examples": [
+        {
+          "problem": "On which intervals is $y = x^2$ increasing, and on which decreasing?",
+          "answer": "Decreasing on $(-\\infty, 0)$, increasing on $(0, \\infty)$.",
+          "context": "read straight off the parabola — downhill to the left of the vertex, uphill to the right"
+        }
+      ],
+      "applied_contexts": [
+        "describing whether a cost is still rising",
+        "reading a growth curve"
+      ],
+      "prerequisites": [
+        "what-is-a-function"
+      ],
+      "common_errors": [
+        "Saying a function 'is increasing' with no interval attached",
+        "Confusing increasing with positive — a function can be negative and still increasing",
+        "Reading the graph right to left"
+      ],
+      "geogebra_prompt": "Drag two points along a curve and watch which way the output moves as the input increases",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 3,
+      "prereq_in_scope": [
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "even-odd-functions",
+      "title": "Even and Odd Functions",
+      "student_facing_name": "Symmetry: even and odd functions",
+      "summary": "An even function satisfies $f(-x) = f(x)$ and its graph is a mirror image across the $y$-axis — $y = x^2$ is the standard example. An odd function satisfies $f(-x) = -f(x)$ and its graph is unchanged by a half-turn about the origin — $y = x^3$ is the standard example. Most functions are neither.",
+      "notation": [
+        "even: $f(-x) = f(x)$",
+        "odd: $f(-x) = -f(x)$"
+      ],
+      "method_steps": [
+        "Replace every $x$ in the formula with $-x$",
+        "Simplify, being careful with signs on odd powers",
+        "If the result is identical to $f(x)$, the function is even",
+        "If the result is $-f(x)$ throughout, the function is odd",
+        "If it is neither, say so — that is the usual answer"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Show $y = x^2$ is even.",
+          "answer": "$y(-x) = (-x)^2 = x^2 = y(x)$, so it is even.",
+          "context": "check numerically first: $y(-1) = 1$ and $y(1) = 1$ are the same value"
+        },
+        {
+          "problem": "Show $y = x^3$ is odd.",
+          "answer": "$y(-x) = (-x)^3 = -(x^3) = -y(x)$, so it is odd.",
+          "context": "numerically, $y(-1) = -1$ and $y(1) = 1$ — each is the negative of the other"
+        },
+        {
+          "problem": "Is $g(x) = \\sqrt{|x|} + 3x^2$ even, odd, or neither?",
+          "answer": "Even.",
+          "context": "$|-x| = |x|$ and $(-x)^2 = x^2$, so every term is unchanged"
+        }
+      ],
+      "applied_contexts": [
+        "halving the work of sketching a symmetric graph"
+      ],
+      "prerequisites": [
+        "what-is-a-function",
+        "pc-sign-rules"
+      ],
+      "common_errors": [
+        "Writing $(-x)^2 = -x^2$ — the bracket matters",
+        "Testing one value and concluding; the identity has to hold for every $x$",
+        "Assuming every function is one or the other"
+      ],
+      "geogebra_prompt": "Reflect a curve across the $y$-axis, then rotate it half a turn about the origin, and see which functions land back on themselves",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 4,
+      "prereq_in_scope": [
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": [
+        "pc-sign-rules"
+      ]
+    },
+    {
+      "id": "combining-functions",
+      "title": "Sums, Differences, Products and Quotients of Functions",
+      "student_facing_name": "Building new functions by adding and multiplying",
+      "summary": "Two functions can be added, subtracted, multiplied and divided to make a new function. The arithmetic is done output by output: $(f+g)(x) = f(x) + g(x)$. The domain of the result is where both original functions are defined — and, for a quotient, where the bottom one is not zero.",
+      "notation": [
+        "$(f+g)(x)$",
+        "$(f-g)(x)$",
+        "$(fg)(x)$",
+        "$\\left(\\frac{f}{g}\\right)(x)$"
+      ],
+      "method_steps": [
+        "Write out $f(x)$ and $g(x)$ separately",
+        "Combine them with the operation asked for, at the same input $x$",
+        "Simplify",
+        "Take the domain to be the overlap of the two domains",
+        "For a quotient, remove the points where $g(x) = 0$"
+      ],
+      "worked_examples": [
+        {
+          "problem": "A firm has revenue $R(x) = 110x$ and cost $C(x) = 7500 + 60x$. Write the profit function and find $P(100)$.",
+          "answer": "$P(x) = R(x) - C(x) = 110x - (7500 + 60x) = 50x - 7500$, so $P(100) = 5000 - 7500 = -2500$.",
+          "context": "a loss of $2,500 at 100 units — the lecture uses this to show profit can be negative below the break-even point"
+        }
+      ],
+      "applied_contexts": [
+        "profit as revenue minus cost",
+        "average cost as total cost divided by quantity"
+      ],
+      "prerequisites": [
+        "what-is-a-function",
+        "pc-rational-expressions"
+      ],
+      "common_errors": [
+        "Dropping the bracket in $R(x) - C(x)$ and subtracting only the first term of $C$",
+        "Forgetting to exclude zeros of the denominator from the domain of a quotient",
+        "Combining a value of $f$ at one input with a value of $g$ at a different input"
+      ],
+      "geogebra_prompt": "Plot $f$, $h$ and $g = f + h$ together and check that the heights add at each $x$",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 5,
+      "prereq_in_scope": [
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": [
+        "pc-rational-expressions"
+      ]
+    },
+    {
+      "id": "function-composition",
+      "title": "Composition of Functions",
+      "student_facing_name": "Feeding one function into another",
+      "summary": "Composition feeds the output of one function into the input of another: $(f \\circ g)(x) = f(g(x))$. Work from the inside out. Composition is not commutative — $f \\circ g$ and $g \\circ f$ are usually different functions. This topic is the one the chain rule depends on entirely, so it is worth being fluent at spotting the inside and the outside function.",
+      "notation": [
+        "$(f \\circ g)(x) = f(g(x))$",
+        "inside function",
+        "outside function"
+      ],
+      "method_steps": [
+        "Identify which function is applied first — that is the inside function",
+        "Evaluate the inside function at $x$",
+        "Substitute that whole expression wherever the outside function has its variable",
+        "Simplify",
+        "For the domain, keep only inputs the inside function accepts whose outputs the outside function also accepts"
+      ],
+      "worked_examples": [
+        {
+          "problem": "With $f(u) = 2u^4 + 5$ and $u = g(x) = 2\\sqrt{x}$, find $(f \\circ g)(1)$.",
+          "answer": "$g(1) = 2$, so $(f \\circ g)(1) = f(2) = 2(16) + 5 = 37$.",
+          "context": "the same pairing reappears in the chain rule lecture, which is why it is set up this way here"
+        }
+      ],
+      "applied_contexts": [
+        "a cost that depends on quantity, which itself depends on time"
+      ],
+      "prerequisites": [
+        "what-is-a-function"
+      ],
+      "common_errors": [
+        "Computing $g(f(x))$ when $f(g(x))$ was asked for",
+        "Substituting only into the first occurrence of the variable",
+        "Multiplying the two functions instead of composing them"
+      ],
+      "geogebra_prompt": "Show a value passing through $g$ and then through $f$, with both intermediate outputs marked",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 6,
+      "prereq_in_scope": [
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "transformations-of-graphs",
+      "title": "Translations, Stretches and Reflections",
+      "student_facing_name": "Shifting, stretching and flipping a graph",
+      "summary": "Small changes to a formula move its graph in predictable ways. Adding a constant outside the function shifts it vertically; adding one inside shifts it horizontally, and in the opposite direction to the sign. Multiplying outside stretches or compresses vertically; multiplying inside does the same horizontally, again the other way round. Negative multipliers reflect. Once these are known, a great many graphs can be drawn from a handful of remembered shapes.",
+      "notation": [
+        "$y = f(x) + k$ — shift up by $k$",
+        "$y = f(x + h)$ — shift left by $h$",
+        "$y = c\\,f(x)$ — $c > 1$ stretches vertically, $c < 1$ compresses vertically",
+        "$y = f(cx)$ — $c > 1$ compresses horizontally, $c < 1$ stretches horizontally",
+        "$y = -f(x)$ — reflect across the $x$-axis",
+        "$y = f(-x)$ — reflect across the $y$-axis"
+      ],
+      "method_steps": [
+        "Identify the base function whose shape you already know",
+        "Deal with changes inside the bracket first — these act horizontally and in reverse",
+        "Then changes outside — these act vertically and in the direction you expect",
+        "Apply reflections wherever a minus sign appears",
+        "Sketch by moving a few landmark points of the base graph rather than plotting from scratch"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Describe how the graph of $y = -f(x - 2) + 3$ relates to the graph of $y = f(x)$.",
+          "answer": "Shift right by 2, reflect across the $x$-axis, then shift up by 3.",
+          "context": "inside first (the $-2$ moves it right, not left), then the reflection, then the vertical shift"
+        }
+      ],
+      "applied_contexts": [
+        "recognising a shifted parabola in a cost model",
+        "sketching quickly in an exam"
+      ],
+      "prerequisites": [
+        "elementary-function-families",
+        "function-composition"
+      ],
+      "common_errors": [
+        "Shifting left for $f(x - 2)$ instead of right — inside changes go the opposite way",
+        "Confusing $-f(x)$ with $f(-x)$",
+        "Applying the outside change before the inside one"
+      ],
+      "geogebra_prompt": "Put sliders on $h$, $k$ and $c$ in $y = c\\,f(x + h) + k$ and watch the graph move",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 7,
+      "prereq_in_scope": [
+        "elementary-function-families",
+        "function-composition"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "trigonometric-functions",
+      "title": "Angles, Radians and the Trigonometric Functions",
+      "student_facing_name": "Radians and the trig functions",
+      "summary": "Angles in calculus are measured in radians, not degrees: a full turn is $2\\pi$ radians, a half turn is $\\pi$, and one radian is about $57.3^\\circ$. The lecture defines $\\sin$, $\\cos$ and $\\tan$ first from a right-angled triangle and then, for any angle at all, from a point on a circle. Every later limit and derivative involving trig functions assumes radians.",
+      "notation": [
+        "$2\\pi$ radians $= 360^\\circ$",
+        "$\\pi$ radians $= 180^\\circ$",
+        "$1$ radian $= \\left(\\frac{180}{\\pi}\\right)^\\circ \\approx 57.3^\\circ$",
+        "$\\sin\\theta$, $\\cos\\theta$, $\\tan\\theta$"
+      ],
+      "method_steps": [
+        "Convert degrees to radians by multiplying by $\\pi/180$; convert back by multiplying by $180/\\pi$",
+        "For an acute angle in a right-angled triangle, use opposite, adjacent and hypotenuse",
+        "For any angle, place it at the centre of a circle and read the coordinates of the point where it cuts the circle",
+        "$\\cos$ is the horizontal coordinate, $\\sin$ the vertical, and $\\tan$ their ratio",
+        "Keep the calculator in radian mode"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Convert $60^\\circ$ to radians.",
+          "answer": "$60 \\times \\frac{\\pi}{180} = \\frac{\\pi}{3}$",
+          "context": "about $1.047$ radians"
+        }
+      ],
+      "applied_contexts": [
+        "periodic quantities",
+        "the Sandwich Theorem limit $\\lim_{\\theta \\to 0}\\sin\\theta = 0$ later in the course"
+      ],
+      "prerequisites": [
+        "what-is-a-function",
+        "elementary-function-families"
+      ],
+      "common_errors": [
+        "Leaving the calculator in degree mode",
+        "Using triangle definitions for angles bigger than $90^\\circ$ instead of the circle definition",
+        "Writing $\\sin x$ as $\\sin \\times x$"
+      ],
+      "geogebra_prompt": "Move a point round a unit circle and watch $\\sin$ and $\\cos$ read off as the two coordinates",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 8,
+      "prereq_in_scope": [
+        "what-is-a-function",
+        "elementary-function-families"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "cost-revenue-profit-functions",
+      "title": "Cost, Revenue, Demand and Profit Functions",
+      "student_facing_name": "The business functions this course keeps using",
+      "summary": "The economic vocabulary the course returns to again and again. The demand function $p = D(x)$ gives the price at which $x$ items sell. Revenue is quantity times price, $R(x) = x\\,D(x)$. Cost $C(x)$ is whatever production costs. Profit is the difference, $P(x) = R(x) - C(x)$. Every optimisation and marginal-analysis problem later in the course is built on these four.",
+      "notation": [
+        "$p = D(x)$ demand",
+        "$R(x) = x\\,p(x) = x\\,D(x)$ revenue",
+        "$C(x)$ cost",
+        "$P(x) = R(x) - C(x)$ profit"
+      ],
+      "method_steps": [
+        "Read off which quantity is which — price per unit, number of units, total cost",
+        "Build revenue as quantity times price, not price alone",
+        "If a demand function is given, substitute it into $R(x) = x\\,D(x)$",
+        "Form profit as revenue minus cost, keeping the whole cost expression in brackets",
+        "Simplify, and check the units make sense"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Demand is $p(x) = -0.27x + 51$ and cost is $C(x) = 2.23x^2 + 3.5x + 85$ (in thousands of dollars). Write $R(x)$ and $P(x)$.",
+          "answer": "$R(x) = x(-0.27x + 51) = -0.27x^2 + 51x$ and $P(x) = -0.27x^2 + 51x - (2.23x^2 + 3.5x + 85) = -2.5x^2 + 47.5x - 85$.",
+          "context": "note the bracket around the whole cost function before subtracting"
+        },
+        {
+          "problem": "Cost is $C(x) = 2x^2 + 3x + 5$ and demand is $p(x) = 5 - 2x$. Write the profit function.",
+          "answer": "$R(x) = x(5 - 2x) = 5x - 2x^2$, so $P(x) = 5x - 2x^2 - (2x^2 + 3x + 5) = -4x^2 + 2x - 5$.",
+          "context": ""
+        }
+      ],
+      "applied_contexts": [
+        "break-even analysis",
+        "profit maximisation later in the course",
+        "marginal cost and marginal revenue"
+      ],
+      "prerequisites": [
+        "combining-functions",
+        "elementary-function-families"
+      ],
+      "common_errors": [
+        "Setting revenue equal to the price rather than price times quantity",
+        "Dropping the bracket when subtracting the cost function",
+        "Mixing up $p(x)$ the price and $P(x)$ the profit — the course uses both letters"
+      ],
+      "geogebra_prompt": "Plot $R(x)$ and $C(x)$ on the same axes and mark where they cross (break-even) and where the gap is widest (maximum profit)",
+      "deck": 1,
+      "unit_title": "Functions",
+      "order": 9,
+      "prereq_in_scope": [
+        "combining-functions",
+        "elementary-function-families"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "limit-motivation-and-informal",
+      "title": "What a Limit Is, Informally",
+      "student_facing_name": "The idea of a limit",
+      "summary": "A limit answers the question: as $x$ gets close to $c$, what value does $f(x)$ get close to? Crucially, the value of $f$ at $c$ itself is irrelevant — the function need not even be defined there. The lecture motivates this with a purification cost $C(x) = \\frac{8x^2 - 636x - 320}{x^2 - 68x - 960}$, which gives $\\frac{0}{0}$ at $x = 80$ yet clearly heads for $7$, and with $f(x) = \\frac{x^2-1}{x-1}$, which equals $x + 1$ everywhere except at $x = 1$.",
+      "notation": [
+        "$\\lim_{x \\to c} f(x) = L$",
+        "$x \\to c$",
+        "the hole in a graph"
+      ],
+      "method_steps": [
+        "Ask what happens near $c$, not at $c$",
+        "Try substituting; if you get an ordinary number, that is usually the limit",
+        "If you get $\\frac{0}{0}$, the expression can almost always be simplified first",
+        "Cancel the common factor and substitute again",
+        "State the limit as a number, and remember it may differ from $f(c)$ or exist where $f(c)$ does not"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\lim_{x \\to 1} \\frac{x^2 - 1}{x - 1}$.",
+          "answer": "$2$",
+          "context": "$\\frac{(x-1)(x+1)}{x-1} = x + 1$ for every $x \\ne 1$, so the function heads for $1 + 1 = 2$ even though $f(1)$ is $\\frac{0}{0}$ and undefined"
+        },
+        {
+          "problem": "For the purification cost $C(x) = \\frac{8x^2 - 636x - 320}{x^2 - 68x - 960}$, find $\\lim_{x \\to 80} C(x)$.",
+          "answer": "$7$",
+          "context": "factor: $8x^2 - 636x - 320 = 4(2x+1)(x-80)$ and $x^2 - 68x - 960 = (x-80)(x+12)$. Cancel $(x-80)$ to get $\\frac{4(2x+1)}{x+12}$, then substitute $80$: $\\frac{4(161)}{92} = 7$."
+        }
+      ],
+      "applied_contexts": [
+        "the cost of removing the last percent of a pollutant",
+        "instantaneous speed, later in the course"
+      ],
+      "prerequisites": [
+        "what-is-a-function",
+        "pc-factoring"
+      ],
+      "common_errors": [
+        "Concluding the limit does not exist as soon as substitution gives $\\frac{0}{0}$",
+        "Insisting the limit must equal $f(c)$",
+        "Cancelling a factor without noting the cancellation is only valid for $x \\ne c$"
+      ],
+      "geogebra_prompt": "Show a graph with a hole at $x = c$ and a point sliding toward the hole from both sides",
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 10,
+      "prereq_in_scope": [
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": [
+        "pc-factoring"
+      ]
+    },
+    {
+      "id": "limits-of-constant-and-identity",
+      "title": "Limits of the Simplest Functions",
+      "student_facing_name": "The two limits everything else is built from",
+      "summary": "Before the limit laws can be used, two starting limits are needed. For the constant function $f(x) = b$, the output never changes, so $\\lim_{x \\to a} b = b$. For the identity function $f(x) = x$, the output is the input, so $\\lim_{x \\to a} x = a$. Every polynomial limit in the course is these two combined by the limit laws.",
+      "notation": [
+        "$\\lim_{x \\to a} b = b$",
+        "$\\lim_{x \\to a} x = a$"
+      ],
+      "method_steps": [
+        "Recognise whether the function is constant or the identity",
+        "For a constant, the limit is that same constant whatever $a$ is",
+        "For the identity, the limit is $a$ itself",
+        "Use these as the base cases when breaking a harder limit apart"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\lim_{x \\to 3} 5$.",
+          "answer": "$5$",
+          "context": "the function is the constant $5$; where $x$ is going makes no difference"
+        },
+        {
+          "problem": "Find $\\lim_{x \\to -1} x$.",
+          "answer": "$-1$",
+          "context": ""
+        }
+      ],
+      "applied_contexts": [],
+      "prerequisites": [
+        "limit-motivation-and-informal"
+      ],
+      "common_errors": [
+        "Writing $\\lim_{x \\to 3} 5 = 3$ — substituting into the arrow rather than the function"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 11,
+      "prereq_in_scope": [
+        "limit-motivation-and-informal"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "limits-that-fail-to-exist",
+      "title": "When a Limit Does Not Exist",
+      "student_facing_name": "Limits that do not exist",
+      "summary": "Not every limit exists. The lecture gives the three ways it can fail at a point: the function approaches different values from the left and from the right (a jump); it grows without bound; or it oscillates and never settles. In each case the answer is 'does not exist', abbreviated DNE — and that is a complete answer, not a failure to finish.",
+      "notation": [
+        "DNE",
+        "$\\lim_{x \\to 0} \\frac{x}{|x|}$",
+        "$\\lim_{x \\to 0} \\frac{1}{x}$"
+      ],
+      "method_steps": [
+        "Approach from the left and record the value the function heads for",
+        "Approach from the right and do the same",
+        "If the two differ, the two-sided limit does not exist",
+        "If the values grow without bound, the limit does not exist as a number",
+        "If the function keeps oscillating, the limit does not exist"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Does $\\lim_{x \\to 0} \\frac{x}{|x|}$ exist?",
+          "answer": "No.",
+          "context": "for $x > 0$ the function equals $1$; for $x < 0$ it equals $-1$. The one-sided limits are $1$ and $-1$, so the two-sided limit does not exist."
+        }
+      ],
+      "applied_contexts": [
+        "a price that jumps at a threshold quantity"
+      ],
+      "prerequisites": [
+        "limit-motivation-and-informal"
+      ],
+      "common_errors": [
+        "Answering $0$ because the two sides 'cancel out'",
+        "Treating $\\infty$ as a number and calling that the limit",
+        "Assuming a limit must exist because the formula looks harmless"
+      ],
+      "geogebra_prompt": "Show $x/|x|$ with the left and right branches at different heights",
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 12,
+      "prereq_in_scope": [
+        "limit-motivation-and-informal"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "limit-laws",
+      "title": "The Limit Laws",
+      "student_facing_name": "The rules for breaking a limit apart",
+      "summary": "Limits distribute over the ordinary operations. The limit of a sum is the sum of the limits, and the same holds for differences, products, quotients (provided the bottom limit is not zero), constant multiples, powers and roots. This is what lets a complicated limit be broken into pieces small enough to use the two base limits on.",
+      "notation": [
+        "sum and difference rules",
+        "product and constant multiple rules",
+        "quotient rule (denominator limit $\\ne 0$)",
+        "power and root rules"
+      ],
+      "method_steps": [
+        "Break the expression at its top-level operation",
+        "Apply the matching law to split the limit",
+        "Keep splitting until only constants and $x$ remain",
+        "Evaluate each base limit",
+        "Reassemble — and before using the quotient rule, check the denominator's limit is not zero"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\lim_{x \\to 2}(x^2 - 3x)$.",
+          "answer": "$-2$",
+          "context": "difference rule gives $\\lim x^2 - \\lim 3x = (\\lim x)^2 - 3(\\lim x) = 4 - 6 = -2$"
+        },
+        {
+          "problem": "Find $\\lim_{x \\to 1}\\sqrt{1 - (x-1)^2}$.",
+          "answer": "$1$",
+          "context": "the root rule moves the limit inside: $\\sqrt{1 - (1-1)^2} = \\sqrt{1} = 1$"
+        },
+        {
+          "problem": "Find $\\lim_{x \\to 3}\\sqrt{10 - x}$.",
+          "answer": "$\\sqrt{7}$",
+          "context": ""
+        }
+      ],
+      "applied_contexts": [],
+      "prerequisites": [
+        "limits-of-constant-and-identity"
+      ],
+      "common_errors": [
+        "Using the quotient rule when the denominator's limit is zero",
+        "Splitting a limit that does not exist into pieces that do",
+        "Losing the constant when applying the constant multiple rule"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 13,
+      "prereq_in_scope": [
+        "limits-of-constant-and-identity"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "limits-of-polynomials-and-rationals",
+      "title": "Limits of Polynomials and Rational Functions",
+      "student_facing_name": "Limits you can do by substituting",
+      "summary": "For a polynomial, the limit as $x \\to c$ is just the value at $c$ — substitution always works. For a rational function, substitution works too, provided the denominator is not zero at $c$. This is the first thing to try on any limit; only if it produces $\\frac{0}{0}$ does more work become necessary.",
+      "notation": [
+        "$\\lim_{x \\to c} P(x) = P(c)$",
+        "$\\lim_{x \\to c} \\frac{P(x)}{Q(x)} = \\frac{P(c)}{Q(c)}$ when $Q(c) \\ne 0$"
+      ],
+      "method_steps": [
+        "Substitute $c$ into the expression",
+        "If the result is an ordinary number, that is the limit and you are done",
+        "If the denominator comes out zero but the numerator does not, the limit does not exist as a number",
+        "If both come out zero, go on to the indeterminate-form techniques"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\lim_{x \\to 1}(x^2 + 3x + 1)$.",
+          "answer": "$5$",
+          "context": "polynomial, so substitute: $1 + 3 + 1 = 5$"
+        },
+        {
+          "problem": "Find $\\lim_{x \\to -1} \\frac{x^3 + 4x^2 - 3}{x^2 + 5}$.",
+          "answer": "$0$",
+          "context": "denominator at $-1$ is $6 \\ne 0$, so substitute: numerator is $-1 + 4 - 3 = 0$, giving $\\frac{0}{6} = 0$"
+        }
+      ],
+      "applied_contexts": [],
+      "prerequisites": [
+        "limit-laws",
+        "elementary-function-families"
+      ],
+      "common_errors": [
+        "Doing elaborate algebra on a limit that substitution would have settled at once",
+        "Reporting $\\frac{0}{6}$ as undefined — it is $0$; it is $\\frac{6}{0}$ that is the problem"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 14,
+      "prereq_in_scope": [
+        "limit-laws",
+        "elementary-function-families"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "limits-indeterminate-forms",
+      "title": "Limits Giving 0/0: Factoring and Rationalizing",
+      "student_facing_name": "What to do when substituting gives 0/0",
+      "summary": "When substitution gives $\\frac{0}{0}$ the expression is telling you there is a common factor to remove, not that the limit fails. Two techniques do almost all the work in this course: factor the top and bottom and cancel the offending factor, or — when a square root is involved — multiply by the conjugate to clear it. The lecture warns explicitly that these two, cancellation and rationalization, are the ones to have ready.",
+      "notation": [
+        "$\\frac{0}{0}$ (indeterminate)",
+        "conjugate: multiply by $\\frac{\\sqrt{a} + \\sqrt{b}}{\\sqrt{a}+\\sqrt{b}}$"
+      ],
+      "method_steps": [
+        "Substitute first and confirm you really have $\\frac{0}{0}$",
+        "If $x = c$ makes both top and bottom vanish, then $(x - c)$ is a factor of each — that is how you know what to look for",
+        "Factor and cancel $(x - c)$",
+        "If there is a square root, multiply top and bottom by the conjugate instead, and simplify",
+        "Substitute again into the simplified expression"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\lim_{x \\to 80} \\frac{8x^2 - 636x - 320}{x^2 - 68x - 960}$.",
+          "answer": "$7$",
+          "context": "$= \\lim \\frac{4(2x+1)(x-80)}{(x-80)(x+12)} = \\lim \\frac{4(2x+1)}{x+12} = \\frac{644}{92} = 7$"
+        },
+        {
+          "problem": "Find $\\lim_{h \\to 0} \\frac{\\sqrt{9+h} - \\sqrt{9}}{h}$.",
+          "answer": "$\\frac{1}{6}$",
+          "context": "multiply by $\\frac{\\sqrt{9+h}+\\sqrt{9}}{\\sqrt{9+h}+\\sqrt{9}}$; the top becomes $h$, which cancels, leaving $\\frac{1}{\\sqrt{9+h}+3} \\to \\frac{1}{6}$"
+        }
+      ],
+      "applied_contexts": [
+        "every derivative computed from the definition"
+      ],
+      "prerequisites": [
+        "limits-of-polynomials-and-rationals",
+        "pc-factoring"
+      ],
+      "common_errors": [
+        "Cancelling terms rather than factors",
+        "Multiplying by the conjugate on the top only and forgetting the bottom",
+        "Expanding the conjugate product instead of using the difference of two squares"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 15,
+      "prereq_in_scope": [
+        "limits-of-polynomials-and-rationals"
+      ],
+      "prereq_outside_scope": [
+        "pc-factoring"
+      ]
+    },
+    {
+      "id": "sandwich-theorem",
+      "title": "The Sandwich Theorem",
+      "student_facing_name": "Trapping a limit between two others",
+      "summary": "If a function is trapped between two others that both head for the same value, it has no choice but to head there too. The lecture's use of this is $-|\\theta| \\le \\sin\\theta \\le |\\theta|$: both outer functions go to $0$ as $\\theta \\to 0$, so $\\lim_{\\theta \\to 0}\\sin\\theta = 0$. This is a result Thomas' Calculus covers but the outline does not list separately, and it comes up again when continuity of the trig functions is claimed.",
+      "notation": [
+        "$g(x) \\le f(x) \\le h(x)$",
+        "$\\lim g = \\lim h = L \\Rightarrow \\lim f = L$"
+      ],
+      "method_steps": [
+        "Find a function below and a function above that both bound the one you want",
+        "Check the inequality really holds near the point (it need not hold everywhere)",
+        "Take the limit of the lower bound and of the upper bound",
+        "If they agree, the trapped function has the same limit"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Show $\\lim_{\\theta \\to 0}\\sin\\theta = 0$.",
+          "answer": "$0$",
+          "context": "since $-|\\theta| \\le \\sin\\theta \\le |\\theta|$ and both $\\pm|\\theta| \\to 0$, the Sandwich Theorem forces $\\sin\\theta \\to 0$"
+        }
+      ],
+      "applied_contexts": [
+        "proving the trig functions are continuous at $0$"
+      ],
+      "prerequisites": [
+        "limit-laws",
+        "trigonometric-functions"
+      ],
+      "common_errors": [
+        "Using bounds that do not both tend to the same value",
+        "Forgetting the inequality only needs to hold near the point"
+      ],
+      "geogebra_prompt": "Plot $y = |x|$, $y = -|x|$ and $y = \\sin x$ together near the origin",
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 16,
+      "prereq_in_scope": [
+        "limit-laws",
+        "trigonometric-functions"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "epsilon-delta-definition",
+      "title": "The Precise Definition of a Limit",
+      "student_facing_name": "The precise ($\\epsilon$–$\\delta$) definition",
+      "summary": "The informal 'gets close to' is made exact. Distance on the number line is $|x_2 - x_1|$. Saying $\\lim_{x \\to c} f(x) = L$ means: however small a tolerance $\\epsilon > 0$ someone demands on the output, you can supply a tolerance $\\delta > 0$ on the input such that $0 < |x - c| < \\delta$ guarantees $|f(x) - L| < \\epsilon$. The lecture works this through concretely for $f(x) = 2x$ at $x = 1$ before stating it in general. The outline gives this a full session; the lecture deck for it is short, so treat it as an idea to understand rather than a technique to drill.",
+      "notation": [
+        "$|x_2 - x_1|$ as distance",
+        "$\\epsilon > 0$",
+        "$\\delta > 0$",
+        "$0 < |x - c| < \\delta \\Rightarrow |f(x) - L| < \\epsilon$"
+      ],
+      "method_steps": [
+        "Write the output requirement as $|f(x) - L| < \\epsilon$",
+        "Rewrite it in terms of $|x - c|$ using algebra",
+        "Read off how small $|x - c|$ has to be — that is your $\\delta$",
+        "State $\\delta$ in terms of $\\epsilon$, so it works for every tolerance, not just one",
+        "Note the strict $0 < |x - c|$: the point $x = c$ itself is deliberately excluded"
+      ],
+      "worked_examples": [
+        {
+          "problem": "For $f(x) = 2x$, how close must $x$ be to $1$ to force $|f(x) - 2| < 0.1$?",
+          "answer": "Within $0.05$ — that is, $\\delta = 0.05$.",
+          "context": "$|2x - 2| = 2|x - 1| < 0.1$ gives $|x - 1| < 0.05$. The same argument with a general $\\epsilon$ gives $\\delta = \\epsilon/2$, which is why any tolerance at all can be met."
+        }
+      ],
+      "applied_contexts": [
+        "manufacturing tolerance: how tightly must the input be controlled to keep the output within spec"
+      ],
+      "prerequisites": [
+        "limit-motivation-and-informal"
+      ],
+      "common_errors": [
+        "Choosing $\\delta$ for one particular $\\epsilon$ and stopping there",
+        "Getting the roles the wrong way round — $\\epsilon$ constrains the output, $\\delta$ the input",
+        "Forgetting that $x = c$ is excluded by the strict inequality $0 < |x - c|$"
+      ],
+      "geogebra_prompt": "Show an $\\epsilon$-band around $L$ on the $y$-axis and the $\\delta$-interval it forces around $c$ on the $x$-axis",
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 17,
+      "prereq_in_scope": [
+        "limit-motivation-and-informal"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "one-sided-limits",
+      "title": "One-Sided Limits",
+      "student_facing_name": "Approaching from the left and from the right",
+      "summary": "A one-sided limit restricts the approach to one direction: $\\lim_{x \\to c^+}f(x)$ comes in from above, $\\lim_{x \\to c^-}f(x)$ from below. The two-sided limit exists exactly when both one-sided limits exist and agree. One-sided limits are also what makes limits meaningful at the endpoint of a domain, where approach from one side is all there is.",
+      "notation": [
+        "$\\lim_{x \\to c^+} f(x)$ right-hand limit",
+        "$\\lim_{x \\to c^-} f(x)$ left-hand limit"
+      ],
+      "method_steps": [
+        "Decide which side you are approaching from",
+        "Use only the part of the rule that applies on that side — for a piecewise function, the relevant piece; for $|x|$, the relevant sign",
+        "Evaluate that one-sided limit",
+        "Repeat on the other side",
+        "The two-sided limit exists only if both exist and are equal"
+      ],
+      "worked_examples": [
+        {
+          "problem": "For $f(x) = \\frac{x}{|x|}$, find both one-sided limits at $0$.",
+          "answer": "$\\lim_{x \\to 0^+} f(x) = 1$ and $\\lim_{x \\to 0^-} f(x) = -1$.",
+          "context": "for $x > 0$, $|x| = x$ so $f(x) = 1$; for $x < 0$, $|x| = -x$ so $f(x) = -1$. They differ, so the two-sided limit does not exist."
+        },
+        {
+          "problem": "Find $\\lim_{x \\to 10^-}\\sqrt{10 - x}$ and $\\lim_{x \\to 10^+}\\sqrt{10-x}$.",
+          "answer": "$0$ from the left; from the right it does not exist.",
+          "context": "for $x > 10$ the expression under the root is negative, so the function is not defined there. $x = 10$ is a right endpoint of the domain, and the left-hand limit is the only one available."
+        }
+      ],
+      "applied_contexts": [
+        "a cost function whose rule changes at a threshold",
+        "behaviour at the edge of a feasible range"
+      ],
+      "prerequisites": [
+        "limits-that-fail-to-exist",
+        "what-is-a-function"
+      ],
+      "common_errors": [
+        "Using the wrong piece of a piecewise rule for the side being approached",
+        "Reading $c^-$ as 'a negative value of $c$' rather than 'from below'",
+        "Claiming the two-sided limit exists when only one side does"
+      ],
+      "geogebra_prompt": "Drag a point toward a jump discontinuity from each side and watch the output land on two different heights",
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 18,
+      "prereq_in_scope": [
+        "limits-that-fail-to-exist",
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "continuity-at-a-point",
+      "title": "Continuity at a Point",
+      "student_facing_name": "What it means for a function to be continuous",
+      "summary": "Informally, a continuous function is one whose graph can be drawn without lifting the pen. Precisely, $f$ is continuous at $c$ when $\\lim_{x \\to c} f(x) = f(c)$ — which quietly demands three things at once: $f(c)$ exists, the limit exists, and the two are equal. At an endpoint of the domain the appropriate one-sided version is used instead.",
+      "notation": [
+        "$\\lim_{x \\to c} f(x) = f(c)$",
+        "continuous on $[a,b]$",
+        "continuous on $(a,b)$"
+      ],
+      "method_steps": [
+        "Check $f(c)$ is defined",
+        "Check $\\lim_{x \\to c} f(x)$ exists — both one-sided limits present and equal",
+        "Check the two numbers are the same",
+        "If all three hold, $f$ is continuous at $c$; if any fails, it is not",
+        "At an endpoint, use the one-sided limit from inside the domain"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Is $f(x) = \\frac{1}{x}$ continuous at $x = 0$?",
+          "answer": "No.",
+          "context": "$f(0)$ is not defined, so the first condition already fails — whatever the limit does"
+        },
+        {
+          "problem": "On what interval is $f(x) = \\sqrt{4 - x^2}$ continuous?",
+          "answer": "On $[-2, 2]$.",
+          "context": "continuous at every interior point, and one-sidedly continuous at the two endpoints $x = -2$ and $x = 2$"
+        }
+      ],
+      "applied_contexts": [
+        "a quantity that changes smoothly rather than jumping"
+      ],
+      "prerequisites": [
+        "one-sided-limits",
+        "limits-of-polynomials-and-rationals"
+      ],
+      "common_errors": [
+        "Checking the limit exists but forgetting to compare it with $f(c)$",
+        "Assuming a formula that looks tidy must be continuous everywhere",
+        "Requiring a two-sided limit at an endpoint, where only one side exists"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 19,
+      "prereq_in_scope": [
+        "one-sided-limits",
+        "limits-of-polynomials-and-rationals"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "types-of-discontinuity",
+      "title": "Removable and Non-Removable Discontinuities",
+      "student_facing_name": "Kinds of break in a graph",
+      "summary": "Discontinuities come in kinds. A removable one is a single missing or misplaced point: the limit exists, so redefining the function at that one input repairs it. A jump, where the two one-sided limits differ, and an infinite discontinuity, where the function blows up, cannot be repaired by any choice of value. The lecture's example of a repair is $f(x) = \\frac{\\sin x}{x}$, undefined at $0$ but with limit $1$ there, extended to a continuous $F$ by setting $F(0) = 1$.",
+      "notation": [
+        "removable discontinuity",
+        "jump discontinuity",
+        "infinite discontinuity",
+        "continuous extension"
+      ],
+      "method_steps": [
+        "Compute both one-sided limits at the suspect point",
+        "If they agree and are finite, the discontinuity is removable — define $f$ there to equal that common value",
+        "If they are finite but different, it is a jump, and nothing can be done",
+        "If either is infinite, it is an infinite discontinuity",
+        "Say which kind it is; the classification is part of the answer"
+      ],
+      "worked_examples": [
+        {
+          "problem": "$f(x) = \\frac{\\sin x}{x}$ is undefined at $x = 0$. Can it be made continuous there?",
+          "answer": "Yes — define $F(x) = \\frac{\\sin x}{x}$ for $x \\ne 0$ and $F(0) = 1$.",
+          "context": "$\\lim_{x \\to 0}\\frac{\\sin x}{x} = 1$, so filling in the single missing point with $1$ repairs it. $f$ itself remains discontinuous at $0$; it is the extended $F$ that is continuous."
+        },
+        {
+          "problem": "Classify the discontinuity of $f(x) = \\frac{x}{|x|}$ at $0$.",
+          "answer": "A jump, and non-removable.",
+          "context": "the one-sided limits are $1$ and $-1$; no single value at $0$ can bridge them"
+        }
+      ],
+      "applied_contexts": [
+        "a tariff that steps up at a threshold",
+        "a data series with one missing reading"
+      ],
+      "prerequisites": [
+        "continuity-at-a-point",
+        "one-sided-limits"
+      ],
+      "common_errors": [
+        "Calling a jump removable because the function is defined on both sides",
+        "Saying the original function is continuous after the repair — it is the extended function that is",
+        "Skipping the classification and only saying 'discontinuous'"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 20,
+      "prereq_in_scope": [
+        "continuity-at-a-point",
+        "one-sided-limits"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "continuity-properties-and-ivt",
+      "title": "Properties of Continuous Functions and the Intermediate Value Theorem",
+      "student_facing_name": "What continuous functions let you do",
+      "summary": "Continuity survives arithmetic and composition: sums, differences, products, quotients (where the denominator is not zero) and compositions of continuous functions are continuous. So polynomials are continuous everywhere, rational functions everywhere their denominator is not zero, and $\\sin$, $\\cos$ and $\\tan$ wherever they are defined. The Intermediate Value Theorem then says a function continuous on $[a,b]$ takes every value between $f(a)$ and $f(b)$ — which is the precise version of 'the graph has no breaks'.",
+      "notation": [
+        "continuous on $[a,b]$",
+        "Intermediate Value Theorem",
+        "connected graph"
+      ],
+      "method_steps": [
+        "Recognise the function as built from known continuous pieces",
+        "Name the construction: sum, product, quotient or composition",
+        "Exclude the points where a denominator vanishes or a root goes negative",
+        "To use the IVT, check continuity on a closed interval $[a,b]$ first",
+        "Then any value between $f(a)$ and $f(b)$ is attained somewhere inside"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Where is $g(x) = 3x^7 - 7x^3 + 2x + 1$ continuous?",
+          "answer": "Everywhere.",
+          "context": "a polynomial, so built by sums and products from $x$ and constants, all of which are continuous"
+        },
+        {
+          "problem": "Where is $f(x) = |x|$ continuous?",
+          "answer": "Everywhere.",
+          "context": "including at $x = 0$, where both one-sided limits are $0$ and $f(0) = 0$ — note it is continuous there even though it has a corner"
+        }
+      ],
+      "applied_contexts": [
+        "showing a break-even point must exist between a loss and a profit"
+      ],
+      "prerequisites": [
+        "continuity-at-a-point",
+        "function-composition"
+      ],
+      "common_errors": [
+        "Using the IVT on an interval where the function is not continuous",
+        "Expecting the IVT to say where the value is reached — it says only that it is",
+        "Assuming a corner means a break; $|x|$ is continuous at $0$"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 21,
+      "prereq_in_scope": [
+        "continuity-at-a-point",
+        "function-composition"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "limits-at-infinity",
+      "title": "Limits at Infinity",
+      "student_facing_name": "What happens as $x$ gets very large",
+      "summary": "Here $x$ runs off to $+\\infty$ or $-\\infty$ and the question is what the outputs settle down to. The two facts everything rests on are $\\lim_{x \\to \\pm\\infty}\\frac{1}{x} = 0$ and $\\lim_{x \\to \\pm\\infty} k = k$. For a rational function, dividing top and bottom by the highest power of $x$ turns every remaining term into something of the form $\\frac{1}{x^n}$, which vanishes. A difference of the form $\\infty - \\infty$ has to be rearranged first, usually by the conjugate trick.",
+      "notation": [
+        "$\\lim_{x \\to \\infty} f(x) = L$",
+        "$\\lim_{x \\to -\\infty} f(x) = L$",
+        "$\\lim_{x \\to \\pm\\infty}\\frac{1}{x} = 0$",
+        "$\\infty - \\infty$ (indeterminate)"
+      ],
+      "method_steps": [
+        "For a rational function, find the highest power of $x$ anywhere in the expression",
+        "Divide every term, top and bottom, by that power",
+        "Send each $\\frac{1}{x^n}$ to zero",
+        "Read off what is left",
+        "For an $\\infty - \\infty$ form involving a root, multiply by the conjugate over itself first"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\lim_{x \\to \\infty}\\left(x - \\sqrt{x^2 + 16}\\right)$.",
+          "answer": "$0$",
+          "context": "this is $\\infty - \\infty$, so multiply by $\\frac{x + \\sqrt{x^2+16}}{x + \\sqrt{x^2+16}}$ to get $\\frac{x^2 - (x^2+16)}{x + \\sqrt{x^2+16}} = \\frac{-16}{x + \\sqrt{x^2+16}}$, whose denominator grows without bound, so the whole thing tends to $0$"
+        }
+      ],
+      "applied_contexts": [
+        "long-run average cost",
+        "a population approaching its carrying capacity"
+      ],
+      "prerequisites": [
+        "limit-laws",
+        "limits-indeterminate-forms"
+      ],
+      "common_errors": [
+        "Treating $\\infty - \\infty$ as $0$ without rearranging",
+        "Dividing by the highest power in the denominator only",
+        "Assuming a limit at $+\\infty$ tells you the limit at $-\\infty$"
+      ],
+      "geogebra_prompt": "Zoom out on $y = 1/x$ and watch the curve flatten toward the $x$-axis in both directions",
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 22,
+      "prereq_in_scope": [
+        "limit-laws",
+        "limits-indeterminate-forms"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "infinite-limits",
+      "title": "Infinite Limits",
+      "student_facing_name": "When the function itself blows up",
+      "summary": "The other way round from limits at infinity: $x$ approaches an ordinary number but the outputs grow without bound. Writing $\\lim_{x \\to 0^+}\\frac{1}{x} = +\\infty$ is a description of behaviour, not a claim that the limit is a number — the limit does not exist. The sign usually depends on which side you come from, so these are almost always computed one side at a time.",
+      "notation": [
+        "$\\lim_{x \\to c^+} f(x) = +\\infty$",
+        "$\\lim_{x \\to c^-} f(x) = -\\infty$"
+      ],
+      "method_steps": [
+        "Find where the denominator is zero",
+        "Approach from one side and decide the sign of the denominator there",
+        "The numerator's sign, divided by that, gives the direction of blow-up",
+        "Repeat on the other side — the signs often differ",
+        "Report each side separately, and say the two-sided limit does not exist"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find the one-sided limits of $\\frac{1}{x+2}$ at $x = -2$.",
+          "answer": "$\\lim_{x \\to -2^-}\\frac{1}{x+2} = -\\infty$ and $\\lim_{x \\to -2^+}\\frac{1}{x+2} = +\\infty$.",
+          "context": "just left of $-2$ the denominator is a small negative number; just right of it, a small positive one"
+        }
+      ],
+      "applied_contexts": [
+        "a cost model that becomes unbounded as a limit of purity is approached"
+      ],
+      "prerequisites": [
+        "one-sided-limits",
+        "limits-at-infinity"
+      ],
+      "common_errors": [
+        "Writing $=\\infty$ and calling the limit existent",
+        "Getting the sign wrong by not checking which side of the zero you are on",
+        "Confusing 'limit at infinity' with 'infinite limit' — they are opposite situations"
+      ],
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 23,
+      "prereq_in_scope": [
+        "one-sided-limits",
+        "limits-at-infinity"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "asymptotes",
+      "title": "Horizontal and Vertical Asymptotes",
+      "student_facing_name": "Asymptotes: the lines a graph hugs",
+      "summary": "Asymptotes are the graphical reading of the two previous topics. A horizontal asymptote $y = b$ records that $f(x) \\to b$ as $x \\to +\\infty$ or $-\\infty$. A vertical asymptote $x = a$ records that $f(x) \\to \\pm\\infty$ as $x \\to a$ from one side or the other. Finding the asymptotes of a rational function is a matter of computing those limits.",
+      "notation": [
+        "horizontal asymptote $y = b$",
+        "vertical asymptote $x = a$"
+      ],
+      "method_steps": [
+        "For horizontal asymptotes, take the limits as $x \\to +\\infty$ and $x \\to -\\infty$",
+        "Any finite value obtained gives a horizontal asymptote; the two directions can give different ones",
+        "For vertical asymptotes, find where the denominator is zero and the numerator is not",
+        "Check the one-sided limits there to confirm blow-up and record its direction",
+        "State the asymptotes as equations of lines, not as numbers"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find the asymptotes of $y = \\frac{1}{x}$.",
+          "answer": "Horizontal: $y = 0$. Vertical: $x = 0$.",
+          "context": "$\\lim_{x \\to \\pm\\infty}\\frac{1}{x} = 0$ gives the horizontal one; $\\lim_{x \\to 0^+} = +\\infty$ and $\\lim_{x \\to 0^-} = -\\infty$ give the vertical one"
+        }
+      ],
+      "applied_contexts": [
+        "a long-run price floor",
+        "a capacity a process can never exceed"
+      ],
+      "prerequisites": [
+        "limits-at-infinity",
+        "infinite-limits"
+      ],
+      "common_errors": [
+        "Writing the asymptote as '$0$' rather than as the line $y = 0$",
+        "Assuming a graph can never cross a horizontal asymptote — it can",
+        "Declaring a vertical asymptote at every zero of the denominator, including ones that cancel"
+      ],
+      "geogebra_prompt": "Plot a rational function with its asymptotes drawn as dashed lines",
+      "deck": 2,
+      "unit_title": "Limits and Continuity",
+      "order": 24,
+      "prereq_in_scope": [
+        "limits-at-infinity",
+        "infinite-limits"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "average-rate-of-change",
+      "title": "Average Rate of Change and Average Speed",
+      "student_facing_name": "How fast something changes on average over an interval",
+      "summary": "The lecture opens with a car travelling at constant speed, where distance is $y = vt$ and the speed can be read off the graph as a slope. It then drops a ball from a tower, where $y = 16t^2$ feet and the speed is no longer constant, so only an *average* speed over an interval makes sense. Average rate of change is the change in the output divided by the change in the input, and geometrically it is the slope of the line joining two points on the graph.",
+      "notation": [
+        "average speed $= \\dfrac{\\text{distance covered}}{\\text{time taken}}$",
+        "$\\dfrac{f(t_2) - f(t_1)}{t_2 - t_1}$",
+        "$\\dfrac{f(x_0 + h) - f(x_0)}{h}$ over $[x_0,\\, x_0 + h]$"
+      ],
+      "method_steps": [
+        "Identify the two endpoints of the interval",
+        "Evaluate the function at both endpoints",
+        "Divide the change in output by the change in input",
+        "If the interval is written $[x_0,\\, x_0+h]$, the denominator is simply $h$",
+        "Say what the number means in the units of the problem"
+      ],
+      "worked_examples": [
+        {
+          "problem": "A ball is dropped from a tower and falls $y = 16t^2$ feet in $t$ seconds. Find its average speed over $[1, 2]$, then over $[1, 1.1]$, $[1, 1.01]$ and $[1, 1.0001]$.",
+          "answer": "$48$, then $33.6$, then $32.16$, then $32.0016$ feet per second.",
+          "context": "the lecture's central table. Average speed over $[t_0, t_0+h]$ is $16\\left(\\dfrac{(t_0+h)^2 - t_0^2}{h}\\right)$. The numbers are visibly closing in on $32$, which is the point of the exercise — it sets up the instantaneous rate in the next topic."
+        },
+        {
+          "problem": "A fly population is $150$ on day $22$ and $340$ on day $45$. Find the average rate of change of the population.",
+          "answer": "$\\dfrac{340 - 150}{45 - 22} = \\dfrac{190}{23} \\approx 8.3$ flies per day.",
+          "context": "the professor's biology example; the units matter as much as the number"
+        }
+      ],
+      "applied_contexts": [
+        "average speed of a falling body",
+        "average growth rate of a population",
+        "average change in consumer expenditure per unit sold"
+      ],
+      "prerequisites": [
+        "what-is-a-function",
+        "pc-slope-coordinate-geometry"
+      ],
+      "common_errors": [
+        "Subtracting the endpoints in one order in the numerator and the other order in the denominator",
+        "Dividing by the endpoint rather than by the length of the interval",
+        "Reporting a bare number with no units",
+        "Treating the average speed over an interval as the speed at one instant in it"
+      ],
+      "geogebra_prompt": "Plot $y = 16t^2$ and a chord from $t = 1$ to a draggable second point; display the chord's slope as the point is dragged towards $t = 1$",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 25,
+      "prereq_in_scope": [
+        "what-is-a-function"
+      ],
+      "prereq_outside_scope": [
+        "pc-slope-coordinate-geometry"
+      ]
+    },
+    {
+      "id": "average-versus-instantaneous-rate",
+      "title": "Average Rate versus Instantaneous Rate",
+      "student_facing_name": "The difference between speed over an interval and speed at an instant",
+      "summary": "Shrinking the interval to nothing turns an average rate into an instantaneous one. The table for the falling ball closes in on $32$ feet per second at $t = 1$, and that number is the limit of the average speeds, not any one of them. This is the whole idea of the derivative stated before the machinery arrives. The lecture ends with a historical note: Bhaskaracarya described exactly this distinction in the *Siddhanta-Siromani* (1114–1185), separating the rough motion (*sthulagati*) of a planet over a day from its fine, instantaneous motion (*tat-kalika gati*), and observing that the interval must be taken immeasurably small.",
+      "notation": [
+        "average rate over $[x_0,\\, x_0+h]$",
+        "instantaneous rate at $x_0$",
+        "$\\lim_{h \\to 0} \\dfrac{f(x_0+h) - f(x_0)}{h}$"
+      ],
+      "method_steps": [
+        "Compute the average rate over a sequence of shrinking intervals starting at the same point",
+        "Watch what number the averages settle towards",
+        "That limiting number is the instantaneous rate at that point",
+        "Recognise this as a limit of the kind met in the limits unit, with $h \\to 0$"
+      ],
+      "worked_examples": [
+        {
+          "problem": "From the table $48,\\, 33.6,\\, 32.16,\\, 32.0016$ for the falling ball, what is the instantaneous speed at $t = 1$?",
+          "answer": "$32$ feet per second.",
+          "context": "the averages are approaching $32$ but never equal it, exactly as the values of a function approach a limit. The limit is the instantaneous speed."
+        },
+        {
+          "problem": "The fly population is $150$ on day $22$ and $340$ on day $45$. Is the rate of growth *at* day 23 the same as the average rate over those 23 days?",
+          "answer": "No.",
+          "context": "the average over the whole period smooths out the variation. The rate at day 23 is the slope of the tangent at that single point, which the professor reads off the graph rather than computing."
+        }
+      ],
+      "applied_contexts": [
+        "speedometer reading versus average speed for a journey",
+        "growth rate on one day versus over a season",
+        "instantaneous motion of a planet in twelfth-century Indian astronomy"
+      ],
+      "prerequisites": [
+        "average-rate-of-change",
+        "limit-motivation-and-informal"
+      ],
+      "common_errors": [
+        "Believing the instantaneous rate is just the average over a very short interval, rather than the limit of those averages",
+        "Trying to set $h = 0$ directly and getting $0/0$",
+        "Assuming the average rate over an interval is attained at its midpoint"
+      ],
+      "geogebra_prompt": "A slider for $h$ on the graph of $y = 16t^2$: as $h \\to 0$ the secant through $(1, 16)$ and $(1+h, 16(1+h)^2)$ rotates into the tangent",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 26,
+      "prereq_in_scope": [
+        "average-rate-of-change",
+        "limit-motivation-and-informal"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "derivative-first-principle-intro",
+      "title": "The Derivative: Secant and Tangent Lines",
+      "student_facing_name": "Understanding instantaneous rate of change via secants and tangents",
+      "summary": "The derivative as the slope of the tangent line, reached as the limit of the slopes of secant lines. The lecture starts with the tangent to a circle — a line meeting it once — then warns that for a general curve the useful definition is not 'meets the curve once' but 'the limiting position of the secants'. With $P = (a, f(a))$ and $Q = (z, f(z))$, the secant slope is $m_{PQ} = \\dfrac{f(z) - f(a)}{z - a}$; writing $z = a + h$ turns this into $\\dfrac{f(a+h) - f(a)}{h}$, and letting $Q \\to P$ gives the slope of the tangent.",
+      "notation": [
+        "secant line through two points",
+        "tangent line at one point",
+        "$m_{PQ} = \\dfrac{f(z) - f(a)}{z - a}$",
+        "$\\lim_{z \\to a} \\dfrac{f(z) - f(a)}{z - a} = \\lim_{h \\to 0} \\dfrac{f(a+h) - f(a)}{h}$",
+        "instantaneous rate of change $=$ slope of the tangent"
+      ],
+      "method_steps": [
+        "Mark the fixed point $P = (a, f(a))$ and a nearby point $Q = (z, f(z))$ on the curve",
+        "Write the secant slope $m_{PQ} = \\dfrac{f(z) - f(a)}{z - a}$",
+        "Substitute $z = a + h$ so the slope becomes $\\dfrac{f(a+h) - f(a)}{h}$",
+        "Let $Q \\to P$, that is $h \\to 0$",
+        "The limit of the secant slopes is the slope of the tangent at $P$, written $f'(a)$"
       ],
       "worked_examples": [],
       "applied_contexts": [
@@ -36,29 +1314,33 @@
         "rate of growth (population, bacteria, etc.)"
       ],
       "prerequisites": [
-        "slope-and-average-rate-of-change",
-        "limit-concept-and-motivation"
+        "average-versus-instantaneous-rate",
+        "limit-motivation-and-informal",
+        "pc-slope-coordinate-geometry"
       ],
       "common_errors": [
         "Confusing average rate of change with instantaneous rate of change",
-        "Misunderstanding the secant-to-tangent limit process",
-        "Thinking the tangent must cross the curve only at one point"
+        "Defining a tangent as a line meeting the curve exactly once — true for a circle, false in general",
+        "Thinking a tangent may never cross the curve",
+        "Setting $h = 0$ in the secant slope instead of taking the limit"
       ],
       "geogebra_prompt": "f(x) = x^2; Create a secant through (a, f(a)) and (a+h, f(a+h)); use slider to shrink h toward 0",
-      "prereq_in_scope": [],
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 27,
+      "prereq_in_scope": [
+        "average-versus-instantaneous-rate",
+        "limit-motivation-and-informal"
+      ],
       "prereq_outside_scope": [
-        "slope-and-average-rate-of-change",
-        "limit-concept-and-motivation"
+        "pc-slope-coordinate-geometry"
       ]
     },
     {
       "id": "derivative-first-principle-definition",
-      "deck": 6,
-      "unit_title": "Differentiation (Part A)",
-      "order": 32,
       "title": "The Derivative by First Principle (Limit Definition)",
       "student_facing_name": "Computing derivatives from the definition",
-      "summary": "The derivative of $f(x)$ at $x = a$ is $f'(a) = \\lim_{h \\to 0} \\frac{f(a+h) - f(a)}{h}$. This is the formal definition and the basis for all derivative rules. Students should be able to apply this definition to simple polynomials, square roots, and rational functions.",
+      "summary": "The derivative of $f$ at $x_0$ is the limit of the difference quotient: $f'(x_0) = \\lim_{h \\to 0} \\dfrac{f(x_0+h) - f(x_0)}{h}$. The professor calls the quotient $\\dfrac{f(x_0+h) - f(x_0)}{h}$ (with $h \\ne 0$) the difference quotient, and states the definition as 'the derivative of $f$ at $x_0$ is equal to the limit of the difference quotient of $f$'. Everything else in the course is built on this, and the rules that come later are shortcuts for it.",
       "notation": [
         "$f'(a) = \\lim_{h \\to 0} \\frac{f(a+h) - f(a)}{h}$",
         "derivative",
@@ -124,10 +1406,10 @@
         "rate of population change (biology)"
       ],
       "prerequisites": [
+        "derivative-first-principle-intro",
+        "limits-indeterminate-forms",
         "pc-exponent-radical-rules",
-        "pc-rational-expressions",
-        "limit-concept-and-motivation",
-        "derivative-first-principle-intro"
+        "pc-rational-expressions"
       ],
       "common_errors": [
         "Failing to fully expand $(a+h)^2$ or $(a+h)^3$ correctly",
@@ -137,42 +1419,173 @@
         "Arithmetic errors in simplifying the difference $f(a+h) - f(a)$"
       ],
       "geogebra_prompt": "f(x) = x^2 + 10*x; Secant line with draggable h parameter; watch slope approach tangent as h -> 0",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 28,
       "prereq_in_scope": [
-        "derivative-first-principle-intro"
+        "derivative-first-principle-intro",
+        "limits-indeterminate-forms"
       ],
       "prereq_outside_scope": [
         "pc-exponent-radical-rules",
-        "pc-rational-expressions",
-        "limit-concept-and-motivation"
+        "pc-rational-expressions"
       ]
     },
     {
+      "id": "derivative-as-a-function",
+      "title": "The Derivative as a Function",
+      "student_facing_name": "Turning the derivative at a point into a function in its own right",
+      "summary": "Instead of fixing $x_0$ and getting a number, let the point vary and get a function. The lecture works $f(x) = 1/x$ at a general point $a$, obtaining $f'(a) = -1/a^2$, and then observes that since this holds for every $a$, the rule $f'(x) = -1/x^2$ is itself a function — the derivative function. Producing it is called differentiation. Several notations for the same object are introduced, and the graph of $f'$ is read off the graph of $f$ by reading slopes. The section closes with the fact that a differentiable function is continuous.",
+      "notation": [
+        "$f'(x)$",
+        "$y'$",
+        "$\\dfrac{dy}{dx}$",
+        "$\\dfrac{d}{dx}f(x)$",
+        "at a point: $f'(a)$, $\\left.\\dfrac{dy}{dx}\\right|_{x=a}$",
+        "$\\dfrac{d}{dx}\\left(\\dfrac{1}{x}\\right) = -\\dfrac{1}{x^2}$"
+      ],
+      "method_steps": [
+        "Run the first-principles calculation with a general point $a$ rather than a number",
+        "Simplify the difference quotient and take the limit as $h \\to 0$",
+        "Read the answer as a rule in $a$, then rename $a$ as $x$",
+        "To get the derivative at a particular point, substitute into this rule",
+        "To sketch $f'$, read the slope of $f$ at each $x$ and plot it as a height"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Differentiate $f(x) = \\dfrac{1}{x}$ from first principles at a general point $a$.",
+          "answer": "$f'(a) = -\\dfrac{1}{a^2}$, so $f'(x) = -\\dfrac{1}{x^2}$.",
+          "context": "$\\dfrac{\\frac{1}{a+h} - \\frac{1}{a}}{h} = \\dfrac{a - (a+h)}{(a+h)a} \\cdot \\dfrac{1}{h} = \\dfrac{-h}{(a+h)a} \\cdot \\dfrac{1}{h} = \\dfrac{-1}{(a+h)a}$, and as $h \\to 0$ this is $-1/a^2$. The professor's worked case, done slowly."
+        },
+        {
+          "problem": "Using $f'(x) = -1/x^2$, find the slope of $y = 1/x$ at $x = 1$.",
+          "answer": "$f'(1) = -1$.",
+          "context": "the same answer the earlier lecture got by running first principles at $x=1$ directly — the point of having the derivative function is that this is now a substitution"
+        }
+      ],
+      "applied_contexts": [
+        "velocity as a function of time, from position as a function of time",
+        "marginal cost as a function of quantity, from total cost",
+        "reading the shape of a graph from the sign of its derivative"
+      ],
+      "prerequisites": [
+        "derivative-first-principle-definition"
+      ],
+      "common_errors": [
+        "Treating $f'(x)$ and $f'(a)$ as the same object — one is a function, the other a number",
+        "Reading $\\dfrac{dy}{dx}$ as a fraction of two quantities that can be separated",
+        "Writing $\\dfrac{d}{dx}$ with nothing after it to differentiate",
+        "Sketching $f'$ by copying the shape of $f$ instead of plotting its slopes"
+      ],
+      "geogebra_prompt": "Show $f(x)$ with a moving tangent and, underneath, a point tracing $(x, f'(x))$ so the derivative graph is drawn out as the tangent slides",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 29,
+      "prereq_in_scope": [
+        "derivative-first-principle-definition"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "where-derivatives-fail",
+      "title": "Functions with No Derivative at a Point",
+      "student_facing_name": "Where a curve has no tangent, and why",
+      "summary": "A function can fail to be differentiable at a point even where it is perfectly well defined. The lecture lists the ways: a corner, where the slope from the left and the slope from the right disagree; a cusp; a vertical tangent, as $f(x) = \\sqrt{x}$ has at $x = 0$; and any discontinuity. The last of these follows from the theorem stated at the end of the section — if $f$ is differentiable at a point it is continuous there — read the other way round: a break in the graph rules out a derivative.",
+      "notation": [
+        "corner",
+        "cusp",
+        "vertical tangent",
+        "left-hand and right-hand derivative",
+        "differentiable $\\Rightarrow$ continuous"
+      ],
+      "method_steps": [
+        "Check first whether the function is continuous at the point; if not, there is no derivative",
+        "Compute the difference quotient's limit from the left and from the right separately",
+        "If the two one-sided limits differ, the graph has a corner and there is no derivative",
+        "If both are infinite in the same direction, the tangent is vertical and there is no derivative",
+        "Only if the two agree and are finite does the derivative exist"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Is $f(x) = \\sqrt{x}$ differentiable at $x = 0$?",
+          "answer": "No — the tangent there is vertical.",
+          "context": "the difference quotient $\\dfrac{\\sqrt{h}}{h} = \\dfrac{1}{\\sqrt{h}} \\to +\\infty$ as $h \\to 0^{+}$. The curve is continuous at $0$ but has no slope there."
+        },
+        {
+          "problem": "Is $f(x) = |x|$ differentiable at $x = 0$?",
+          "answer": "No — there is a corner.",
+          "context": "from the right the difference quotient is $h/h = 1$; from the left it is $-h/h = -1$. Two different one-sided answers, so the limit does not exist."
+        }
+      ],
+      "applied_contexts": [
+        "a tariff that changes rate at a threshold, giving a kink in the cost curve",
+        "an object that bounces, so velocity reverses instantaneously"
+      ],
+      "prerequisites": [
+        "derivative-as-a-function",
+        "one-sided-limits",
+        "continuity-at-a-point"
+      ],
+      "common_errors": [
+        "Assuming continuity is enough for differentiability — the implication runs one way only",
+        "Reporting a derivative at a corner by using only one side",
+        "Thinking a vertical tangent means the derivative is 'infinity' rather than that it does not exist",
+        "Forgetting to check the point is in the domain at all"
+      ],
+      "geogebra_prompt": "Plot $y = |x|$ and $y = \\sqrt{x}$ side by side with a tangent that follows the cursor, so it visibly jumps at the corner and rears up at the vertical tangent",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 30,
+      "prereq_in_scope": [
+        "derivative-as-a-function",
+        "one-sided-limits",
+        "continuity-at-a-point"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
       "id": "derivative-rules-basic",
-      "deck": 6,
-      "unit_title": "Differentiation (Part A)",
-      "order": 33,
       "title": "Basic Derivative Rules: Power, Constant, Exponential, Logarithm",
       "student_facing_name": "Quick rules for finding derivatives",
-      "summary": "Students learn shortcut formulas: constant rule, power rule, exponential rule, natural log rule. These avoid the need for first principles in most cases.",
+      "summary": "The shortcut rules, which replace first principles for almost every function met in this course: the derivative of a constant is zero, the power rule $\\dfrac{d}{dx}x^n = nx^{n-1}$ for any real $n$, the exponential rules and the logarithm rule. The professor's own examples push the power rule past whole numbers deliberately — $x^{\\sqrt{3}+1}$ appears on the board — to make the point that $n$ need not be an integer. The trigonometric derivatives are noted at the end of the lecture. A constant multiple passes straight through: $\\dfrac{d}{dx}[k\\,f(x)] = k\\,f'(x)$.",
       "notation": [
-        "$\\frac{d}{dx}[c] = 0$",
-        "$\\frac{d}{dx}[x^n] = nx^{n-1}$",
-        "$\\frac{d}{dx}[a^x] = a^x \\ln a$",
-        "$\\frac{d}{dx}[e^x] = e^x$",
-        "$\\frac{d}{dx}[\\ln x] = \\frac{1}{x}$"
+        "$\\dfrac{d}{dx}[c] = 0$",
+        "$\\dfrac{d}{dx}[x^n] = nx^{n-1}$",
+        "$\\dfrac{d}{dx}[k\\,f(x)] = k\\,f'(x)$",
+        "$\\dfrac{d}{dx}[e^x] = e^x$",
+        "$\\dfrac{d}{dx}[a^x] = a^x \\ln a$",
+        "$\\dfrac{d}{dx}[\\ln x] = \\dfrac{1}{x}$",
+        "$\\dfrac{d}{dx}[\\sin x] = \\cos x$, $\\dfrac{d}{dx}[\\cos x] = -\\sin x$"
       ],
       "method_steps": [
         "Identify which rule(s) apply to the function",
         "Apply the rule(s) to each term",
         "Simplify the result"
       ],
-      "worked_examples": [],
+      "worked_examples": [
+        {
+          "problem": "Differentiate $f(x) = 2x^{17} - \\dfrac{3}{4}x^{8} - \\sqrt{2}\\,x^{4}$.",
+          "answer": "$f'(x) = 34x^{16} - 6x^{7} - 4\\sqrt{2}\\,x^{3}$",
+          "context": "the professor's first rules example. $\\sqrt{2}$ is a constant multiplier, not something to differentiate."
+        },
+        {
+          "problem": "Differentiate $f(x) = x^{\\sqrt{3}+1}$.",
+          "answer": "$f'(x) = (\\sqrt{3}+1)\\,x^{\\sqrt{3}}$",
+          "context": "chosen to show the power rule holds for irrational exponents; subtracting one from $\\sqrt{3}+1$ leaves $\\sqrt{3}$"
+        },
+        {
+          "problem": "Differentiate $y = x^{6}$ and state $y'$.",
+          "answer": "$y' = 6x^{5}$",
+          "context": "the plain case, used on the slide to set the pattern before the harder ones"
+        }
+      ],
       "applied_contexts": [
         "quickly computing marginal quantities",
         "optimizing production or revenue"
       ],
       "prerequisites": [
-        "derivative-first-principle-definition"
+        "derivative-as-a-function",
+        "pc-exponent-radical-rules"
       ],
       "common_errors": [
         "Forgetting the exponent decrease in the power rule",
@@ -181,19 +1594,21 @@
         "Misapplying the power rule to negative or fractional exponents"
       ],
       "geogebra_prompt": "y = x^3; Derivative should be 3*x^2",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 31,
       "prereq_in_scope": [
-        "derivative-first-principle-definition"
+        "derivative-as-a-function"
       ],
-      "prereq_outside_scope": []
+      "prereq_outside_scope": [
+        "pc-exponent-radical-rules"
+      ]
     },
     {
       "id": "derivative-rules-sum-product-quotient",
-      "deck": 6,
-      "unit_title": "Differentiation (Part A)",
-      "order": 34,
       "title": "Sum, Product, and Quotient Rules",
       "student_facing_name": "Derivatives of sums, products, and quotients of functions",
-      "summary": "Students learn the sum rule, product rule, and quotient rule. These allow differentiation of more complex expressions by breaking them into simpler parts.",
+      "summary": "Sums and differences differentiate term by term. Products and quotients do not — the professor flags these as 'two more rules which are very important' precisely because students expect them to. The product rule is $\\dfrac{d}{dx}[uv] = u\\dfrac{dv}{dx} + v\\dfrac{du}{dx}$ and the quotient rule is $\\dfrac{d}{dx}\\!\\left[\\dfrac{u}{v}\\right] = \\dfrac{v\\frac{du}{dx} - u\\frac{dv}{dx}}{v^{2}}$.",
       "notation": [
         "$\\frac{d}{dx}[u + v] = \\frac{du}{dx} + \\frac{dv}{dx}$",
         "$\\frac{d}{dx}[u \\cdot v] = u \\frac{dv}{dx} + v \\frac{du}{dx}$",
@@ -251,86 +1666,19 @@
         "Not simplifying or factoring before applying the rule, leading to messy algebra"
       ],
       "geogebra_prompt": "y = (x^2 - 2)^2; Compute derivative symbolically",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 32,
       "prereq_in_scope": [
         "derivative-rules-basic"
       ],
       "prereq_outside_scope": []
     },
     {
-      "id": "derivative-chain-rule",
-      "deck": 6,
-      "unit_title": "Differentiation (Part A)",
-      "order": 35,
-      "title": "Chain Rule",
-      "student_facing_name": "Derivatives of composite functions",
-      "summary": "The chain rule states: if $y = f(u)$ and $u = g(x)$, then $\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$. This is one of the most important rules and is used extensively in later calculus.",
-      "notation": [
-        "$\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$",
-        "outer function",
-        "inner function"
-      ],
-      "method_steps": [
-        "Identify the outer function and inner function",
-        "Differentiate the outer function with respect to the inner function",
-        "Multiply by the derivative of the inner function",
-        "Simplify"
-      ],
-      "worked_examples": [
-        {
-          "problem": "$y = (9x^2 - 5x + 100)^3$",
-          "answer": "$\\frac{dy}{dx} = 3(9x^2 - 5x + 100)^2 \\cdot (18x - 5)$",
-          "context": "outer function is 'cube'; inner is the polynomial"
-        },
-        {
-          "problem": "$y = \\sqrt[3]{7x^2 - 5}$",
-          "answer": "$\\frac{dy}{dx} = \\frac{1}{3}(7x^2 - 5)^{-2/3} \\cdot 14x = \\frac{14x}{3(7x^2 - 5)^{2/3}}$",
-          "context": "cube root means exponent 1/3; apply power rule to outer function"
-        },
-        {
-          "problem": "$y = e^{5x^2 - 3x + 2}$",
-          "answer": "$\\frac{dy}{dx} = e^{5x^2 - 3x + 2} \\cdot (10x - 3)$",
-          "context": "derivative of $e^u$ is $e^u$ times the derivative of $u$"
-        },
-        {
-          "problem": "$y = \\ln(7x^2 - 5)$",
-          "answer": "$\\frac{dy}{dx} = \\frac{14x}{7x^2 - 5}$",
-          "context": "derivative of $\\ln u$ is $\\frac{1}{u}$ times the derivative of $u$"
-        },
-        {
-          "problem": "$y = 2\\ln(x^3 + 2x^2 + 5x + 1)$",
-          "answer": "$\\frac{dy}{dx} = 2 \\cdot \\frac{3x^2 + 4x + 5}{x^3 + 2x^2 + 5x + 1}$",
-          "context": "chain rule with logarithm"
-        }
-      ],
-      "applied_contexts": [
-        "growth models with exponential and logarithmic components",
-        "compound rate changes"
-      ],
-      "prerequisites": [
-        "function-composition",
-        "derivative-rules-sum-product-quotient"
-      ],
-      "common_errors": [
-        "Forgetting to multiply by the derivative of the inner function",
-        "Misidentifying which is the outer and which is the inner function",
-        "Applying the chain rule when not needed (e.g., $(2x)^2$ is not a composition)"
-      ],
-      "geogebra_prompt": "y = (9*x^2 - 5*x + 100)^3; Verify derivative by numerical differentiation",
-      "prereq_in_scope": [
-        "derivative-rules-sum-product-quotient"
-      ],
-      "prereq_outside_scope": [
-        "function-composition"
-      ]
-    },
-    {
       "id": "derivative-complex-examples",
-      "deck": 6,
-      "unit_title": "Differentiation (Part A)",
-      "order": 36,
       "title": "Differentiation of Complex Functions",
       "student_facing_name": "Combining multiple rules to differentiate complicated expressions",
-      "summary": "Students practice combining sum, product, quotient, and chain rules on functions involving polynomials, exponentials, logarithms, and roots. This builds fluency and confidence.",
+      "summary": "Longer problems where more than one rule is needed and the algebra is the real work. The professor's classroom examples are a product of two multi-term expressions and a quotient of two surd expressions evaluated at a point. The habit being taught is to name $u$ and $v$ explicitly, differentiate each separately, then assemble — rather than trying to do the whole thing in one line.",
       "notation": [
         "all previous notation"
       ],
@@ -341,44 +1689,14 @@
       ],
       "worked_examples": [
         {
-          "problem": "$y = 5x \\ln x$",
-          "answer": "$\\frac{dy}{dx} = 5 \\ln x + 5x \\cdot \\frac{1}{x} = 5 \\ln x + 5$",
-          "context": "product rule"
+          "problem": "Differentiate $f(x) = \\left(\\sqrt{x} + x^{2} + 3\\right)\\left(x^{3} + x - \\tfrac{1}{4}\\right)$.",
+          "answer": "$f'(x) = \\left(\\tfrac{1}{2\\sqrt{x}} + 2x\\right)\\left(x^{3} + x - \\tfrac{1}{4}\\right) + \\left(\\sqrt{x} + x^{2} + 3\\right)\\left(3x^{2} + 1\\right)$",
+          "context": "the professor's product-rule example. Set $u = \\sqrt{x} + x^2 + 3$ and $v = x^3 + x - \\tfrac14$; note $\\sqrt{x} = x^{1/2}$ before differentiating."
         },
         {
-          "problem": "$y = 7^x x^7$",
-          "answer": "$\\frac{dy}{dx} = 7^x \\ln 7 \\cdot x^7 + 7^x \\cdot 7x^6 = 7^x(x^7 \\ln 7 + 7x^6)$",
-          "context": "product rule on exponential and power"
-        },
-        {
-          "problem": "$y = e^x \\ln x \\cdot x^5$",
-          "answer": "This is a product of three functions; apply product rule twice or regroup. $\\frac{dy}{dx} = e^x \\ln x \\cdot x^5 + e^x \\cdot \\frac{1}{x} \\cdot x^5 + e^x \\ln x \\cdot 5x^4$.",
-          "context": "triple product rule"
-        },
-        {
-          "problem": "$y = e^x 3^x x^3$",
-          "answer": "$\\frac{dy}{dx} = e^x 3^x \\ln 3 \\cdot x^3 + e^x \\cdot 3^x \\cdot x^3 \\ln e + e^x 3^x \\cdot 3x^2 = e^x 3^x (x^3 \\ln 3 + x^3 + 3x^2)$",
-          "context": "carefully apply product rule multiple times"
-        },
-        {
-          "problem": "$y = \\frac{2^x}{x^2}$",
-          "answer": "$\\frac{dy}{dx} = \\frac{2^x \\ln 2 \\cdot x^2 - 2^x \\cdot 2x}{x^4} = \\frac{2^x(x^2 \\ln 2 - 2x)}{x^4} = \\frac{2^x(x \\ln 2 - 2)}{x^3}$",
-          "context": "quotient rule"
-        },
-        {
-          "problem": "$y = \\frac{e^x}{\\ln x}$",
-          "answer": "$\\frac{dy}{dx} = \\frac{e^x \\ln x - e^x \\cdot \\frac{1}{x}}{(\\ln x)^2} = \\frac{e^x(\\ln x - \\frac{1}{x})}{(\\ln x)^2} = \\frac{e^x(x \\ln x - 1)}{x(\\ln x)^2}$",
-          "context": "quotient rule with exponential and logarithm"
-        },
-        {
-          "problem": "$y = \\frac{5 - \\ln x}{x^5}$",
-          "answer": "$\\frac{dy}{dx} = \\frac{-\\frac{1}{x} \\cdot x^5 - (5 - \\ln x) \\cdot 5x^4}{x^{10}} = \\frac{-x^4 - 5x^4(5 - \\ln x)}{x^{10}} = \\frac{-x^4(1 + 5(5 - \\ln x))}{x^{10}} = \\frac{-(26 - 5\\ln x)}{x^6}$",
-          "context": "quotient rule with logarithm and power"
-        },
-        {
-          "problem": "$y = \\frac{2x^2 + 5}{3 - 5x^2}$",
-          "answer": "$\\frac{dy}{dx} = \\frac{4x(3 - 5x^2) - (2x^2 + 5)(-10x)}{(3 - 5x^2)^2} = \\frac{12x - 20x^3 + 20x^3 + 50x}{(3 - 5x^2)^2} = \\frac{62x}{(3 - 5x^2)^2}$",
-          "context": "quotient rule simplifying nicely"
+          "problem": "For $g(s) = \\dfrac{\\sqrt{s} + 1}{2\\sqrt{s} - 1}$, find $g'(s)$ and evaluate it at $s = 3$.",
+          "answer": "$g'(s) = \\dfrac{\\frac{1}{2\\sqrt{s}}\\left(2\\sqrt{s} - 1\\right) - \\left(\\sqrt{s} + 1\\right)\\frac{1}{\\sqrt{s}}}{\\left(2\\sqrt{s} - 1\\right)^{2}} = \\dfrac{-3}{2\\sqrt{s}\\left(2\\sqrt{s} - 1\\right)^{2}}$, so $g'(3) = \\dfrac{-3}{2\\sqrt{3}\\left(2\\sqrt{3} - 1\\right)^{2}}$.",
+          "context": "the professor's quotient-rule example, with the variable called $s$ rather than $x$ on purpose. The numerator simplifies a long way before substituting."
         }
       ],
       "applied_contexts": [
@@ -395,6 +1713,9 @@
         "Applying rules in the wrong order"
       ],
       "geogebra_prompt": "y = (5-ln(x))/x^5; Compute and plot derivative",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 33,
       "prereq_in_scope": [
         "derivative-rules-sum-product-quotient"
       ],
@@ -402,12 +1723,9 @@
     },
     {
       "id": "second-order-derivatives",
-      "deck": 7,
-      "unit_title": "Differentiation (Part B)",
-      "order": 37,
       "title": "Second and Higher-Order Derivatives",
       "student_facing_name": "Taking derivatives of derivatives",
-      "summary": "A second-order derivative is the derivative of the first derivative: $\\frac{d^2y}{dx^2} = \\frac{d}{dx}\\left(\\frac{dy}{dx}\\right)$. Third-order and higher derivatives follow the same pattern. These describe rates of change of rates of change and are essential for understanding concavity and testing for maxima and minima.",
+      "summary": "Differentiating twice. The professor writes it as $\\left(f'\\right)' = f''$ and reads $\\dfrac{d^{2}y}{dx^{2}}$ as the derivative of $\\dfrac{dy}{dx}$. Higher orders follow the same pattern. The second derivative is a rate of change of a rate of change — acceleration is the standard example — and it is the tool the second derivative test uses later to tell a maximum from a minimum.",
       "notation": [
         "$\\frac{dy}{dx}$",
         "$\\frac{d^2y}{dx^2}$",
@@ -420,31 +1738,524 @@
         "Differentiate $f'(x)$ to obtain $f''(x)$",
         "Repeat if higher orders are required"
       ],
-      "worked_examples": [],
+      "worked_examples": [
+        {
+          "problem": "For $y = x^{6}$, find $y'$ and $y''$.",
+          "answer": "$y' = 6x^{5}$ and $y'' = 30x^{4}$.",
+          "context": "the slide's own example; the second derivative is just the rule applied again"
+        },
+        {
+          "problem": "A particle falls with $x(t) = \\tfrac{1}{2}gt^{2}$. Find its velocity and its acceleration.",
+          "answer": "$v(t) = \\dfrac{dx}{dt} = gt$ and $a(t) = \\dfrac{d^{2}x}{dt^{2}} = g$.",
+          "context": "the professor's physics case: the acceleration is constant, which is what makes free fall the standard example"
+        }
+      ],
       "applied_contexts": [],
       "prerequisites": [
-        "derivative-first-principle-definition",
-        "derivative-rules-basic"
+        "derivative-rules-sum-product-quotient"
       ],
       "common_errors": [
         "Forgetting to apply the power rule completely when taking second derivatives",
         "Confusing notation: $f''$ means derivative of $f'$, not squaring $f$"
       ],
       "geogebra_prompt": "Plot y = x^3 - 3x^2 + 1, then plot its first derivative, then its second derivative to see how concavity changes",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 34,
       "prereq_in_scope": [
-        "derivative-first-principle-definition",
-        "derivative-rules-basic"
+        "derivative-rules-sum-product-quotient"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "derivative-chain-rule",
+      "title": "Chain Rule",
+      "student_facing_name": "Derivatives of composite functions",
+      "summary": "For a composition, the derivatives multiply. If $y = f(u)$ and $u = g(x)$ then $\\dfrac{dy}{dx} = \\dfrac{dy}{du}\\cdot\\dfrac{du}{dx}$, equivalently $\\dfrac{d}{dx}f(g(x)) = f'(g(x))\\,g'(x)$. The professor states it both ways on consecutive slides, because the Leibniz form is easier to remember and the prime form is easier to apply. Nested compositions are handled by working from the outside in, one layer at a time.",
+      "notation": [
+        "$\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$",
+        "outer function",
+        "inner function"
+      ],
+      "method_steps": [
+        "Identify the outer function and inner function",
+        "Differentiate the outer function with respect to the inner function",
+        "Multiply by the derivative of the inner function",
+        "Simplify"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\dfrac{dy}{dx}$ for $y = \\sqrt{1 - \\sqrt{1 - x}}$.",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{1}{2\\sqrt{1 - \\sqrt{1-x}}} \\cdot \\left(-\\dfrac{1}{2\\sqrt{1-x}}\\right) \\cdot (-1) = \\dfrac{1}{4\\sqrt{1-x}\\,\\sqrt{1 - \\sqrt{1-x}}}$",
+          "context": "the professor's hardest chain-rule example — three layers. Peel from the outside: outer square root, then $1 - \\sqrt{1-x}$, then $1-x$. The two minus signs cancel, which is where students go wrong."
+        },
+        {
+          "problem": "If $y = 2u^{3}$ and $u = 8x - 1$, find $\\dfrac{dy}{dx}$.",
+          "answer": "$\\dfrac{dy}{dx} = 6u^{2} \\cdot 8 = 48(8x-1)^{2}$",
+          "context": "the professor's introductory case, stated in the $y = f(u)$, $u = g(x)$ form"
+        },
+        {
+          "problem": "Differentiate $y = \\sqrt{5 - 2t}$.",
+          "answer": "$\\dfrac{dy}{dt} = \\dfrac{-2}{2\\sqrt{5-2t}} = \\dfrac{-1}{\\sqrt{5-2t}}$",
+          "context": "a one-layer composition where the inner derivative is the constant $-2$"
+        },
+        {
+          "problem": "Differentiate $y = \\sqrt{3x^{3} - \\tfrac{4}{7}x^{2} + 6x + 1}$.",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{9x^{2} - \\tfrac{8}{7}x + 6}{2\\sqrt{3x^{3} - \\tfrac{4}{7}x^{2} + 6x + 1}}$",
+          "context": "the inner function is a whole polynomial; differentiate it as one object"
+        },
+        {
+          "problem": "Given $g(3) = 2$ and $g'(3) = 5$, find $\\dfrac{dy}{dx}$ at $x = 3$ for $y = \\dfrac{1}{g^{2}(x)}$.",
+          "answer": "$y = g(x)^{-2}$, so $\\dfrac{dy}{dx} = -2g(x)^{-3}g'(x)$, giving $-2 \\cdot 2^{-3} \\cdot 5 = -\\dfrac{5}{4}$.",
+          "context": "the professor's abstract version — no formula for $g$ is given, only its values, so the chain rule has to be applied symbolically"
+        }
+      ],
+      "applied_contexts": [
+        "growth models with exponential and logarithmic components",
+        "compound rate changes"
+      ],
+      "prerequisites": [
+        "function-composition",
+        "derivative-rules-sum-product-quotient"
+      ],
+      "common_errors": [
+        "Forgetting to multiply by the derivative of the inner function",
+        "Misidentifying which is the outer and which is the inner function",
+        "Applying the chain rule when not needed (e.g., $(2x)^2$ is not a composition)"
+      ],
+      "geogebra_prompt": "y = (9*x^2 - 5*x + 100)^3; Verify derivative by numerical differentiation",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 35,
+      "prereq_in_scope": [
+        "function-composition",
+        "derivative-rules-sum-product-quotient"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "implicit-differentiation",
+      "title": "Implicit Differentiation",
+      "student_facing_name": "Differentiating equations that are not solved for y",
+      "summary": "Some curves are given by an equation in $x$ and $y$ that cannot, or should not, be rearranged into $y = f(x)$. The professor's examples are the circle $x^2 + y^2 = 25$ and a four-leaved clover, neither of which passes the vertical line test, so neither is the graph of a single function. The method is to treat $y$ as a function of $x$, differentiate both sides with respect to $x$ applying the chain rule wherever $y$ appears, then solve the result for $\\dfrac{dy}{dx}$. The answer usually contains both $x$ and $y$, which is expected: a point on the curve is needed to get a number.",
+      "notation": [
+        "$F(x, y) = 0$",
+        "$y(x)$ — the dependent variable written as a function of $x$",
+        "$\\dfrac{dy}{dx}$",
+        "$\\left.\\dfrac{dy}{dx}\\right|_{(3,\\,-4)}$"
+      ],
+      "notation_warning": "This course writes the dependent variable as $y(x)$ all the way through an implicit differentiation, not as a bare $y$. So the professor writes $x^2 + (y(x))^2 = 25$ and then $2x + 2y(x)\\dfrac{dy}{dx} = 0$, and his final answers keep the $y(x)$, as in $\\dfrac{dy}{dx} = -\\dfrac{x}{y(x)}$. Follow that notation. It is deliberate — his slide says 'Don't forget to differentiate $y(x)$ with respect to $x$' — and it is the whole point of the method, so do not silently drop the $(x)$ and write $-x/y$.",
+      "method_steps": [
+        "Rewrite the equation with the dependent variable shown as $y(x)$",
+        "Differentiate both sides with respect to $x$",
+        "Every time $y(x)$ is differentiated, the chain rule contributes a factor $\\dfrac{dy}{dx}$",
+        "Collect all the terms containing $\\dfrac{dy}{dx}$ on one side",
+        "Factor out $\\dfrac{dy}{dx}$ and divide to solve for it",
+        "To get a number, substitute the coordinates of a point that lies on the curve"
+      ],
+      "worked_examples": [
+        {
+          "problem": "For $y^{3} + 1 = x$, find $\\dfrac{dy}{dx}$, and its value at $(2, 1)$.",
+          "answer": "$3y(x)^{2}\\dfrac{dy}{dx} = 1$, so $\\dfrac{dy}{dx} = \\dfrac{1}{3y(x)^{2}}$. At $x = 2$, $y = 1$: $\\dfrac{dy}{dx} = \\dfrac{1}{3(1)^{2}} = \\dfrac{1}{3}$.",
+          "context": "the professor's first example, worked twice across two decks. Written his way: $y(x)^3 + 1 = x$, then differentiate."
+        },
+        {
+          "problem": "For $y^{2} = x$, find $\\dfrac{dy}{dx}$.",
+          "answer": "$2y(x)\\dfrac{dy}{dx} = 1$, so $\\dfrac{dy}{dx} = \\dfrac{1}{2y(x)}$.",
+          "context": "a sideways parabola — two $y$ values for most $x$, so it is not a function, yet it still has a well-defined tangent at each point"
+        },
+        {
+          "problem": "Find the slope of the circle $x^{2} + y^{2} = 25$ at the point $(3, -4)$.",
+          "answer": "$2x + 2y(x)\\dfrac{dy}{dx} = 0$, so $\\dfrac{dy}{dx} = -\\dfrac{x}{y(x)}$. At $(3, -4)$: $-\\dfrac{3}{-4} = \\dfrac{3}{4}$.",
+          "context": "the professor's main example. Note the sign: the point has $y = -4$, and the two minus signs give a positive slope."
+        },
+        {
+          "problem": "Find $\\dfrac{dy}{dx}$ for $x^{3} - xy + y^{3} = 1$ at $(0, 1)$.",
+          "answer": "$3x^{2} - \\left(y(x) + x\\dfrac{dy}{dx}\\right) + 3y(x)^{2}\\dfrac{dy}{dx} = 0$. At $(0,1)$: $-1 + 3\\dfrac{dy}{dx} = 0$, so $\\dfrac{dy}{dx} = \\dfrac{1}{3}$.",
+          "context": "the $xy$ term needs the product rule as well as the chain rule — this is the example that separates students who have understood the method from those copying a pattern"
+        },
+        {
+          "problem": "Find $\\dfrac{dy}{dx}$ for $y\\,e^{2x} = 1$ at $(0, 1)$.",
+          "answer": "$\\dfrac{dy}{dx}e^{2x} + 2y(x)e^{2x} = 0$, so $\\dfrac{dy}{dx} = -2y(x)$. At $(0,1)$: $\\dfrac{dy}{dx} = -2$.",
+          "context": "product rule on the left, with the chain rule inside $e^{2x}$"
+        }
+      ],
+      "applied_contexts": [
+        "the slope of a circular or elliptical path at a point",
+        "curves given by an equation rather than a formula for $y$"
+      ],
+      "prerequisites": [
+        "derivative-chain-rule",
+        "derivative-rules-sum-product-quotient"
+      ],
+      "common_errors": [
+        "Differentiating a term in $y$ as though $y$ were a constant, and losing the $\\dfrac{dy}{dx}$ factor",
+        "Forgetting the product rule on a mixed term such as $xy$",
+        "Trying to solve the equation for $y$ first, which is often impossible and always more work",
+        "Substituting the point before differentiating rather than after",
+        "Being surprised that the answer contains $y$ — it should"
+      ],
+      "geogebra_prompt": "Plot $x^2 + y^2 = 25$ with a draggable point on the circle and its tangent, displaying $-x/y$ as the point moves",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 36,
+      "prereq_in_scope": [
+        "derivative-chain-rule",
+        "derivative-rules-sum-product-quotient"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "derivative-as-rate-of-change",
+      "title": "The Derivative as a Rate of Change",
+      "student_facing_name": "Using the derivative to model motion and cost",
+      "summary": "What the derivative is *for*. Two settings are developed. In motion along a line, position $s = f(t)$ has derivative $\\dfrac{ds}{dt}$, the velocity, and differentiating again gives the acceleration. In economics, the derivative of a cost function $C(x)$ is the marginal cost $C'(x)$ and the derivative of a revenue function $R(x)$ is the marginal revenue $R'(x)$. The professor is careful about the two definitions of marginal cost that are in circulation: strictly it is the derivative, but it is also often defined as the cost of producing one more unit, and the two agree closely because $\\dfrac{dC}{dx} \\simeq \\dfrac{\\Delta C}{\\Delta x}$ when $\\Delta x = 1$ is small relative to the output.",
+      "notation": [
+        "$s = f(t)$, velocity $v = \\dfrac{ds}{dt}$",
+        "acceleration $a = \\dfrac{dv}{dt} = \\dfrac{d^{2}s}{dt^{2}}$",
+        "$\\Delta s = f(t + \\Delta t) - f(t)$",
+        "marginal cost $C'(x)$, marginal revenue $R'(x)$",
+        "$\\dfrac{dC}{dx} \\simeq \\dfrac{\\Delta C}{\\Delta x}$"
+      ],
+      "method_steps": [
+        "Identify what is changing and with respect to what",
+        "Write the relationship as a function",
+        "Differentiate to get the rate of change",
+        "Substitute the value at which the rate is wanted",
+        "State the answer with its units, and say what it means in the situation"
+      ],
+      "worked_examples": [
+        {
+          "problem": "For $C(x) = \\tfrac{1}{8}x^{2} + 3x + 98$, find the marginal cost at $x = 8$, and compare it with the actual cost of the ninth unit, $C(9) - C(8)$.",
+          "answer": "$C'(x) = \\tfrac{1}{4}x + 3$, so $C'(8) = 2 + 3 = 5$ dollars. The actual cost of the ninth unit is $C(9) - C(8) = 5.13$ dollars.",
+          "context": "the professor's example, and the reason he raises the two definitions: they differ by 13 cents here. The derivative is the standard meaning of marginal cost."
+        },
+        {
+          "problem": "Differentiate $y = \\dfrac{x - 1}{x + 1}$ and say what the sign of the answer tells you.",
+          "answer": "$\\dfrac{dy}{dx} = \\dfrac{(1)(x+1) - (x-1)(1)}{(x+1)^{2}} = \\dfrac{2}{(x+1)^{2}}$, which is positive wherever it is defined, so $y$ is increasing on each side of $x = -1$.",
+          "context": "the professor's warm-up on this slide; a quotient rule revision with a rate reading"
+        },
+        {
+          "problem": "A particle falls with $x(t) = \\tfrac{1}{2}gt^{2}$. Find its velocity and acceleration at time $t$.",
+          "answer": "$\\dfrac{dx}{dt} = gt$ and $\\dfrac{d^{2}x}{dt^{2}} = g$.",
+          "context": "constant acceleration; the velocity grows linearly with time"
+        }
+      ],
+      "applied_contexts": [
+        "particle motion in one dimension",
+        "marginal cost and marginal revenue",
+        "any quantity described as a 'rate' or 'per unit'"
+      ],
+      "prerequisites": [
+        "derivative-rules-sum-product-quotient",
+        "second-order-derivatives",
+        "cost-revenue-profit-functions"
+      ],
+      "common_errors": [
+        "Confusing speed with velocity — velocity carries a sign, speed does not",
+        "Reading a negative velocity as 'slowing down' rather than 'moving the other way'",
+        "Treating marginal cost as an average cost",
+        "Dropping the units, which is where the interpretation lives",
+        "Differentiating with respect to the wrong variable in a problem with more than one"
+      ],
+      "geogebra_prompt": "Animate a point moving along a horizontal line driven by $s(t)$, with $v(t)$ and $a(t)$ plotted alongside so the sign changes line up with the reversals of motion",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 37,
+      "prereq_in_scope": [
+        "derivative-rules-sum-product-quotient",
+        "second-order-derivatives",
+        "cost-revenue-profit-functions"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "marginal-analysis-economics",
+      "title": "Marginal Analysis in Economics",
+      "student_facing_name": "Understanding marginal cost, revenue, and profit",
+      "summary": "Marginal cost, marginal revenue and marginal profit as derivatives, and what they mean to someone running a business. The marginal cost at an output level is very nearly the cost of the next unit, so comparing marginal revenue with marginal cost answers the question 'is one more unit worth making?'. This is the strand the professor teaches alongside the textbook rather than from it, and it recurs in the applications and integration units.",
+      "notation": [
+        "$MC = C'(x)$",
+        "$MR = R'(x)$",
+        "$MP = P'(x)$",
+        "$C(k+1) - C(k)$ (actual incremental cost)"
+      ],
+      "method_steps": [
+        "Find $C'(x)$, $R'(x)$, and $P'(x)$ as the marginal functions",
+        "Evaluate the derivative at a specific production level $k$ to estimate the cost/revenue/profit of the next unit",
+        "Compare the marginal value to the actual incremental value $C(k+1) - C(k)$ to show how close the derivative approximation is"
+      ],
+      "worked_examples": [
+        {
+          "problem": "A manufacturer estimates that when $x$ units of a commodity are produced, total cost will be $C(x) = \\frac{1}{8}x^2 + 3x + 98$ dollars. (a) Find $C'(x)$ and compute $C'(8)$. (b) Find $C(9) - C(8)$. (c) Is $C'(8)$ close to $C(9) - C(8)$?",
+          "answer": "$C'(x) = \\frac{1}{4}x + 3$; $C'(8) = 5$; $C(9) - C(8) = 5.125$; yes, very close",
+          "context": "Demonstrates how marginal cost approximates actual incremental cost"
+        },
+        {
+          "problem": "A manufacturer estimates that when $x$ units are produced, all units will be sold when price is $p(x) = \\frac{1}{3}(75 - x)$ dollars per unit. (a) Find the marginal revenue function and use it to estimate revenue from selling the ninth unit. (b) What is the actual revenue from selling the ninth unit? (c) How close is marginal revenue to actual?",
+          "answer": "$R(x) = p(x) \\cdot x = \\frac{1}{3}(75 - x) \\cdot x$; compute $R'(x)$, then $R'(8)$ and $R(9) - R(8)$",
+          "context": "Marginal revenue with price-dependent demand"
+        },
+        {
+          "problem": "A manufacturer estimates $C(x) = \\frac{1}{8}x^2 + 3x + 98$ and $p(x) = \\frac{1}{3}(75 - x)$. (a) Find the marginal profit function and estimate profit from selling the ninth unit. (b) What is the actual profit? (c) Compare.",
+          "answer": "$P'(x) = R'(x) - C'(x)$; compute $P'(8)$ and $P(9) - P(8)$",
+          "context": "Marginal profit combines marginal revenue and marginal cost"
+        }
+      ],
+      "applied_contexts": [
+        "pricing and demand",
+        "production planning",
+        "unit cost analysis",
+        "incremental business decisions"
+      ],
+      "prerequisites": [
+        "derivative-as-rate-of-change",
+        "cost-revenue-profit-functions"
+      ],
+      "common_errors": [
+        "Confusing marginal (derivative) with total (function value)",
+        "Forgetting that marginal is an approximation and will not exactly equal the actual incremental change",
+        "Computing $C(k) - C(k+1)$ instead of $C(k+1) - C(k)$ (sign error)"
+      ],
+      "geogebra_prompt": "C(x) = x^2/8 + 3x + 98; plot C(x) and C'(x); mark x=8 and show how C'(8) approximates the slope",
+      "deck": 3,
+      "unit_title": "The Derivative",
+      "order": 38,
+      "prereq_in_scope": [
+        "derivative-as-rate-of-change",
+        "cost-revenue-profit-functions"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "critical-points",
+      "title": "Critical Points",
+      "student_facing_name": "Finding the points where a curve might turn",
+      "summary": "A critical point of $f$ is a point $x = a$ in the domain where $f'(a) = 0$, or where $f'(a)$ does not exist. These are the only candidates for a local maximum or minimum, so every question about the largest or smallest value of a function starts here. Finding them is a two-step job: differentiate, then solve $f'(x) = 0$. The professor's worked cases are chosen so that the solving is the interesting part.",
+      "notation": [
+        "critical point",
+        "$f'(a) = 0$",
+        "stationary point"
+      ],
+      "method_steps": [
+        "Differentiate to get $f'(x)$",
+        "Set $f'(x) = 0$ and solve for $x$",
+        "Also note any point of the domain where $f'$ fails to exist",
+        "Check each solution actually lies in the domain of $f$",
+        "These are the critical points — they are candidates only, not yet classified"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find the critical points of $y = x^{2} + 1$.",
+          "answer": "$\\dfrac{dy}{dx} = 2x$, and $2x = 0$ gives $x = 0$.",
+          "context": "the simplest case, used to fix the procedure before the algebra gets harder"
+        },
+        {
+          "problem": "Find the critical points of $y = x^{2}e^{-x}$.",
+          "answer": "$\\dfrac{dy}{dx} = 2xe^{-x} + x^{2}(-1)e^{-x} = (2x - x^{2})e^{-x} = x(2-x)e^{-x}$, so the critical points are $x = 0$ and $x = 2$.",
+          "context": "the professor's example. The key move is that $e^{-x} = \\dfrac{1}{e^{x}}$ is never zero, so only the polynomial factor can vanish — he spends a whole slide on that point."
+        },
+        {
+          "problem": "Find the critical points of $f(x) = 2x^{3} + 3x^{2} - 12x - 7$.",
+          "answer": "$f'(x) = 6x^{2} + 6x - 12 = 6(x^{2} + x - 2) = 6(x+2)(x-1)$, so $x = -2$ and $x = 1$.",
+          "context": "the cubic the professor carries through the whole first-derivative-test section; factor out the 6 before factorising"
+        }
+      ],
+      "applied_contexts": [
+        "the output level at which profit might be greatest",
+        "the dimensions at which a container might use least material"
+      ],
+      "prerequisites": [
+        "derivative-rules-sum-product-quotient",
+        "pc-factoring",
+        "pc-solving-equations"
+      ],
+      "common_errors": [
+        "Setting $f(x) = 0$ instead of $f'(x) = 0$",
+        "Concluding that a factor like $e^{-x}$ can be zero",
+        "Assuming every critical point is a maximum or a minimum — it may be neither",
+        "Losing a solution by dividing through by a factor containing $x$ instead of factorising",
+        "Forgetting points where the derivative does not exist"
+      ],
+      "geogebra_prompt": "Plot $f(x) = 2x^3 + 3x^2 - 12x - 7$ with $f'(x)$ underneath, marking where the lower graph crosses the axis and what the upper graph does there",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 39,
+      "prereq_in_scope": [
+        "derivative-rules-sum-product-quotient"
+      ],
+      "prereq_outside_scope": [
+        "pc-factoring",
+        "pc-solving-equations"
+      ]
+    },
+    {
+      "id": "extreme-values-closed-interval",
+      "title": "Extreme Values on a Closed Interval",
+      "student_facing_name": "The largest and smallest values a function reaches",
+      "summary": "The professor states the guarantee plainly: every continuous function on a closed interval attains both a smallest value and a largest value on that interval. These are the absolute, or global, extrema. They occur either at a critical point inside the interval or at one of the two endpoints, so the search is finite — evaluate $f$ at every critical point and at both endpoints, and compare. He stresses that the answer depends on the domain: change the interval and the extrema can change with it.",
+      "notation": [
+        "absolute (global) maximum and minimum",
+        "extreme values, extrema",
+        "closed interval $[a, b]$"
+      ],
+      "method_steps": [
+        "Check the function is continuous on the closed interval",
+        "Find all critical points and keep only those inside the interval",
+        "Evaluate $f$ at each of those critical points",
+        "Evaluate $f$ at both endpoints $a$ and $b$",
+        "The largest of these values is the absolute maximum, the smallest the absolute minimum"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find the absolute maximum and minimum of $g(x) = x^{2/3}$ on $[-2, 3]$.",
+          "answer": "$g'(x) = \\tfrac{2}{3}x^{-1/3}$, which does not exist at $x = 0$, so $x = 0$ is a critical point. Comparing $g(0) = 0$, $g(-2) = 2^{2/3} \\approx 1.587$ and $g(3) = 3^{2/3} \\approx 2.08$: the minimum is $0$ at $x = 0$ and the maximum is $3^{2/3}$ at $x = 3$.",
+          "context": "the professor opens the integration lecture with this same function. It is chosen because the critical point comes from the derivative failing to exist, not from it being zero."
+        },
+        {
+          "problem": "Find the extreme values of $f(x) = x^{2} + 1$ on $[-1, 2]$.",
+          "answer": "The only critical point is $x = 0$, with $f(0) = 1$. The endpoints give $f(-1) = 2$ and $f(2) = 5$. So the minimum is $1$ at $x = 0$ and the maximum is $5$ at $x = 2$.",
+          "context": "the maximum is at an endpoint, not a critical point — which is exactly why endpoints have to be tested"
+        }
+      ],
+      "applied_contexts": [
+        "the best output level when production capacity is limited",
+        "the highest and lowest temperature over a fixed period"
+      ],
+      "prerequisites": [
+        "critical-points",
+        "continuity-properties-and-ivt"
+      ],
+      "common_errors": [
+        "Forgetting to test the endpoints",
+        "Including critical points that fall outside the interval",
+        "Reporting the $x$ value where the maximum occurs as the maximum value itself",
+        "Applying the guarantee to an open interval or to a function with a break in it",
+        "Assuming the absolute maximum must be at a critical point"
+      ],
+      "geogebra_prompt": "Plot a function with draggable interval endpoints and highlight the highest and lowest points of the visible piece, so the extrema visibly jump between critical points and endpoints",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 40,
+      "prereq_in_scope": [
+        "critical-points",
+        "continuity-properties-and-ivt"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "increasing-decreasing-intervals",
+      "title": "Monotonic Functions: Intervals of Increase and Decrease",
+      "student_facing_name": "Using the sign of the derivative to say where a curve rises and falls",
+      "summary": "The sign of $f'$ decides the direction of $f$: where $f'(x) > 0$ the function is increasing, and where $f'(x) < 0$ it is decreasing. Since $f'$ can only change sign at a critical point, the critical points cut the domain into intervals on which the direction is constant. Testing one convenient value of $f'$ in each interval therefore settles the behaviour on the whole interval — the professor's phrase is to pick a point $c$ with $a < c < b$ and look at the sign of $f'(c)$.",
+      "notation": [
+        "$f'(x) > 0 \\Rightarrow f$ increasing",
+        "$f'(x) < 0 \\Rightarrow f$ decreasing",
+        "sign chart",
+        "$(-\\infty, -2) \\cup (-2, 1) \\cup (1, \\infty)$"
+      ],
+      "method_steps": [
+        "Find the critical points",
+        "Use them to split the domain into open intervals",
+        "Choose one test value $c$ inside each interval",
+        "Evaluate $f'(c)$ and record only its sign",
+        "Report: increasing where the sign is positive, decreasing where it is negative"
+      ],
+      "worked_examples": [
+        {
+          "problem": "For $f(x) = 2x^{3} + 3x^{2} - 12x - 7$, find the intervals on which $f$ is increasing and decreasing.",
+          "answer": "Critical points $x = -2$ and $x = 1$ split the line into $(-\\infty, -2)$, $(-2, 1)$ and $(1, \\infty)$. Testing $c = -3$: $f'(-3) = 54 - 18 - 12 = 32 > 0$. Testing $c = 0$: $f'(0) = -12 < 0$. Testing $c = 2$: $f'(2) = 24 + 12 - 12 = 24 > 0$. So $f$ increases on $(-\\infty, -2)$, decreases on $(-2, 1)$, and increases on $(1, \\infty)$.",
+          "context": "the professor's fully worked case, spread across three slides. Note he evaluates $f'$ at the test point, not $f$, and only the sign is used."
+        },
+        {
+          "problem": "For $f(x) = x^{2} + 1$, where is $f$ increasing and where decreasing?",
+          "answer": "$f'(x) = 2x$, critical point $x = 0$. At $c = -1$, $f'(-1) = -2 < 0$; at $c = 1$, $f'(1) = 2 > 0$. So $f$ decreases on $(-\\infty, 0)$ and increases on $(0, \\infty)$.",
+          "context": "the parabola, done the same way so the method is seen on a graph students already know"
+        }
+      ],
+      "applied_contexts": [
+        "trend analysis",
+        "business metrics",
+        "production efficiency over time"
+      ],
+      "prerequisites": [
+        "critical-points"
+      ],
+      "common_errors": [
+        "Testing the critical point itself instead of a point strictly inside an interval",
+        "Substituting the test value into $f$ rather than $f'$",
+        "Computing the whole value of $f'(c)$ carefully when only its sign is needed — harmless, but slow",
+        "Writing the intervals as closed rather than open",
+        "Assuming the sign must alternate between consecutive intervals"
+      ],
+      "geogebra_prompt": "f(x) = x^3 - 3x^2 - 9x + 5; plot f(x), f'(x); mark critical points and shade increasing/decreasing regions",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 41,
+      "prereq_in_scope": [
+        "critical-points"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "first-derivative-test",
+      "title": "The First Derivative Test",
+      "student_facing_name": "Deciding whether a critical point is a peak or a trough",
+      "summary": "Once the sign of $f'$ is known either side of a critical point, the nature of that point follows. If $f'$ changes from positive to negative there, the function rises then falls, so the point is a local maximum. If $f'$ changes from negative to positive, it is a local minimum. If the sign does not change, the point is neither. The professor defines a relative maximum as a point whose value is larger than the values at nearby points — a local claim, not a claim about the whole graph.",
+      "notation": [
+        "relative (local) maximum and minimum",
+        "$f'$ changes $+ \\to -$ : local maximum",
+        "$f'$ changes $- \\to +$ : local minimum",
+        "no sign change: neither"
+      ],
+      "method_steps": [
+        "Find the critical points",
+        "Build the sign chart of $f'$ on the intervals between them",
+        "At each critical point, read the sign to its left and to its right",
+        "Positive then negative means a local maximum; negative then positive means a local minimum",
+        "Substitute back into $f$ to get the value at that maximum or minimum"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Classify the critical points of $f(x) = 2x^{3} + 3x^{2} - 12x - 7$.",
+          "answer": "$f'$ is positive on $(-\\infty, -2)$, negative on $(-2, 1)$ and positive on $(1, \\infty)$. So $x = -2$ is a local maximum and $x = 1$ is a local minimum.",
+          "context": "the professor's main worked example, continued from the sign chart. $f(-2) = 13$ and $f(1) = -14$."
+        },
+        {
+          "problem": "Classify the critical point of $f(x) = x^{2} + 1$.",
+          "answer": "$f'$ is negative on $(-\\infty, 0)$ and positive on $(0, \\infty)$, so $x = 0$ is a local minimum, with value $f(0) = 1$.",
+          "context": "the sign goes from negative to positive, which is the minimum pattern"
+        }
+      ],
+      "applied_contexts": [
+        "the output level that maximises profit",
+        "the moment a quantity stops growing and starts shrinking"
+      ],
+      "prerequisites": [
+        "increasing-decreasing-intervals",
+        "critical-points"
+      ],
+      "common_errors": [
+        "Getting the two patterns the wrong way round — rising then falling is a maximum",
+        "Concluding a critical point must be one or the other when the sign does not change at all",
+        "Confusing a local maximum with the absolute maximum on an interval",
+        "Reporting the critical $x$ value as the maximum instead of $f$ at that value"
+      ],
+      "geogebra_prompt": "A tangent line sliding along a cubic, with the sign of its slope shown, so the changeover from positive to negative can be seen happening at the peak",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 42,
+      "prereq_in_scope": [
+        "increasing-decreasing-intervals",
+        "critical-points"
       ],
       "prereq_outside_scope": []
     },
     {
       "id": "second-deriv-test-maxima-minima",
-      "deck": 7,
-      "unit_title": "Differentiation (Part B)",
-      "order": 38,
       "title": "Second-Derivative Test for Maxima and Minima",
       "student_facing_name": "Using the second derivative to find max and min",
-      "summary": "To find relative extrema: (1) Solve $f'(x) = 0$ to find critical points; (2) Evaluate $f''(x)$ at each critical point. If $f''(a) < 0$, then $x = a$ gives a relative maximum. If $f''(a) > 0$, then $x = a$ gives a relative minimum. This is THE method taught in this course.",
+      "summary": "A quicker alternative to the sign chart when the second derivative is easy to compute. At a critical point where $f'(a) = 0$: if $f''(a) < 0$ the point is a local maximum, if $f''(a) > 0$ it is a local minimum, and if $f''(a) = 0$ the test says nothing and the first derivative test has to be used instead. The professor presents it as the second of two tools for the same job, not as a replacement for the first.",
       "notation": [
         "$f'(x) = 0$",
         "$f''(a) < 0$ (maximum)",
@@ -481,24 +2292,86 @@
         "manufacturing"
       ],
       "prerequisites": [
-        "second-order-derivatives"
+        "critical-points",
+        "second-order-derivatives",
+        "first-derivative-test"
       ],
       "common_errors": [
-        "Using first-derivative sign test instead of second-derivative test (wrong method for this course)",
-        "Forgetting to check that $f'(x) = 0$ before applying the second derivative test",
-        "Confusing the inequality: $f'' < 0$ means maximum, $f'' > 0$ means minimum"
+        "Applying the test at a point that is not a critical point",
+        "Reading $f''(a) < 0$ as a minimum — negative means the curve bends downwards, so it is a maximum",
+        "Treating $f''(a) = 0$ as proof that the point is neither, when the test is simply silent",
+        "Differentiating only once and testing the sign of $f'$ at the point, which is zero by construction"
       ],
       "geogebra_prompt": "f(x) = 2x^3 + 3x^2 - 36x + 10; find critical points, plot f''(x), mark the max and min",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 43,
       "prereq_in_scope": [
-        "second-order-derivatives"
+        "critical-points",
+        "second-order-derivatives",
+        "first-derivative-test"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "applied-optimization",
+      "title": "Applied Optimization",
+      "student_facing_name": "Turning a word problem into a maximum or minimum",
+      "summary": "The hard part of an optimization problem is never the calculus — it is getting from the words to a single function of a single variable. The professor gives a five-step procedure for this and then applies the three tools already available (extreme values on a closed interval, the first derivative test, the second derivative test) to the function that results. The examples are geometric: the largest rectangle inside a semicircle, and the one-litre can using the least metal.",
+      "notation": [
+        "constraint equation",
+        "objective function",
+        "domain of the variable being optimized"
+      ],
+      "method_steps": [
+        "Read the problem carefully: what is given, and what quantity is to be optimized?",
+        "Draw a picture and label it with everything known",
+        "Introduce variables and write every relation in the problem as an equation",
+        "Write an equation for the quantity to be optimized, using the constraint to reduce it to one variable",
+        "Find the critical points, then test them and the endpoints of the domain, and classify"
+      ],
+      "worked_examples": [
+        {
+          "problem": "A rectangle is to be inscribed in a semicircle of radius 2, with its base on the diameter. What is the largest area it can have, and what are its dimensions?",
+          "answer": "Put the semicircle as $y = \\sqrt{4 - x^{2}}$ with the rectangle running from $-x$ to $x$. Area $A(x) = 2x\\sqrt{4 - x^{2}}$ on $[0, 2]$. Setting $A'(x) = 0$ gives $x = \\sqrt{2}$, so the rectangle is $2\\sqrt{2}$ wide and $\\sqrt{2}$ tall, with area $4$.",
+          "context": "the professor's worked example. The constraint is the equation of the circle; it is what turns two variables into one."
+        },
+        {
+          "problem": "Design a one-litre can shaped like a right circular cylinder. What dimensions use the least material?",
+          "answer": "With volume fixed at $1000\\ \\text{cm}^3 = \\pi r^{2}h$, the surface area is $A(r) = 2\\pi r^{2} + 2\\pi r h = 2\\pi r^{2} + \\dfrac{2000}{r}$. Setting $A'(r) = 4\\pi r - \\dfrac{2000}{r^{2}} = 0$ gives $r = \\sqrt[3]{\\dfrac{500}{\\pi}} \\approx 5.42$ cm, and then $h \\approx 10.84$ cm — the height is twice the radius.",
+          "context": "the professor's second example. The volume constraint eliminates $h$; the answer $h = 2r$ is worth remembering as a sanity check."
+        }
+      ],
+      "applied_contexts": [
+        "least material for a container of fixed volume",
+        "largest enclosed area for a fixed length of fencing",
+        "cheapest production schedule subject to a requirement"
+      ],
+      "prerequisites": [
+        "first-derivative-test",
+        "second-deriv-test-maxima-minima",
+        "extreme-values-closed-interval"
+      ],
+      "common_errors": [
+        "Differentiating a function of two variables without using the constraint to eliminate one",
+        "Optimizing the wrong quantity — maximising the perimeter when the area was asked for",
+        "Ignoring the natural domain, so a negative length or radius survives as an 'answer'",
+        "Stopping at the critical value of $x$ without answering the question that was asked",
+        "Forgetting to check the endpoints of the domain"
+      ],
+      "geogebra_prompt": "A semicircle of radius 2 with a rectangle whose corner is dragged along the arc, displaying the area as it changes and marking the largest value reached",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 44,
+      "prereq_in_scope": [
+        "first-derivative-test",
+        "second-deriv-test-maxima-minima",
+        "extreme-values-closed-interval"
       ],
       "prereq_outside_scope": []
     },
     {
       "id": "optimization-cost-problems",
-      "deck": 7,
-      "unit_title": "Differentiation (Part B)",
-      "order": 39,
       "title": "Optimization: Cost and Production Problems",
       "student_facing_name": "Minimizing cost and maximizing production efficiency",
       "summary": "Apply the second-derivative test to real-world cost functions to find production levels that minimize unit cost or total cost. These problems are central to the course's business focus and include overhead costs, per-unit material costs, and labour costs as polynomials in production quantity.",
@@ -530,7 +2403,8 @@
         "overhead and labour costs in rupees"
       ],
       "prerequisites": [
-        "second-deriv-test-maxima-minima"
+        "applied-optimization",
+        "cost-revenue-profit-functions"
       ],
       "common_errors": [
         "Forgetting to include fixed (overhead) costs in the cost function",
@@ -538,16 +2412,17 @@
         "Not checking the second derivative to confirm it is a minimum"
       ],
       "geogebra_prompt": "C(x) = x^2/25 - 6x + 500; plot C(x), C'(x), and mark the minimum",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 45,
       "prereq_in_scope": [
-        "second-deriv-test-maxima-minima"
+        "applied-optimization",
+        "cost-revenue-profit-functions"
       ],
       "prereq_outside_scope": []
     },
     {
       "id": "optimization-revenue-profit",
-      "deck": 7,
-      "unit_title": "Differentiation (Part B)",
-      "order": 40,
       "title": "Optimization: Revenue and Profit Problems",
       "student_facing_name": "Maximizing revenue and profit",
       "summary": "Apply optimization to revenue and profit functions. Revenue often decreases as price increases (due to elasticity), and profit is revenue minus cost. Use the second-derivative test to find production/pricing levels that maximize revenue or profit.",
@@ -581,7 +2456,8 @@
         "demand and supply"
       ],
       "prerequisites": [
-        "second-deriv-test-maxima-minima"
+        "applied-optimization",
+        "cost-revenue-profit-functions"
       ],
       "common_errors": [
         "Confusing revenue (price times quantity) with profit (revenue minus cost)",
@@ -589,96 +2465,38 @@
         "Arithmetic errors when setting $R'(x) = 0$ or expanding $(ax + b)^n$ terms"
       ],
       "geogebra_prompt": "C(x) = 100 + 0.015x^2; R(x) = 3x; P(x) = R(x) - C(x); plot all three and mark max profit",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 46,
       "prereq_in_scope": [
-        "second-deriv-test-maxima-minima"
-      ],
-      "prereq_outside_scope": []
-    },
-    {
-      "id": "marginal-analysis-economics",
-      "deck": 7,
-      "unit_title": "Differentiation (Part B)",
-      "order": 41,
-      "title": "Marginal Analysis in Economics",
-      "student_facing_name": "Understanding marginal cost, revenue, and profit",
-      "summary": "Marginal cost, marginal revenue, and marginal profit are the derivatives of cost, revenue, and profit functions. The marginal value at $x = k$ approximates the actual change in the total quantity when production increases from $k$ to $k+1$ units. Marginal analysis connects rates of change to real economic quantities.",
-      "notation": [
-        "$MC = C'(x)$",
-        "$MR = R'(x)$",
-        "$MP = P'(x)$",
-        "$C(k+1) - C(k)$ (actual incremental cost)"
-      ],
-      "method_steps": [
-        "Find $C'(x)$, $R'(x)$, and $P'(x)$ as the marginal functions",
-        "Evaluate the derivative at a specific production level $k$ to estimate the cost/revenue/profit of the next unit",
-        "Compare the marginal value to the actual incremental value $C(k+1) - C(k)$ to show how close the derivative approximation is"
-      ],
-      "worked_examples": [
-        {
-          "problem": "A manufacturer estimates that when $x$ units of a commodity are produced, total cost will be $C(x) = \\frac{1}{8}x^2 + 3x + 98$ dollars. (a) Find $C'(x)$ and compute $C'(8)$. (b) Find $C(9) - C(8)$. (c) Is $C'(8)$ close to $C(9) - C(8)$?",
-          "answer": "$C'(x) = \\frac{1}{4}x + 3$; $C'(8) = 5$; $C(9) - C(8) = 5.125$; yes, very close",
-          "context": "Demonstrates how marginal cost approximates actual incremental cost"
-        },
-        {
-          "problem": "A manufacturer estimates that when $x$ units are produced, all units will be sold when price is $p(x) = \\frac{1}{3}(75 - x)$ dollars per unit. (a) Find the marginal revenue function and use it to estimate revenue from selling the ninth unit. (b) What is the actual revenue from selling the ninth unit? (c) How close is marginal revenue to actual?",
-          "answer": "$R(x) = p(x) \\cdot x = \\frac{1}{3}(75 - x) \\cdot x$; compute $R'(x)$, then $R'(8)$ and $R(9) - R(8)$",
-          "context": "Marginal revenue with price-dependent demand"
-        },
-        {
-          "problem": "A manufacturer estimates $C(x) = \\frac{1}{8}x^2 + 3x + 98$ and $p(x) = \\frac{1}{3}(75 - x)$. (a) Find the marginal profit function and estimate profit from selling the ninth unit. (b) What is the actual profit? (c) Compare.",
-          "answer": "$P'(x) = R'(x) - C'(x)$; compute $P'(8)$ and $P(9) - P(8)$",
-          "context": "Marginal profit combines marginal revenue and marginal cost"
-        }
-      ],
-      "applied_contexts": [
-        "pricing and demand",
-        "production planning",
-        "unit cost analysis",
-        "incremental business decisions"
-      ],
-      "prerequisites": [
-        "second-deriv-test-maxima-minima"
-      ],
-      "common_errors": [
-        "Confusing marginal (derivative) with total (function value)",
-        "Forgetting that marginal is an approximation and will not exactly equal the actual incremental change",
-        "Computing $C(k) - C(k+1)$ instead of $C(k+1) - C(k)$ (sign error)"
-      ],
-      "geogebra_prompt": "C(x) = x^2/8 + 3x + 98; plot C(x) and C'(x); mark x=8 and show how C'(8) approximates the slope",
-      "prereq_in_scope": [
-        "second-deriv-test-maxima-minima"
+        "applied-optimization",
+        "cost-revenue-profit-functions"
       ],
       "prereq_outside_scope": []
     },
     {
       "id": "marginal-approach-to-profit-max",
-      "deck": 7,
-      "unit_title": "Differentiation (Part B)",
-      "order": 42,
       "title": "Marginal Approach to Profit Maximization",
       "student_facing_name": "Finding max profit using marginals",
-      "summary": "Profit is maximized when marginal revenue equals marginal cost: $MR = MC$, or equivalently $R'(x) = C'(x)$. This is a key principle in economics: at the optimal production level, the revenue from one more unit equals the cost of producing one more unit.",
+      "summary": "The economic version of the same calculation. With revenue $r(x)$ and cost $c(x)$, profit is $p(x) = r(x) - c(x)$. To maximise it, differentiate and set the result to zero, which gives $r'(x) = c'(x)$ — marginal revenue equals marginal cost. That condition finds candidates; the second derivative then says which candidate is the maximum. The professor's worked case has two critical points and only one of them is the profit-maximising one, which is the whole point of doing the second stage.",
       "notation": [
-        "$R'(x) = C'(x)$",
-        "$MR = MC$",
-        "$P'(x) = 0$"
+        "$p(x) = r(x) - c(x)$",
+        "$\\dfrac{dp}{dx} = r'(x) - c'(x)$",
+        "at a maximum: $r'(x) = c'(x)$, i.e. $MR = MC$",
+        "$p''(x) = r''(x) - c''(x)$"
       ],
       "method_steps": [
-        "Set up cost and revenue functions",
-        "Find $C'(x)$ and $R'(x)$",
-        "Solve $R'(x) = C'(x)$",
-        "Evaluate profit $P(x) = R(x) - C(x)$ at the solution to find maximum profit"
+        "Write the profit function as revenue minus cost, $p(x) = r(x) - c(x)$",
+        "Differentiate: $\\dfrac{dp}{dx} = r'(x) - c'(x)$",
+        "Set it to zero, which is the condition $r'(x) = c'(x)$, marginal revenue equals marginal cost",
+        "Solve for $x$ — there may be more than one solution",
+        "Use $p''(x)$ at each solution: negative means that output level maximises profit"
       ],
       "worked_examples": [
         {
-          "problem": "The total cost and revenue functions for a product are $C(q) = 40,000 + 25q + 0.002q^2$ and $R(q) = 75q - 0.008q^2$. Using the marginal approach, determine the profit-maximizing level of output and the maximum profit.",
-          "answer": "$R'(q) = 75 - 0.016q$; $C'(q) = 25 + 0.004q$; solve $75 - 0.016q = 25 + 0.004q$ to find $q$, then compute profit",
-          "context": "Standard profit maximization with cost and revenue functions"
-        },
-        {
-          "problem": "A manufacturer has developed solar collection panels. Demand: $q = 100,000 - 200p$. Cost: $C = 150,000 + 100q + 0.003q^2$. (a) Formulate profit as a function of $q$. (b) Using the marginal approach, determine the profit-maximizing output level.",
-          "answer": "Express revenue as $R = p \\cdot q$ where $p = \\frac{100,000 - q}{200}$; form $P(q)$; solve $P'(q) = 0$",
-          "context": "Demand-based pricing; requires expressing price as a function of quantity demanded"
+          "problem": "With $x$ in millions of MP3 players, revenue is $r(x) = 9x$ and cost is $c(x) = x^{3} - 6x^{2} + 15x$. Find the production level that maximises profit.",
+          "answer": "$r'(x) = 9$ and $c'(x) = 3x^{2} - 12x + 15$. Setting them equal: $9 = 3x^{2} - 12x + 15$, so $3x^{2} - 12x + 6 = 0$, giving $x_1 = 2 - \\sqrt{2} \\approx 0.586$ and $x_2 = 2 + \\sqrt{2} \\approx 3.414$. Since $r''(x) = 0$ and $c''(x) = 6x - 12$, $p''(x) = 6(2 - x)$. At $x_2 \\approx 3.414$, $p''= 6(2 - 3.414) = -8.484 < 0$, so profit is maximised at $x = 2 + \\sqrt{2}$ million players.",
+          "context": "the professor's fully worked example. Both critical points satisfy $MR = MC$; only the second maximises profit, and the smaller one is a local minimum."
         }
       ],
       "applied_contexts": [
@@ -688,55 +2506,613 @@
         "manufacturing management"
       ],
       "prerequisites": [
-        "marginal-analysis-economics"
+        "marginal-analysis-economics",
+        "second-deriv-test-maxima-minima",
+        "cost-revenue-profit-functions"
       ],
       "common_errors": [
-        "Solving $MR = MC$ but forgetting to verify it gives a maximum (not minimum)",
-        "Arithmetic errors when equating the derivatives and solving for $q$",
-        "Confusing demand function $q(p)$ with inverse demand $p(q)$"
+        "Writing the derivative of profit as $c'(x) - r'(x)$ instead of $r'(x) - c'(x)$. Profit is revenue minus cost, so its derivative is marginal revenue minus marginal cost, in that order. The condition $MR = MC$ comes out the same either way, so the slip is easy to miss — but the sign of $p''$, which decides maximum from minimum, is reversed by it",
+        "Stopping at $MR = MC$ without checking which solution is the maximum",
+        "Assuming there is only one solution to $r'(x) = c'(x)$",
+        "Maximising revenue instead of profit",
+        "Forgetting the units: here $x$ is in millions, so the answer is not 3.414 players"
       ],
       "geogebra_prompt": "C(q) = 40000 + 25q + 0.002q^2; R(q) = 75q - 0.008q^2; plot C'(q) and R'(q); mark their intersection",
+      "deck": 4,
+      "unit_title": "Applications of the Derivative",
+      "order": 47,
       "prereq_in_scope": [
-        "marginal-analysis-economics"
+        "marginal-analysis-economics",
+        "second-deriv-test-maxima-minima",
+        "cost-revenue-profit-functions"
       ],
       "prereq_outside_scope": []
     },
     {
-      "id": "increasing-decreasing-intervals",
-      "deck": 7,
-      "unit_title": "Differentiation (Part B)",
-      "order": 43,
-      "title": "Intervals of Increase and Decrease",
-      "student_facing_name": "Where functions go up and down",
-      "summary": "A function is increasing on an interval where $f'(x) > 0$ and decreasing where $f'(x) < 0$. This tells us the behavior of a function between critical points and is useful for sketching curves and understanding real-world behavior.",
+      "id": "antiderivative-definition",
+      "title": "Antiderivatives and the Indefinite Integral",
+      "student_facing_name": "Reversing differentiation",
+      "summary": "Integration is introduced as the reverse of differentiation. The professor's opening observation is that $x^{2}$, $x^{2}+1$ and $x^{2}+4.5$ all have derivative $2x$, so reversing the process cannot recover a single function — it recovers a whole family $x^{2} + C$. A function $F$ is an antiderivative of $f$ when $F'(x) = f(x)$, and the indefinite integral $\\int f(x)\\,dx = F(x) + C$ names that family. He is explicit that there are two connected ways to view integration: as antidifferentiation (the indefinite integral) and as a limit of a sum (the definite integral), and that the Fundamental Theorem is what joins them.",
       "notation": [
-        "$f'(x) > 0$ (increasing)",
-        "$f'(x) < 0$ (decreasing)",
-        "Critical point: $f'(x) = 0$"
+        "$F'(x) = f(x)$",
+        "$\\int f(x) dx = F(x) + C$",
+        "Integral sign: $\\int$",
+        "Integrand: $f(x)$",
+        "Constant of integration: $C$"
       ],
       "method_steps": [
-        "Find $f'(x)$",
-        "Solve $f'(x) = 0$ to find critical points",
-        "Create a sign chart for $f'(x)$ by testing the sign in each interval between critical points",
-        "Determine intervals where $f'(x) > 0$ (increasing) and where $f'(x) < 0$ (decreasing)"
+        "Ask which function, when differentiated, gives the integrand",
+        "Check the guess by differentiating it",
+        "Add the constant of integration $C$, because every constant differentiates away",
+        "Write the answer as $\\int f(x)\\,dx = F(x) + C$"
       ],
-      "worked_examples": [],
-      "applied_contexts": [
-        "trend analysis",
-        "business metrics",
-        "production efficiency over time"
+      "worked_examples": [
+        {
+          "problem": "What is $\\int 2x\\,dx$, and why is the answer not simply $x^{2}$?",
+          "answer": "$\\int 2x\\,dx = x^{2} + C$.",
+          "context": "the professor's opening slides: $\\dfrac{d(x^{2})}{dx}$, $\\dfrac{d(x^{2}+1)}{dx}$ and $\\dfrac{d(x^{2}+4.5)}{dx}$ are all $2x$, so $x^2$ is one antiderivative among infinitely many"
+        },
+        {
+          "problem": "Verify that $F(x) = \\tfrac{1}{3}x^{3} + 5x + 2$ is an antiderivative of $f(x) = x^{2} + 5$.",
+          "answer": "$F'(x) = x^{2} + 5 = f(x)$, so yes.",
+          "context": "checking by differentiating is the only verification needed, and it always works"
+        }
       ],
+      "applied_contexts": [],
       "prerequisites": [
-        "second-deriv-test-maxima-minima"
+        "derivative-rules-basic",
+        "derivative-rules-sum-product-quotient"
       ],
       "common_errors": [
-        "Forgetting to check signs in all regions separated by critical points",
-        "Claiming a function increases/decreases at a single point (intervals only)",
-        "Sign errors when evaluating test points in $f'(x)$"
+        "Forgetting the constant of integration $C$",
+        "Thinking there is only one antiderivative (there are infinitely many, differing by constants)",
+        "Confusing antiderivative with derivative"
       ],
-      "geogebra_prompt": "f(x) = x^3 - 3x^2 - 9x + 5; plot f(x), f'(x); mark critical points and shade increasing/decreasing regions",
+      "geogebra_prompt": "Plot F(x) = x^3/3 + 5x, F(x) = x^3/3 + 5x + 2, F(x) = x^3/3 + 5x - 3 to visualize different antiderivatives",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 48,
       "prereq_in_scope": [
-        "second-deriv-test-maxima-minima"
+        "derivative-rules-basic",
+        "derivative-rules-sum-product-quotient"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "power-rule-integration",
+      "title": "Integration Rules for Common Functions",
+      "student_facing_name": "Integrating powers, polynomials, and exponentials",
+      "summary": "The standard integrals, each one a differentiation rule read backwards. The power rule for integration is $\\int x^{n}\\,dx = \\dfrac{1}{n+1}x^{n+1} + C$, which the professor states in exactly that form, and it holds for every $n$ except $-1$ — the case that would divide by zero, and the one the logarithm rule covers instead. Alongside it come $\\int \\dfrac{1}{x}\\,dx = \\ln(x) + C$, $\\int e^{x}\\,dx = e^{x} + C$ and $\\int a^{x}\\,dx = \\dfrac{a^{x}}{\\ln(a)} + C$.",
+      "notation": [
+        "$\\int x^n dx = \\frac{x^{n+1}}{n+1} + c$ (for $n \\neq -1$)",
+        "$\\int \\frac{1}{x} dx = \\ln x + c$",
+        "$\\int e^x dx = e^x + c$",
+        "$\\int a^x dx = \\frac{a^x}{\\ln a} + c$"
+      ],
+      "method_steps": [
+        "Identify the form of the integrand",
+        "Apply the appropriate rule",
+        "Do not forget the constant of integration"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\int x^{5}\\,dx$.",
+          "answer": "$\\dfrac{x^{6}}{6} + C$",
+          "context": "add one to the exponent, then divide by the new exponent"
+        },
+        {
+          "problem": "Find $\\int \\sqrt{x}\\,dx$.",
+          "answer": "$\\int x^{1/2}\\,dx = \\dfrac{x^{3/2}}{3/2} + C = \\dfrac{2}{3}x^{3/2} + C$",
+          "context": "rewrite the radical as a fractional power first; dividing by $3/2$ means multiplying by $2/3$"
+        },
+        {
+          "problem": "Find $\\int \\dfrac{1}{x^{2}}\\,dx$.",
+          "answer": "$\\int x^{-2}\\,dx = \\dfrac{x^{-1}}{-1} + C = -\\dfrac{1}{x} + C$",
+          "context": "a negative exponent, and not the excluded case — $n = -2$, not $-1$, so the power rule applies"
+        }
+      ],
+      "applied_contexts": [],
+      "prerequisites": [
+        "antiderivative-definition",
+        "pc-exponent-radical-rules"
+      ],
+      "common_errors": [
+        "Applying power rule when $n = -1$ (use logarithm rule instead)",
+        "Forgetting to add 1 to the exponent and divide by the new exponent",
+        "Sign errors with negative exponents"
+      ],
+      "geogebra_prompt": "Numerically integrate f(x) = x^3 - 2x + 5 and verify against F(x) = x^4/4 - x^2 + 5x + C",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 49,
+      "prereq_in_scope": [
+        "antiderivative-definition"
+      ],
+      "prereq_outside_scope": [
+        "pc-exponent-radical-rules"
+      ]
+    },
+    {
+      "id": "algebraic-rules-indefinite-integration",
+      "title": "Algebraic Rules for Indefinite Integration",
+      "student_facing_name": "Integrating sums, differences, and scaled functions",
+      "summary": "Integration is linear, which is what makes long integrands manageable. The professor states the two rules together: $\\int\\left(f(x) \\pm g(x)\\right)dx = \\int f(x)\\,dx \\pm \\int g(x)\\,dx$ and $\\int k\\,f(x)\\,dx = k\\int f(x)\\,dx$. Split the integrand into terms, integrate each with the appropriate rule, and add a single $C$ at the end. Products and quotients must be multiplied out or rewritten first — there is no product rule for integration.",
+      "notation": [
+        "$\\int kf(x) dx = k \\int f(x) dx$ (constant multiple rule)",
+        "$\\int [f(x) + g(x)] dx = \\int f(x) dx + \\int g(x) dx$ (sum rule)",
+        "$\\int [f(x) - g(x)] dx = \\int f(x) dx - \\int g(x) dx$ (difference rule)"
+      ],
+      "method_steps": [
+        "Split the integrand into individual terms",
+        "Apply power rule or other appropriate rule to each term",
+        "Combine results and include a single $C$"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\int (27 + 18x^5 - 13x^3 + 15) dx$",
+          "answer": "$27x + 3x^6 - \\frac{13x^4}{4} + 15x + C$",
+          "context": "Polynomial integral using sum rule and power rule"
+        },
+        {
+          "problem": "Find $\\int (5x^4 - 12x^3)(3\\sqrt{x} - 5x^2) dx$",
+          "answer": "Expand, apply sum and constant rules, integrate term by term",
+          "context": "Requires expansion before integrating"
+        },
+        {
+          "problem": "Find $\\int t\\sqrt{t}(t^3 - t + 10) dt$",
+          "answer": "Rewrite as $\\int t^{3/2}(t^3 - t + 10) dt$, expand, integrate",
+          "context": "Radical must be rewritten using exponent notation"
+        }
+      ],
+      "applied_contexts": [],
+      "prerequisites": [
+        "power-rule-integration"
+      ],
+      "common_errors": [
+        "Writing a separate $C$ for each term instead of one at the end",
+        "Trying to integrate a product term by term, as though there were a product rule",
+        "Failing to expand a product before integrating",
+        "Not rewriting radicals and reciprocals as powers before applying the power rule"
+      ],
+      "geogebra_prompt": "Plot several polynomials and their antiderivatives to verify algebraic rules",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 50,
+      "prereq_in_scope": [
+        "power-rule-integration"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "initial-value-problems",
+      "title": "Recovering a Function from Its Rate of Change",
+      "student_facing_name": "Working back from a rate to the quantity itself",
+      "summary": "The constant of integration is not a nuisance — it is where an extra piece of information gets used. Given a rate of change and one known value, integrate to get the general form $F(x) + C$, then substitute the known value to pin down $C$. The professor's business case is recovering a total cost function from its marginal cost: $\\int MC(q)\\,dq = C(q) + K$, where $K$ is fixed by knowing the cost at one output level. In economics $K$ is usually related to the fixed cost, the cost of producing nothing at all.",
+      "notation": [
+        "$\\dfrac{dy}{dx} = f(x)$ with a known point",
+        "$MC(q) = \\dfrac{dC}{dq}$",
+        "$\\int MC(q)\\,dq = C(q) + K$"
+      ],
+      "method_steps": [
+        "Integrate the given rate to obtain the general form, keeping the constant",
+        "Substitute the one known pair of values into that general form",
+        "Solve the resulting equation for the constant",
+        "Write the particular function out in full, with the constant replaced by its value",
+        "Use it to answer whatever was actually asked"
+      ],
+      "worked_examples": [
+        {
+          "problem": "A firm's marginal cost is $\\dfrac{dC}{dq} = 3q^{2} - 60q + 400$, and the cost of producing 2 units is $C(2) = 900$. Find $C(q)$, then find $C(5)$.",
+          "answer": "$C(q) = \\int(3q^{2} - 60q + 400)\\,dq = q^{3} - 30q^{2} + 400q + K$. Substituting: $900 = 8 - 120 + 800 + K$, so $K = 212$. Hence $C(q) = q^{3} - 30q^{2} + 400q + 212$, and $C(5) = 125 - 750 + 2000 + 212 = \\$1{,}587$.",
+          "context": "the professor's worked example, carried across four slides. Note that $K$ here is 212, not the fixed cost, because the known value was at $q = 2$ rather than $q = 0$."
+        },
+        {
+          "problem": "A particle has velocity $v(t) = t^{2}$ and is at the origin at time zero, $x(0) = 0$. Find its position $x(t)$.",
+          "answer": "$x(t) = \\int t^{2}\\,dt + K = \\dfrac{t^{3}}{3} + K$. Since $x(0) = 0$ gives $0 = 0 + K$, we have $K = 0$ and $x(t) = \\dfrac{t^{3}}{3}$.",
+          "context": "the professor's motion example. Position, velocity and acceleration form a chain: differentiating goes one way, integrating comes back."
+        },
+        {
+          "problem": "Solve $\\dfrac{dy}{dx} = 2x^{3} - 5x + 12$ given that $y = 15$ when $x = 2$.",
+          "answer": "$y = \\dfrac{x^{4}}{2} - \\dfrac{5x^{2}}{2} + 12x + C$. At $x = 2$: $15 = 8 - 10 + 24 + C$, so $C = -7$ and $y = \\dfrac{x^{4}}{2} - \\dfrac{5x^{2}}{2} + 12x - 7$.",
+          "context": "the same procedure with no context attached, to show it is purely mechanical"
+        }
+      ],
+      "applied_contexts": [
+        "velocity and position",
+        "accumulation of quantities"
+      ],
+      "prerequisites": [
+        "algebraic-rules-indefinite-integration",
+        "derivative-as-rate-of-change"
+      ],
+      "common_errors": [
+        "Substituting the known value before integrating rather than after",
+        "Dropping the constant during the integration, so there is nothing left to solve for",
+        "Assuming the constant equals the fixed cost when the known value was not at $q = 0$",
+        "Arithmetic slips when substituting, particularly with negative terms"
+      ],
+      "geogebra_prompt": "Plot the family $C(q) = q^3 - 30q^2 + 400q + K$ for several $K$, then mark the point $(2, 900)$ and show that exactly one curve passes through it",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 51,
+      "prereq_in_scope": [
+        "algebraic-rules-indefinite-integration",
+        "derivative-as-rate-of-change"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "area-under-a-curve-as-a-limit",
+      "title": "Area Under a Curve as a Limit of Sums",
+      "student_facing_name": "Why area under a curve is a limit, not a formula",
+      "summary": "To find the area under $y = f(x)$ between $x = a$ and $x = b$, fill the region with vertical bars whose heights come from the curve. The total area of the bars approximates the area under the curve, and more bars give a better approximation. The area under the curve is the limit of those totals as the number of bars grows. The professor treats this as an idea to be seen rather than computed — his reading list marks the corresponding textbook section 'Outline Only' and omits sigma notation entirely — and he demonstrates it with a GeoGebra applet where increasing $n$ visibly settles the total towards a limit.",
+      "notation": [
+        "approximating rectangles",
+        "$A = \\int_{a}^{b} f(x)\\,dx$",
+        "the limit as the number of bars increases"
+      ],
+      "method_steps": [
+        "Draw the region between the curve and the $x$-axis from $x = a$ to $x = b$",
+        "Fill it with vertical bars of equal width, each as tall as the curve",
+        "Add the areas of the bars to get an approximation",
+        "Increase the number of bars and watch the approximation improve",
+        "The area under the curve is the limit of these totals, written $\\int_{a}^{b} f(x)\\,dx$"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Why does using more approximating rectangles give a better estimate of the area under a curve?",
+          "answer": "Because the error is the mismatch between the flat top of each bar and the curve above it, and narrower bars mismatch less.",
+          "context": "this is a conceptual topic. The professor's point is that the area is *defined* as this limit, and that the limit is impossible to compute by hand except in a few cases — which is why the Fundamental Theorem matters."
+        }
+      ],
+      "applied_contexts": [
+        "total distance travelled from a velocity graph",
+        "total cost accumulated from a marginal cost curve"
+      ],
+      "prerequisites": [
+        "limit-motivation-and-informal",
+        "antiderivative-definition"
+      ],
+      "common_errors": [
+        "Thinking the rectangles eventually fit the curve exactly rather than approaching it in the limit",
+        "Expecting a formula for the area when the definition is a limit",
+        "Ignoring that area below the axis counts as negative"
+      ],
+      "geogebra_prompt": "The professor's own applet: rectangles under a curve with a slider for $n$, showing the total settle towards a fixed value as $n$ grows (geogebra.org/m/PUvYCTYM)",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 52,
+      "prereq_in_scope": [
+        "limit-motivation-and-informal",
+        "antiderivative-definition"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "the-definite-integral",
+      "title": "The Definite Integral",
+      "student_facing_name": "What the definite integral is, and how it differs from the indefinite one",
+      "summary": "The definite integral $\\int_{a}^{b} f(x)\\,dx$ is a number: the signed area under $y = f(x)$ between $x = a$ and $x = b$. The indefinite integral $\\int f(x)\\,dx$ is a family of functions. The professor is emphatic that these are 'completely different' objects that happen to share a symbol, and the properties he lists for each are different too. Only the definite integral is given directly by a limit; the indefinite one is defined by reversing differentiation. Regions below the axis contribute negatively, which is why the phrase is *signed* area.",
+      "notation": [
+        "$\\int_{a}^{b} f(x)\\,dx$ — a number",
+        "$\\int f(x)\\,dx + K$ — a family of functions",
+        "lower limit $a$, upper limit $b$",
+        "signed area"
+      ],
+      "method_steps": [
+        "Check whether the integral has limits attached: with limits it is a number, without them a family of functions",
+        "For a definite integral, identify the region: between the curve and the $x$-axis, from $x = a$ to $x = b$",
+        "Note where the curve is below the axis, since that area counts as negative",
+        "Do not write $+ C$ on a definite integral"
+      ],
+      "worked_examples": [
+        {
+          "problem": "What is the difference between $\\int_{1}^{3} x^{2}\\,dx$ and $\\int x^{2}\\,dx$?",
+          "answer": "The first is a single number — the area under $y = x^{2}$ from $1$ to $3$. The second is the family of functions $\\dfrac{x^{3}}{3} + C$.",
+          "context": "the distinction the professor devotes a whole slide to. One has limits, is a number, and carries no $C$; the other has neither."
+        },
+        {
+          "problem": "If $f(x)$ is negative on the whole of $[a, b]$, what is the sign of $\\int_{a}^{b} f(x)\\,dx$?",
+          "answer": "Negative.",
+          "context": "area below the axis is counted with a minus sign, hence 'signed area'"
+        }
+      ],
+      "applied_contexts": [
+        "net displacement when velocity changes sign",
+        "net change in cost or revenue over a production range"
+      ],
+      "prerequisites": [
+        "area-under-a-curve-as-a-limit"
+      ],
+      "common_errors": [
+        "Adding $+ C$ to a definite integral",
+        "Treating signed area as if it were geometric area when the curve dips below the axis",
+        "Confusing the limits of integration with the values of the function",
+        "Using the two kinds of integral interchangeably because the symbol looks similar"
+      ],
+      "geogebra_prompt": "Plot a curve crossing the $x$-axis inside $[a,b]$, shading the part above in one colour and the part below in another, with the running signed total displayed",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 53,
+      "prereq_in_scope": [
+        "area-under-a-curve-as-a-limit"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "definite-integral-ftc",
+      "title": "The Fundamental Theorem of Calculus",
+      "student_facing_name": "The shortcut that makes definite integrals computable",
+      "summary": "The professor sets the problem up before giving the answer: the definite integral is defined as a limit of sums, the sum is hard to compute except by machine, and the limit is impossible by hand except in a handful of cases — 'we still can't do a single integral!'. The Fundamental Theorem of Calculus resolves this by connecting the definite integral to the indefinite one. If $F$ is any antiderivative of $f$ on $[a, b]$, then $\\int_{a}^{b} f(x)\\,dx = F(b) - F(a)$. Knowing how to antidifferentiate is therefore enough to compute areas, and the constant of integration cancels in the subtraction, which is why definite integrals carry no $+C$.",
+      "notation": [
+        "$\\int_a^b f(x) dx = F(b) - F(a)$ where $F'(x) = f(x)$",
+        "Lower limit: $a$",
+        "Upper limit: $b$"
+      ],
+      "method_steps": [
+        "Find any antiderivative $F$ of the integrand — the simplest one, with $C = 0$",
+        "Evaluate $F$ at the upper limit $b$",
+        "Evaluate $F$ at the lower limit $a$",
+        "Subtract in that order: $F(b) - F(a)$",
+        "The result is a number; no constant of integration appears"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find the area under $y = x - x^{3}$ from $x = 0$ to $x = 1$.",
+          "answer": "$\\int_{0}^{1}(x - x^{3})\\,dx = \\left[\\dfrac{x^{2}}{2}\\right]_{0}^{1} - \\left[\\dfrac{x^{4}}{4}\\right]_{0}^{1} = \\left(\\dfrac{1}{2} - 0\\right) - \\left(\\dfrac{1}{4} - 0\\right) = \\dfrac{1}{4}$.",
+          "context": "the professor's worked example, done by splitting the integral over the two terms first — an illustration of linearity as well as of the theorem"
+        },
+        {
+          "problem": "Evaluate $\\int_{\\sqrt{3}}^{\\sqrt{3}} (t+1)(t^{2}+4)\\,dt$.",
+          "answer": "$0$.",
+          "context": "the professor's trick question: the two limits are equal, so whatever $F$ is, $F(b) - F(a) = 0$. No integration is needed at all."
+        }
+      ],
+      "applied_contexts": [
+        "area calculation",
+        "net accumulation",
+        "total distance travelled"
+      ],
+      "prerequisites": [
+        "the-definite-integral",
+        "algebraic-rules-indefinite-integration"
+      ],
+      "common_errors": [
+        "Subtracting the wrong way round, computing $F(a) - F(b)$",
+        "Carrying the constant $C$ through a definite integral",
+        "Evaluating at only one limit",
+        "Substituting into $f$ rather than into the antiderivative $F$",
+        "Assuming the answer is the geometric area when part of the curve lies below the axis"
+      ],
+      "geogebra_prompt": "Plot y = x - x^3; shade region from x=0 to x=1; compute area using Fundamental Theorem",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 54,
+      "prereq_in_scope": [
+        "the-definite-integral",
+        "algebraic-rules-indefinite-integration"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "rules-for-definite-integrals",
+      "title": "Properties and Rules for Definite Integrals",
+      "student_facing_name": "Manipulating definite integrals",
+      "summary": "Definite integrals satisfy linearity: constants factor out, and integrals of sums are sums of integrals. Additional properties include: swapping limits negates the integral, integrating over the same point gives zero, and integrals can be subdivided at intermediate points. These rules are essential for computing complex areas and cumulative quantities.",
+      "notation": [
+        "$\\int_a^b kf(x) dx = k\\int_a^b f(x) dx$ (constant multiple)",
+        "$\\int_a^b [f(x) + g(x)] dx = \\int_a^b f(x) dx + \\int_a^b g(x) dx$ (sum)",
+        "$\\int_a^a f(x) dx = 0$ (same limits)",
+        "$\\int_a^b f(x) dx = -\\int_b^a f(x) dx$ (reversed limits)",
+        "$\\int_a^b f(x) dx = \\int_a^c f(x) dx + \\int_c^b f(x) dx$ (subdivision)"
+      ],
+      "method_steps": [
+        "Recognize which property applies to the integral",
+        "Apply the property to simplify or rearrange",
+        "Evaluate the resulting simpler integral(s)"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Given $\\int_{1}^{4} f(x)\\,dx = 6$ and $\\int_{1}^{4} g(x)\\,dx = 10$, find $\\int_{1}^{4}\\left(3f(x) - g(x)\\right)dx$.",
+          "answer": "$3(6) - 10 = 8$.",
+          "context": "constants come out and the integral of a difference is the difference of the integrals — no antiderivative is needed, and none is available here"
+        },
+        {
+          "problem": "Given $\\int_{0}^{2} f(x)\\,dx = 5$ and $\\int_{2}^{7} f(x)\\,dx = 3$, find $\\int_{0}^{7} f(x)\\,dx$ and $\\int_{7}^{0} f(x)\\,dx$.",
+          "answer": "$\\int_{0}^{7} f(x)\\,dx = 5 + 3 = 8$, and $\\int_{7}^{0} f(x)\\,dx = -8$.",
+          "context": "the subdivision rule joins adjoining intervals; reversing the limits flips the sign"
+        },
+        {
+          "problem": "Evaluate $\\int_{3}^{3} \\left(x^{5} - 7x + 2\\right)dx$.",
+          "answer": "$0$.",
+          "context": "the limits are equal, so the integral is zero whatever the integrand is. Spotting this saves all the work."
+        }
+      ],
+      "applied_contexts": [],
+      "prerequisites": [
+        "definite-integral-ftc"
+      ],
+      "common_errors": [
+        "Forgetting that constants can be pulled out of integrals",
+        "Not recognizing when subdivision can simplify a calculation",
+        "Confusing the sign when reversing limits"
+      ],
+      "geogebra_prompt": "Show how subdivision rule works: plot integral from a to b as integral from a to c plus integral from c to b",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 55,
+      "prereq_in_scope": [
+        "definite-integral-ftc"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "integration-by-substitution",
+      "title": "Integration by Substitution",
+      "student_facing_name": "Simplifying integrals with u-substitution",
+      "summary": "Substitution is the chain rule run backwards, and the professor says so explicitly: 'the substitution principle is used to do complicated integrals. It follows from the chain rule.' When the integrand contains an inner function together with its derivative, setting $u$ equal to that inner function and $du = u'(x)\\,dx$ turns the integral into a simpler one in $u$. Integrate in $u$, then substitute back so the answer is in terms of $x$.",
+      "notation": [
+        "$u = g(x)$",
+        "$du = g'(x) dx$",
+        "$\\int f(g(x)) g'(x) dx = \\int f(u) du = F(u) + C = F(g(x)) + C$"
+      ],
+      "method_steps": [
+        "Step 1: Choose a substitution $u = u(x)$ that simplifies the integrand",
+        "Step 2: Express the entire integral in terms of $u$ and $du = u'(x) dx$. All terms involving $x$ and $dx$ must be transformed",
+        "Step 3: When the integrand is now in a simpler form, integrate with respect to $u$",
+        "Step 4: Substitute $u = u(x)$ back into the result"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Find $\\int \\dfrac{(\\ln(x))^{7}}{x}\\,dx$.",
+          "answer": "Let $u = \\ln(x)$, so $du = \\dfrac{1}{x}dx$. Then $\\int u^{7}\\,du = \\dfrac{u^{8}}{8} + C = \\dfrac{(\\ln(x))^{8}}{8} + C$.",
+          "context": "the professor's example. The $\\dfrac{1}{x}$ in the integrand is exactly the derivative of $\\ln(x)$, which is what makes the substitution work."
+        },
+        {
+          "problem": "Find $\\int \\dfrac{4x^{3}}{(x^{4}+1)^{2}}\\,dx$.",
+          "answer": "Let $u = x^{4} + 1$, so $du = 4x^{3}dx$. Then $\\int u^{-2}\\,du = -\\dfrac{1}{u} + C = -\\dfrac{1}{x^{4}+1} + C$.",
+          "context": "the professor sets this one himself, naming the substitution. The numerator is the derivative of the bracket exactly, with no leftover constant to adjust."
+        },
+        {
+          "problem": "Find $\\int (3x^{2} + 1)(x^{3} + x)^{5}\\,dx$.",
+          "answer": "Let $u = x^{3} + x$, so $du = (3x^{2}+1)dx$. Then $\\int u^{5}\\,du = \\dfrac{u^{6}}{6} + C = \\dfrac{(x^{3}+x)^{6}}{6} + C$.",
+          "context": "the pattern to learn to recognise: a bracket raised to a power, multiplied by its own derivative"
+        },
+        {
+          "problem": "Find $\\int (1+x)^{2}(1-x)^{5}\\,dx$.",
+          "answer": "Substitution alone does not clear this one. Expand $(1+x)^{2} = (1-x)^2 + 4x$ — or more simply, put $u = 1 - x$ so $x = 1 - u$ and $dx = -du$, giving $-\\int (2-u)^{2}u^{5}\\,du$, which expands to a polynomial in $u$ and integrates term by term.",
+          "context": "the professor's hardest example. The point is that the derivative of the inner function is not sitting there ready — the substitution has to be used to rewrite *everything*, including the $x$ that is left over."
+        }
+      ],
+      "applied_contexts": [],
+      "prerequisites": [
+        "algebraic-rules-indefinite-integration",
+        "derivative-chain-rule"
+      ],
+      "common_errors": [
+        "Forgetting to substitute back at the end",
+        "Not transforming ALL terms involving $x$ and $dx$ into terms involving $u$ and $du$",
+        "Not accounting for constant factors when computing $du$",
+        "Choosing a substitution that does not simplify the integrand"
+      ],
+      "geogebra_prompt": "Plot f(x) = (3x^2 + 1)(x^3 + x)^5 and verify its antiderivative (x^3+x)^6/6",
+      "slides_show_answers": false,
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 56,
+      "prereq_in_scope": [
+        "algebraic-rules-indefinite-integration",
+        "derivative-chain-rule"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "definite-integrals-by-substitution",
+      "title": "Definite Integration by Substitution",
+      "student_facing_name": "Substitution when the integral has limits",
+      "summary": "The same substitution works for a definite integral, with one extra step that the professor flags: 'we have to be careful of the limits'. The limits are values of $x$, and after substituting, the integral is in $u$ — so the limits must be converted too, by putting each $x$ limit through the substitution. Once that is done there is no need to substitute back at the end: evaluate directly in $u$.",
+      "notation": [
+        "$\\int_{a}^{b} f(g(x))g'(x)\\,dx = \\int_{g(a)}^{g(b)} f(u)\\,du$",
+        "new limits $u = g(a)$ and $u = g(b)$"
+      ],
+      "method_steps": [
+        "Choose the substitution $u$ and compute $du$ as usual",
+        "Convert the lower limit: put $x = a$ into $u$",
+        "Convert the upper limit: put $x = b$ into $u$",
+        "Rewrite the whole integral in $u$, with the new limits",
+        "Integrate and evaluate in $u$ — there is no need to change back to $x$"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Evaluate $\\int_{0}^{1} \\sqrt{2x+1}\\,dx$.",
+          "answer": "Let $u = 2x+1$, so $dx = \\dfrac{du}{2}$. When $x = 0$, $u = 1$; when $x = 1$, $u = 3$. Then $\\int_{1}^{3}\\sqrt{u}\\,\\dfrac{du}{2} = \\left[\\dfrac{1}{3}u^{3/2}\\right]_{1}^{3} = \\dfrac{1}{3}\\left(3^{3/2} - 1\\right)$.",
+          "context": "the professor's first example, done across two slides. Watch the limits change from $0,1$ to $1,3$ — that is the only new idea here."
+        },
+        {
+          "problem": "Evaluate $\\int_{1}^{3} \\dfrac{6x}{(3x^{2}+1)^{2}}\\,dx$.",
+          "answer": "Let $u = 3x^{2}+1$, so $du = 6x\\,dx$. When $x = 1$, $u = 4$; when $x = 3$, $u = 28$. Then $\\int_{4}^{28} u^{-2}\\,du = \\left[-\\dfrac{1}{u}\\right]_{4}^{28} = -\\left(\\dfrac{1}{28} - \\dfrac{1}{4}\\right) = \\dfrac{6}{28} = \\dfrac{3}{14}$.",
+          "context": "the professor's second example. The numerator $6x$ is exactly $du$, and the new limits are 4 and 28 rather than 1 and 3."
+        },
+        {
+          "problem": "Evaluate $\\int_{1}^{3} \\dfrac{x}{\\sqrt{1+x}}\\,dx$.",
+          "answer": "Let $u = 1+x$, so $x = u - 1$ and $dx = du$; the limits become $2$ and $4$. Then $\\int_{2}^{4}\\dfrac{u-1}{\\sqrt{u}}\\,du = \\int_{2}^{4}\\left(u^{1/2} - u^{-1/2}\\right)du = \\left[\\tfrac{2}{3}u^{3/2} - 2u^{1/2}\\right]_{2}^{4}$.",
+          "context": "the leftover $x$ in the numerator has to be rewritten as $u - 1$; this is the example that catches people who only ever match patterns"
+        }
+      ],
+      "applied_contexts": [
+        "accumulated change where the rate is itself a composite function"
+      ],
+      "prerequisites": [
+        "integration-by-substitution",
+        "definite-integral-ftc"
+      ],
+      "common_errors": [
+        "Changing the variable but leaving the old $x$ limits in place",
+        "Converting the limits and then also substituting back to $x$, so the limits are applied twice",
+        "Forgetting the factor from $du$, such as the $\\tfrac{1}{2}$ when $u = 2x+1$",
+        "Leaving a stray $x$ in an integral that is otherwise in $u$"
+      ],
+      "geogebra_prompt": "Show the region under $y = \\sqrt{2x+1}$ from 0 to 1 beside the region under $y = \\tfrac{1}{2}\\sqrt{u}$ from 1 to 3, so the equal areas are visible",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 57,
+      "prereq_in_scope": [
+        "integration-by-substitution",
+        "definite-integral-ftc"
+      ],
+      "prereq_outside_scope": []
+    },
+    {
+      "id": "accumulated-cost-from-marginal",
+      "title": "Applications of the Definite Integral",
+      "student_facing_name": "Using definite integrals for area and for accumulated cost",
+      "summary": "What definite integrals are used for in this course: area under a curve, and accumulation in economics. Since marginal cost is the derivative of total cost, the Fundamental Theorem says $\\int_{q_1}^{q_2} MC(q)\\,dq = C(q_2) - C(q_1)$ — the extra cost of raising output from $q_1$ to $q_2$. No initial condition is needed for this question, because the constant cancels in the subtraction; an initial condition is only needed if the total cost itself is wanted.",
+      "notation": [
+        "$MC(q) = C'(q)$",
+        "$C(q) = \\int MC(q) dq$"
+      ],
+      "method_steps": [
+        "Decide whether the question asks for a total (needs an initial condition) or a change (does not)",
+        "For a change from $q_1$ to $q_2$, write it as $\\int_{q_1}^{q_2} MC(q)\\,dq$",
+        "Antidifferentiate the marginal function",
+        "Evaluate at the upper limit and subtract the value at the lower limit",
+        "State the answer in currency, and say what it represents"
+      ],
+      "worked_examples": [
+        {
+          "problem": "Marginal cost is $\\dfrac{dC}{dq} = 3(q-4)^{2}$. Find the additional cost of increasing production from 6 units to 10.",
+          "answer": "$C(10) - C(6) = \\int_{6}^{10} 3(q-4)^{2}\\,dq = \\left[(q-4)^{3}\\right]_{6}^{10} = (10-4)^{3} - (6-4)^{3} = 216 - 8 = \\$208$.",
+          "context": "the professor's closing example. Note that $(q-4)^3$ is an antiderivative of $3(q-4)^2$ directly — no expansion needed — and that no initial condition was given or required."
+        },
+        {
+          "problem": "Find the area under $y = x - x^{3}$ between $x = 0$ and $x = 1$.",
+          "answer": "$\\dfrac{1}{4}$.",
+          "context": "the area application, worked in the Fundamental Theorem topic and repeated here as the geometric case"
+        }
+      ],
+      "applied_contexts": [
+        "manufacturing cost",
+        "production planning",
+        "marginal analysis"
+      ],
+      "prerequisites": [
+        "definite-integral-ftc",
+        "initial-value-problems",
+        "marginal-analysis-economics"
+      ],
+      "common_errors": [
+        "Forgetting to use the given initial condition to find the constant of integration",
+        "Confusing 'cost of first $n$ units' with 'cost of the $n$-th unit' (definite integral vs. marginal value)",
+        "Arithmetic errors when expanding and integrating polynomials"
+      ],
+      "geogebra_prompt": "MC(q) = 3q^2 - 60q + 400; integrate to find C(q); use C(2)=900 to find constant; plot C(q)",
+      "deck": 5,
+      "unit_title": "Integration",
+      "order": 58,
+      "prereq_in_scope": [
+        "definite-integral-ftc",
+        "initial-value-problems",
+        "marginal-analysis-economics"
       ],
       "prereq_outside_scope": []
     }
