@@ -349,7 +349,7 @@ export default function TutorClient({
                   <>
                     <span className={`tick ${cls}`}>{glyph}</span>
                     {/* Topic names carry maths of their own — "the precise
-                        ($\\epsilon$–$\\delta$) definition" — so they are typeset
+                        ($\epsilon$–$\delta$) definition" — so they are typeset
                         rather than printed as written. */}
                     <span className="nm">
                       {isNow
@@ -454,7 +454,7 @@ export default function TutorClient({
               ref={inputRef}
               rows={2}
               value={input}
-              placeholder={'Type your answer, or tell me you\\u2019re stuck\\u2026'}
+              placeholder={'Type your answer, or tell me you\u2019re stuck\u2026'}
               disabled={busy || !sessionId}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
@@ -473,7 +473,7 @@ export default function TutorClient({
             <span>Enter to send, Shift+Enter for a new line</span>
             <span>&middot;</span>
             <button className="linkbtn" onClick={() => void endSession()} disabled={ending || !sessionId}>
-              {ending ? 'Saving\\u2026' : 'End session'}
+              {ending ? 'Saving\u2026' : 'End session'}
             </button>
           </div>
         </div>
