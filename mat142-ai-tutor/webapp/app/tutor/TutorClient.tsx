@@ -35,7 +35,11 @@ export interface SoloHooks {
   };
   persist: (messages: ChatMessage[]) => void;
   finish: (messages: ChatMessage[]) => Promise<void>;
-  switchTopic: (topicId: string) => void;
+  /**
+   * Leaves for another topic. The conversation goes with it, because the
+   * session being left is ended and read exactly as `finish` would end it.
+   */
+  switchTopic: (topicId: string, messages: ChatMessage[]) => Promise<void>;
   reset: () => void;
 }
 
@@ -251,14 +255,25 @@ export default function TutorClient({
   }
 
   /**
-   * Jump to another topic (try-it-out version only). Anything typed in the
-   * current conversation goes, so say so before it does.
+   * Jump to another topic (try-it-out version only).
+   *
+   * This ends the current session rather than abandoning it, so the work
+   * already done is read and remembered. It therefore takes as long as "End
+   * session" does, which is why it shares the same waiting state.
    */
-  function jumpTo(topicId: string, topicName: string) {
-    if (!solo || busy) return;
+  async function jumpTo(topicId: string, topicName: string) {
+    if (!solo || busy || ending) return;
     const started = messagesRef.current.some((m) => m.role === 'user');
-    if (started && !window.confirm(`Leave this conversation and start on ${topicName}?`)) return;
-    solo.switchTopic(topicId);
+    if (
+      started &&
+      !window.confirm(
+        `Finish here and start on ${topicName}? What you have done so far will be saved first.`,
+      )
+    ) {
+      return;
+    }
+    setEnding(true);
+    await solo.switchTopic(topicId, messagesRef.current);
   }
 
   function startOver() {
@@ -334,7 +349,7 @@ export default function TutorClient({
                   <>
                     <span className={`tick ${cls}`}>{glyph}</span>
                     {/* Topic names carry maths of their own — "the precise
-                        ($\epsilon$–$\delta$) definition" — so they are typeset
+                        ($\\epsilon$–$\\delta$) definition" — so they are typeset
                         rather than printed as written. */}
                     <span className="nm">
                       {isNow
@@ -348,7 +363,12 @@ export default function TutorClient({
                     {/* Only the try-it-out version lets you jump about. Students
                         follow the order the course teaches things in. */}
                     {solo && !isNow ? (
-                      <button type="button" className="tjump" onClick={() => jumpTo(t.id, t.name)}>
+                      <button
+                        type="button"
+                        className="tjump"
+                        disabled={busy || ending}
+                        onClick={() => void jumpTo(t.id, t.name)}
+                      >
                         {label}
                       </button>
                     ) : (
@@ -434,7 +454,7 @@ export default function TutorClient({
               ref={inputRef}
               rows={2}
               value={input}
-              placeholder={'Type your answer, or tell me you\u2019re stuck\u2026'}
+              placeholder={'Type your answer, or tell me you\\u2019re stuck\\u2026'}
               disabled={busy || !sessionId}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
@@ -453,7 +473,7 @@ export default function TutorClient({
             <span>Enter to send, Shift+Enter for a new line</span>
             <span>&middot;</span>
             <button className="linkbtn" onClick={() => void endSession()} disabled={ending || !sessionId}>
-              {ending ? 'Saving\u2026' : 'End session'}
+              {ending ? 'Saving\\u2026' : 'End session'}
             </button>
           </div>
         </div>
