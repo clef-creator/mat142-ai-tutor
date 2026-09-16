@@ -6,14 +6,14 @@ Calcu-Buddy starts with a specific topic and a warm-up question, guides students
 
 ## Current status
 
-The repository contains an implemented Next.js student tutor with two operating modes and a Supabase schema. The professor dashboard is currently a static HTML prototype.
+The repository contains an implemented Next.js student tutor with two operating modes, versioned Supabase migrations and a pinned local database toolchain. The professor dashboard is currently a static HTML prototype.
 
 | Area | Current implementation |
 | --- | --- |
 | Student tutor | Streaming AI chat, mathematical rendering, topic selection and session summaries |
 | Demo access | Shared code; progress and current conversation stored in the browser |
 | Account mode | Supabase email magic links, student allowlist, database-backed conversations and progress |
-| Active curriculum | 13 topics from lecture decks 6 and 7: differentiation and its applications |
+| Active curriculum | 58 topics across the five course units, built from 22 supplied lecture decks |
 | Professor dashboard | Mockup with invented data; authenticated dashboard and export are not implemented |
 | Reliability and access controls | Known gaps tracked in [GitHub issues](https://github.com/clef-creator/mat142-ai-tutor/issues) |
 
@@ -73,18 +73,21 @@ There is no vector database, RAG pipeline, PDF retrieval or separate calculation
 | [webapp/lib/prompt.ts](mat142-ai-tutor/webapp/lib/prompt.ts) | Active tutor and assessment prompts |
 | [webapp/lib/tutor.ts](mat142-ai-tutor/webapp/lib/tutor.ts) | Streaming model responses |
 | [webapp/lib/signals.ts](mat142-ai-tutor/webapp/lib/signals.ts) | End-of-session assessment |
-| [webapp/data/curriculum.json](mat142-ai-tutor/webapp/data/curriculum.json) | Active 13-topic curriculum |
+| [webapp/data/curriculum.json](mat142-ai-tutor/webapp/data/curriculum.json) | Active 58-topic curriculum |
 | [webapp/supabase/schema.sql](mat142-ai-tutor/webapp/supabase/schema.sql) | Existing database tables, policies and dashboard view |
+| [webapp/supabase/migrations/](mat142-ai-tutor/webapp/supabase/migrations/) | Ordered, reproducible database deployment history |
 | [webapp/tests/](mat142-ai-tutor/webapp/tests/) | Tutoring, rendering and solo-mode checks |
 | [prototype/](mat142-ai-tutor/prototype/) | Student and professor HTML mockup |
-| [curriculum/](mat142-ai-tutor/curriculum/) | Broader 55-topic reference curriculum; not imported by the webapp |
+| [curriculum/](mat142-ai-tutor/curriculum/) | Broader reference curriculum; not imported by the webapp |
 | [prompts/](mat142-ai-tutor/prompts/) | Earlier Gem instructions and teaching guides; reference material |
 | [planning/](mat142-ai-tutor/planning/) | Faculty discussion and historical cost model |
 | [brand/](mat142-ai-tutor/brand/) | University logo assets |
+| [docs/deployment.md](docs/deployment.md) | Deployment, migrations, Auth/email setup and rollback runbook |
+| [ADR 0001](docs/architecture/0001-api-runtime.md) | Decision to keep application APIs on Vercel |
 
 ## Local setup
 
-Install Git, Node.js and npm compatible with the dependencies in [package.json](mat142-ai-tutor/webapp/package.json). The repository does not currently pin a Node runtime version.
+Install Git, Node.js 20 or newer, npm and Docker. CI and `.nvmrc` use Node.js 22; Docker is required only for the local Supabase database workflow.
 
 ```bash
 git clone https://github.com/clef-creator/mat142-ai-tutor.git
@@ -137,7 +140,7 @@ Open [localhost:3000](http://localhost:3000), enter the code, and start a conver
 
 Use a development Supabase project to exercise the existing account flow.
 
-1. Review and apply [schema.sql](mat142-ai-tutor/webapp/supabase/schema.sql) in the project's SQL editor.
+1. From `mat142-ai-tutor/webapp`, run `npm ci`, `npm run db:start` and `npm run db:verify` to verify the migrations locally.
 2. Configure email authentication and email delivery for the intended test recipients.
 3. Allow the app's callback URL, such as `http://localhost:3000/auth/callback`, in Supabase authentication redirect settings.
 4. Add approved student emails to `public.allowed_students`.
@@ -165,7 +168,7 @@ Store emails in lowercase. On a successful callback, the app checks the email do
 
 Enrollment remains active only while the signed-in email is present in `allowed_students` and its `students` row matches the authenticated user. Removing an allowlist row revokes the next tutor page or API request even when the browser still has a valid login and an open session. Reapply the checked-in schema changes to existing Supabase projects so the same rule protects direct database reads.
 
-The schema is a baseline, not a completed production migration system. Review the remaining [access-control work](https://github.com/clef-creator/mat142-ai-tutor/issues/5) before using real student data. Adding rows to the faculty tables does not create a working professor login flow.
+Use the [deployment runbook](docs/deployment.md) to adopt or update a hosted project with `supabase db push`; do not rebuild a linked database with `db reset --linked`. Review the remaining [access-control work](https://github.com/clef-creator/mat142-ai-tutor/issues/5) before using real student data. Adding rows to the faculty tables does not create a working professor login flow.
 
 ## Configuration reference
 
@@ -205,7 +208,7 @@ The checked-in schema has **eight application tables**, plus the `student_signal
 
 Account-mode writes use a service-role client, which bypasses row-level security. Those server operations require their own authorization checks.
 
-Future schema proposals are tracked as work, not reflected as existing tables in this README.
+`schema.sql` is the declarative schema source. The files under `supabase/migrations` are the deployment history. Change both through the documented diff-and-review workflow rather than editing a hosted database directly.
 
 ## Professor dashboard and privacy
 
@@ -227,12 +230,21 @@ npm run build
 
 Or run all three with `npm run check`.
 
+Before deployment, validate the selected runtime mode and environment without
+printing secret values:
+
+```bash
+npm run validate:config -- .env.local
+```
+
 | Script | Coverage |
 | --- | --- |
 | `test:tutoring` | Curriculum structure, topic selection, prompt construction |
 | `test:rendering` | LaTeX, currency, malformed formulas and partial streamed text |
 | `test:solo` | Shared-code helpers, browser storage and rendered solo/account differences |
 | `test:enrollment` | Active-enrollment checks and revoked users with existing sessions |
+| `test:config` | Complete solo/account configuration and secret/URL safety rules |
+| `db:verify` | Fresh migration replay, idempotent reapplication over fixture data and database lint |
 
 These tests do not establish live model quality, Supabase permission correctness or end-to-end account behavior. That coverage is tracked in [#24](https://github.com/clef-creator/mat142-ai-tutor/issues/24).
 
@@ -240,9 +252,9 @@ These tests do not establish live model quality, Supabase permission correctness
 
 For this repository layout, set the Vercel project root directory to **`mat142-ai-tutor/webapp`** and use the Next.js application build (`npm run build`).
 
-Configure environment variables for the intended mode and redeploy after changes. For account mode, configure Supabase authentication redirects for the deployed app origin and its `/auth/callback` path. Preview environments need their own appropriate configuration.
+Configure environment variables for the intended mode and validate them before deployment. For account mode, configure Supabase authentication redirects for the deployed app origin and its `/auth/callback` path. Preview environments need their own appropriate configuration.
 
-The application includes server-side routes and cannot be treated as a static HTML export. Keep model and service-role secrets server-side. Database provisioning is separate from a Vercel deployment.
+The application includes server-side routes and cannot be treated as a static HTML export. Those routes run on Vercel; connecting Supabase does not move them to Edge Functions. Keep model and service-role secrets server-side. Apply reviewed database migrations before deploying application code that depends on them. See the [deployment runbook](docs/deployment.md).
 
 ## Known limitations and next work
 
@@ -250,7 +262,7 @@ The application includes server-side routes and cannot be treated as a static HT
 - [Retries and concurrent chat](https://github.com/clef-creator/mat142-ai-tutor/issues/13), [finalization and attempt counts](https://github.com/clef-creator/mat142-ai-tutor/issues/15), and [duplicate solo input](https://github.com/clef-creator/mat142-ai-tutor/issues/25) need fixes.
 - [Assessment failures currently default to shaky](https://github.com/clef-creator/mat142-ai-tutor/issues/16).
 - [Activity timing](https://github.com/clef-creator/mat142-ai-tutor/issues/17), [topic switching](https://github.com/clef-creator/mat142-ai-tutor/issues/18), and [session history](https://github.com/clef-creator/mat142-ai-tutor/issues/21) need defined behavior.
-- [Curriculum scope and faculty validation](https://github.com/clef-creator/mat142-ai-tutor/issues/22) and [deployment/migrations](https://github.com/clef-creator/mat142-ai-tutor/issues/23) remain open.
+- [Curriculum scope and faculty validation](https://github.com/clef-creator/mat142-ai-tutor/issues/22) remains open.
 
 The planning workbook contains historical cost assumptions, not current pricing or a guaranteed budget.
 

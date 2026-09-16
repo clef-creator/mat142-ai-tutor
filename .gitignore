@@ -1,0 +1,12 @@
+# Dependencies and generated application output
+**/node_modules/
+**/.next/
+**/.tests/
+**/*.tsbuildinfo
+**/next-env.d.ts
+
+# Local and hosted deployment state
+**/.vercel/
+**/.env
+**/.env.*
+!**/.env.example

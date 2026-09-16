@@ -1,7 +1,7 @@
 # Tests
 
-Two files, both plain scripts. No test framework — this project is small enough
-that a framework would be more to learn than it is worth.
+The checks are plain scripts rather than a test framework. They are bundled
+with esbuild and run in sequence by `npm test`.
 
 Run them with:
 
@@ -31,7 +31,18 @@ begin with a digit.
 It also checks that a reply still renders correctly when only half of it has
 arrived, since replies stream in a few characters at a time.
 
+**`solo.test.tsx`** checks shared-code access, browser persistence, session
+outcomes and the rendered differences between solo and account mode.
+
+**`conversation.test.ts`** checks that each student message reaches the model
+exactly once, in order, even across repeated messages and malformed history.
+
 **`enrollment.test.ts`** checks account-mode authorization. It models a student
 whose browser still has a valid login and an open tutoring session after their
 address is removed from the pilot allow-list. Session start, chat and session
 end must all return `403` before reading session data or calling either model.
+
+**`deployment-config.test.ts`** checks the explicit pre-deployment validator:
+complete solo and account configurations pass, while partial Supabase setup,
+placeholder secrets, insecure production URLs, mismatched domains and unsafe
+limits fail without printing secret values.
