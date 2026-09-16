@@ -10,4 +10,4 @@ See the [repository README](../README.md) for current implementation status, loc
 - [Student and professor mockup](prototype/Calcu-Buddy-Mockup.html)
 - [Planning documents](planning/)
 
-The professor dashboard is a prototype; the student tutor is implemented. The active curriculum still awaits faculty verification.
+The professor dashboard shows real authorized learning signals; export and final alert definitions remain open. The student tutor is implemented. The active curriculum still awaits faculty verification.

@@ -124,8 +124,8 @@ to `allowed_students`; `allowed_faculty` is a legacy table and is not used for
 authorization. The callback sends the professor to `/dashboard`, which checks
 the faculty row again on every visit. Delete the `faculty` row to revoke access.
 Only an administrator with privileged database access can grant this role; there is no
-client-facing role assignment. The dashboard currently shows an authorized
-entry screen; issue #8 will add learning signals. Faculty still have no access
+client-facing role assignment. The dashboard shows authorized learning signals
+as described in [`dashboard.md`](dashboard.md). Faculty still have no access
 to `public.messages`.
 
 ## Release and rollback order
