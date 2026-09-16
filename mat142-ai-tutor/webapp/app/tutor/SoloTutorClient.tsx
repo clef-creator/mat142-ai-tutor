@@ -12,9 +12,62 @@ import {
   markStarted,
   newSessionId,
   saveState,
+  worthAssessing,
   type SoloState,
 } from '@/lib/solo-store';
 import type { ChatMessage } from '@/lib/types';
+
+/**
+ * Ends whatever session is open and records what came of it.
+ *
+ * Both ways out of a session go through here — pressing "End session" and
+ * clicking a different topic in the sidebar. Clicking away used to throw the
+ * conversation away unread, so a student who worked through a topic and then
+ * went to look at another one was recorded as never having done it. What the
+ * student did is the same in both cases, so what is remembered about it should
+ * be too.
+ *
+ * Returns the state with nothing open. Nothing here can throw: a session that
+ * cannot be summarised is still a session that happened.
+ */
+async function closeOpenSession(state: SoloState, messages: ChatMessage[]): Promise<SoloState> {
+  if (!state.open) return state;
+
+  // The tutor speaks first, so a conversation with nothing from the student is
+  // not work to be recorded. Drop it rather than count it.
+  if (!worthAssessing(messages)) return { ...state, open: null };
+
+  const topicId = state.open.topicId;
+  let outcome: 'steady' | 'shaky' = 'shaky';
+  let summary = `Worked on ${getTopic(topicId)?.student_facing_name ?? topicId}.`;
+  let sticking: string | null = null;
+  // Nothing has been judged until the server says it has. If the request never
+  // arrives, or comes back without a real assessment, the session still closes
+  // but what is recorded about the student stays as it was.
+  let assessed = false;
+
+  try {
+    const res = await fetch('/api/solo/end', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ history: messages, topicId }),
+    });
+    const data = await res.json();
+    if (res.ok && data.signals?.assessed === true) {
+      outcome = data.signals.outcome === 'steady' ? 'steady' : 'shaky';
+      summary = data.signals.summary ?? summary;
+      sticking = data.signals.sticking_point ?? null;
+      assessed = true;
+    } else if (res.ok && typeof data.signals?.summary === 'string') {
+      // No judgement, but the note for next time is still worth having.
+      summary = data.signals.summary;
+    }
+  } catch {
+    // Keep whatever we can rather than losing the session entirely.
+  }
+
+  return applyOutcome({ ...state, open: null }, topicId, outcome, summary, sticking, assessed);
+}
 
 /**
  * Solo mode's half of the tutor screen.
@@ -124,45 +177,9 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
             const s = stateRef.current;
             if (!s?.open) return;
 
-            const topicId = s.open.topicId;
-            let outcome: 'steady' | 'shaky' = 'shaky';
-            let summary = `Worked on ${getTopic(topicId)?.student_facing_name ?? topicId}.`;
-            let sticking: string | null = null;
-            // Nothing has been judged until the server says it has. If the
-            // request never arrives, or comes back without a real assessment,
-            // the session still closes but what is recorded about the student
-            // stays as it was.
-            let assessed = false;
+            const ended = await closeOpenSession(s, messages);
 
-            try {
-              const res = await fetch('/api/solo/end', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ history: messages, topicId }),
-              });
-              const data = await res.json();
-              if (res.ok && data.signals?.assessed === true) {
-                outcome = data.signals.outcome === 'steady' ? 'steady' : 'shaky';
-                summary = data.signals.summary ?? summary;
-                sticking = data.signals.sticking_point ?? null;
-                assessed = true;
-              } else if (res.ok && typeof data.signals?.summary === 'string') {
-                // No judgement, but the note for next time is still worth having.
-                summary = data.signals.summary;
-              }
-            } catch {
-              // Keep whatever we can rather than losing the session entirely.
-            }
-
-            const ended = applyOutcome(
-              { ...s, open: null },
-              topicId,
-              outcome,
-              summary,
-              sticking,
-              assessed,
-            );
-
+            // The tutor chooses what comes next, as it does every time.
             const nextChoice = pickTopic(ended.progress);
             const started = markStarted(ended, nextChoice.topic.id);
             update({
@@ -175,14 +192,24 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
             window.location.reload();
           },
 
-          switchTopic(topicId: string) {
+          /**
+           * Moving to a topic the student picked themselves.
+           *
+           * Identical to finishing, apart from which topic opens next: the one
+           * they chose rather than the one the tutor would have chosen. The
+           * session they are leaving is ended and read the same way either way.
+           */
+          async switchTopic(topicId: string, messages: ChatMessage[]) {
             const s = stateRef.current;
             if (!s || !getTopic(topicId)) return;
-            const started = markStarted(s, topicId);
+
+            const ended = await closeOpenSession(s, messages);
+            const started = markStarted(ended, topicId);
             update({
               ...started,
               open: { id: newSessionId(), topicId, messages: [] },
             });
+
             window.location.reload();
           },
 
