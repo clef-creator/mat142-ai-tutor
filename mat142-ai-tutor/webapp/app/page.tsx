@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { findActiveStudentEnrollment } from '@/lib/enrollment';
+import { findActiveFaculty } from '@/lib/faculty';
 import { isSoloMode, soloModeReady } from '@/lib/mode';
 import { ACCESS_COOKIE, hasAccess } from '@/lib/access';
 import Header from '@/components/Header';
@@ -17,6 +18,7 @@ export default async function Home() {
   const { data: { user } } = await supabase.auth.getUser();
   if (user) {
     const admin = createAdminClient();
+    if (await findActiveFaculty(admin, user)) redirect('/dashboard');
     if (await findActiveStudentEnrollment(admin, user)) redirect('/tutor');
   }
 
