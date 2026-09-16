@@ -7,6 +7,7 @@ const REASONS: Record<string, string> = {
   domain: 'Only Ahmedabad University addresses can be used to sign in.',
   'not-on-list': 'That address is not on the pilot list. If you think it should be, contact your instructor.',
   'enrollment-inactive': 'Your access to this pilot is no longer active. Contact your instructor if you think this is a mistake.',
+  provisioning: 'Your account could not be set up just now. Please try again or contact your instructor.',
 };
 
 export default async function AuthError({

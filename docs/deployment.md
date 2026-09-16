@@ -106,12 +106,27 @@ Store allow-listed student emails in lowercase in `public.allowed_students`.
 The callback creates their `students` row; removing the allow-list entry
 revokes subsequent tutor requests and direct student reads.
 
-Professor login and dashboard routing are not implemented yet (see
-[#7](https://github.com/clef-creator/mat142-ai-tutor/issues/7)). The existing
-`faculty` and `allowed_faculty` tables do not create a working professor
-account by themselves. Do not treat manual table rows as completed professor
-setup. When #7 is implemented, document the single trusted provisioning path
-here and keep faculty access to `public.messages` prohibited.
+The professor uses the same email-link form, but the role is granted only by a
+trusted administrator. In Supabase Auth, create or invite the professor's
+university email address. Copy its Auth user UUID, then, using the SQL Editor
+as an administrator, provision that exact identity:
+
+```sql
+insert into public.faculty (id, email, full_name)
+values ('<auth-user-uuid>', 'professor@ahduni.edu.in', 'Professor Name')
+on conflict (id) do update
+  set email = excluded.email, full_name = excluded.full_name;
+```
+
+Replace the placeholders with the real Auth user and address. The Auth email,
+faculty email and configured domain must match. A professor must not be added
+to `allowed_students`; `allowed_faculty` is a legacy table and is not used for
+authorization. The callback sends the professor to `/dashboard`, which checks
+the faculty row again on every visit. Delete the `faculty` row to revoke access.
+Only an administrator with privileged database access can grant this role; there is no
+client-facing role assignment. The dashboard currently shows an authorized
+entry screen; issue #8 will add learning signals. Faculty still have no access
+to `public.messages`.
 
 ## Release and rollback order
 

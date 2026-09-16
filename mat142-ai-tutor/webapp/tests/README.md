@@ -42,6 +42,10 @@ whose browser still has a valid login and an open tutoring session after their
 address is removed from the pilot allow-list. Session start, chat and session
 end must all return `403` before reading session data or calling either model.
 
+**`faculty.test.ts`** checks that a professor role requires a privileged
+faculty row matching both the authenticated user ID and email. It also checks
+revocation, email changes and database lookup failures.
+
 **`deployment-config.test.ts`** checks the explicit pre-deployment validator:
 complete solo and account configurations pass, while partial Supabase setup,
 placeholder secrets, insecure production URLs, mismatched domains and unsafe

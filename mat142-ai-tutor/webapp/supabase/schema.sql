@@ -148,7 +148,13 @@ alter table public.usage_daily      enable row level security;
 create or replace function public.is_faculty()
 returns boolean
 language sql stable security definer set search_path = public
-as $$ select exists (select 1 from public.faculty f where f.id = auth.uid()) $$;
+as $$
+  select exists (
+    select 1 from public.faculty f
+    where f.id = auth.uid()
+      and lower(f.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  )
+$$;
 
 -- A valid Supabase session is not, by itself, an active enrollment. This
 -- function is used by student-facing RLS policies so removing an address from

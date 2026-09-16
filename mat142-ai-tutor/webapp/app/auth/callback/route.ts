@@ -1,10 +1,10 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { findAllowedStudent } from '@/lib/enrollment';
+import { findActiveFaculty } from '@/lib/faculty';
 import { isSoloMode } from '@/lib/mode';
 
-/** Where the emailed link lands. Exchanges the one-time code for a session,
- *  then makes sure the student has a row in our own table. */
+/** Exchange the emailed code, then route an authorized professor or student. */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
 
@@ -32,8 +32,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/auth/error?reason=domain`);
   }
 
-  // The allow-list is what keeps the pilot at fifteen students.
   const admin = createAdminClient();
+  if (await findActiveFaculty(admin, data.user)) {
+    return NextResponse.redirect(`${origin}/dashboard`);
+  }
+
+  // The student allow-list keeps the pilot at fifteen students.
   const allowed = await findAllowedStudent(admin, email);
 
   if (!allowed) {
@@ -41,7 +45,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/auth/error?reason=not-on-list`);
   }
 
-  await admin.from('students').upsert(
+  const { error: provisionError } = await admin.from('students').upsert(
     {
       id: data.user.id,
       email,
@@ -50,6 +54,12 @@ export async function GET(request: NextRequest) {
     },
     { onConflict: 'id' },
   );
+
+  if (provisionError) {
+    console.error('[auth] student provisioning failed', provisionError);
+    await supabase.auth.signOut();
+    return NextResponse.redirect(`${origin}/auth/error?reason=provisioning`);
+  }
 
   return NextResponse.redirect(`${origin}/tutor`);
 }
