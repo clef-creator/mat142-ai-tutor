@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { getTopic } from '@/lib/curriculum';
 import { isSoloMode } from '@/lib/mode';
-import { MIN_MESSAGES_TO_SUMMARISE, summariseSession } from '@/lib/signals';
+import { summariseSession } from '@/lib/signals';
 import type { ChatMessage } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -52,32 +52,42 @@ export async function POST(req: Request) {
   const endedAt = new Date().toISOString();
   const topic = getTopic(session.topic_id);
 
-  // Too short to judge. Close it without spending anything on a summary.
-  if (!history || history.length < MIN_MESSAGES_TO_SUMMARISE) {
-    await admin
-      .from('sessions')
-      .update({ ended_at: endedAt, outcome: 'shaky', summary: 'Session ended almost immediately.' })
-      .eq('id', sessionId);
-    return NextResponse.json({ ok: true, tooShort: true });
-  }
-
+  // A session too short to judge never reaches the model; one that does may
+  // still come back unusable. Either way `assessed` is false and no judgement
+  // about the student is recorded.
   const signals = await summariseSession({
     topicTitle: topic?.title ?? session.topic_id,
     topicName: topic?.student_facing_name ?? session.topic_id,
-    history: history as ChatMessage[],
+    history: (history ?? []) as ChatMessage[],
   });
 
   await admin
     .from('sessions')
     .update({
       ended_at: endedAt,
-      outcome: signals.outcome,
+      // A session with no assessment is recorded as having none, rather than
+      // as a shaky one. The dashboard counts outcomes.
+      outcome: signals.assessed ? signals.outcome : null,
       summary: signals.summary,
-      sticking_point: signals.sticking_point,
-      asked_for_answers: signals.asked_for_answers,
-      self_critical: signals.self_critical,
+      sticking_point: signals.assessed ? signals.sticking_point : null,
+      asked_for_answers: signals.assessed && signals.asked_for_answers,
+      self_critical: signals.assessed && signals.self_critical,
     })
     .eq('id', sessionId);
+
+  await admin.from('students').update({ last_seen_at: endedAt }).eq('id', user.id);
+
+  if (!signals.assessed) {
+    // Leave the progress row exactly as it is — including `attempts`, so the
+    // assessment can be retried later without the student appearing to have
+    // had two goes at the topic.
+    return NextResponse.json({
+      ok: true,
+      tooShort: signals.reason === 'too_short',
+      assessed: false,
+      reason: signals.reason,
+    });
+  }
 
   const { data: existing } = await admin
     .from('progress')
@@ -98,7 +108,5 @@ export async function POST(req: Request) {
     { onConflict: 'student_id,topic_id' },
   );
 
-  await admin.from('students').update({ last_seen_at: endedAt }).eq('id', user.id);
-
-  return NextResponse.json({ ok: true, outcome: signals.outcome });
+  return NextResponse.json({ ok: true, assessed: true, outcome: signals.outcome });
 }
