@@ -138,7 +138,15 @@ export function applyOutcome(
   };
 }
 
-/** Marks a topic as being worked on, so an abandoned session is not forgotten. */
+/**
+ * Marks a topic as being worked on, so an abandoned session is not forgotten.
+ *
+ * `attempts` starts at zero, not one. An attempt is a session that was actually
+ * judged, and opening a topic is not that — the student has not yet had a go at
+ * anything. Counting the opening as an attempt made a single finished session
+ * read as two, which matters because "repeatedly stuck on this" will be read
+ * from this number.
+ */
 export function markStarted(state: SoloState, topicId: string): SoloState {
   if (state.progress.some((p) => p.topic_id === topicId)) return state;
 
@@ -150,7 +158,7 @@ export function markStarted(state: SoloState, topicId: string): SoloState {
         student_id: 'local',
         topic_id: topicId,
         status: 'shaky',
-        attempts: 1,
+        attempts: 0,
         last_worked_at: new Date().toISOString(),
         note: null,
       } as ProgressRow,

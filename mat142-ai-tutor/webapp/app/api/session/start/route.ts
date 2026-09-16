@@ -76,12 +76,16 @@ export async function POST() {
     return NextResponse.json({ error: 'Could not start a session' }, { status: 500 });
   }
 
+  // The row exists from the moment a topic is opened, so an abandoned session
+  // is not lost. `attempts` stays at zero until a session is actually judged —
+  // session/end is the only place it goes up, and only when `assessed` is true.
+  // Counting the opening here as well made one finished session read as two.
   await admin.from('progress').upsert(
     {
       student_id: user.id,
       topic_id: choice.topic.id,
       status: 'shaky',
-      attempts: 1,
+      attempts: 0,
       last_worked_at: new Date().toISOString(),
     },
     { onConflict: 'student_id,topic_id', ignoreDuplicates: true },

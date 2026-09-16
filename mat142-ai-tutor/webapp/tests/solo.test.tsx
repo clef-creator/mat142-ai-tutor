@@ -91,6 +91,7 @@ function storeChecks() {
   check('an unfinished conversation survives a reload', reloaded.open?.topicId === first.topic.id);
   check('a started topic is recorded, so an abandoned session is not lost',
     reloaded.progress[0].status === 'shaky');
+  check('opening a topic is not itself an attempt', reloaded.progress[0].attempts === 0);
 
   state = applyOutcome(reloaded, first.topic.id, 'shaky', 'Stuck on the chain rule.', 'inner function');
   saveState(state);
@@ -100,7 +101,7 @@ function storeChecks() {
   check('what happened last time is remembered', after.lastSummary === 'Stuck on the chain rule.');
   check('the sticking point is remembered', after.progress[0].note === 'inner function');
   check('a second go at a topic does not duplicate the row', after.progress.length === 1);
-  check('attempts are counted', after.progress[0].attempts === 2);
+  check('one finished session counts as exactly one attempt', after.progress[0].attempts === 1);
 
   // A shaky topic must come back round rather than being left behind.
   check('a shaky topic is offered again', pickTopic(after.progress).topic.id === first.topic.id);
