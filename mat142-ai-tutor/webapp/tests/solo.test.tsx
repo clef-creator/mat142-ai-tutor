@@ -19,11 +19,13 @@ import {
   markStarted,
   newSessionId,
   saveState,
+  worthAssessing,
   type SoloState,
 } from '@/lib/solo-store';
 import { topics, units, topicsInUnit, unitPosition, visibleTopics } from '@/lib/curriculum';
 import { pickTopic, choiceForTopic } from '@/lib/picker';
 import { parseSignals, unassessedSignals } from '@/lib/signals';
+import type { ChatMessage } from '@/lib/types';
 
 let failures = 0;
 function check(name: string, cond: boolean, detail = '') {
@@ -166,7 +168,7 @@ const soloHooks = {
   }),
   persist: () => {},
   finish: async () => {},
-  switchTopic: () => {},
+  switchTopic: async () => {},
   reset: () => {},
 };
 
@@ -341,6 +343,49 @@ function jumpChecks() {
   const unknown = choiceForTopic('not-a-real-topic', []);
   check('a topic that no longer exists falls back rather than breaking',
     Boolean(unknown.topic?.id));
+
+  /* --- and leaving a topic must not throw the work away -------------- */
+
+  // Every session opens with the tutor speaking, so what separates a session
+  // that happened from a screen somebody looked at is whether the student
+  // answered.
+  const opening: ChatMessage[] = [
+    { role: 'assistant', content: 'What is the derivative of $x^2$?' },
+  ];
+  const worked: ChatMessage[] = [...opening, { role: 'user', content: 'is it 2x' }];
+
+  check('a conversation the student never answered is not a session',
+    !worthAssessing(opening));
+  check('a conversation the student answered is', worthAssessing(worked));
+  check('a blank answer is not an answer',
+    !worthAssessing([...opening, { role: 'user', content: '   ' }]));
+
+  // Switching topics goes through the same ending as pressing "End session",
+  // so the topic being left is recorded rather than silently abandoned.
+  const from = topics[0].id;
+  const to = topics[3].id;
+  const open: SoloState = {
+    ...markStarted(emptyState, from),
+    open: { id: newSessionId(), topicId: from, messages: worked },
+  };
+
+  const switched = markStarted(
+    applyOutcome({ ...open, open: null }, from, 'shaky', 'Got partway.', 'the inner function'),
+    to,
+  );
+  const left = switched.progress.find((p) => p.topic_id === from);
+
+  check('leaving a topic mid-session still counts as a go at it', left?.attempts === 1);
+  check('what the student struggled with is kept', left?.note === 'the inner function');
+  check('the session that was left is counted', switched.sessionCount === 1);
+  check('what happened is carried into the next session',
+    switched.lastSummary === 'Got partway.' && switched.lastTopicId === from);
+  check('the topic chosen is the one that opens',
+    switched.progress.some((p) => p.topic_id === to) && switched.open === null);
+
+  // A topic left unfinished must come back round, not be skipped past.
+  check('an unfinished topic is offered again later',
+    pickTopic(switched.progress).topic.id === from);
 }
 
 /* ------------------------------------------------------------------ */
