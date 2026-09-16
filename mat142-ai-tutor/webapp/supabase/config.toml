@@ -1,0 +1,49 @@
+# Local-only Supabase configuration. Hosted project settings remain in the
+# Supabase dashboard and are documented in docs/deployment.md.
+project_id = "mat142-ai-tutor"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 17
+
+[db.migrations]
+enabled = true
+# schema.sql is the declarative source used when generating future diffs.
+schema_paths = ["./schema.sql"]
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+
+[local_smtp]
+enabled = true
+port = 54324
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = [
+  "http://localhost:3000/auth/callback",
+  "http://127.0.0.1:3000/auth/callback",
+]
+jwt_expiry = 3600
+enable_signup = true
+enable_anonymous_sign_ins = false
+
+[auth.email]
+enable_signup = true
+enable_confirmations = false
+otp_length = 6
+otp_expiry = 3600
