@@ -166,6 +166,19 @@ export function markStarted(state: SoloState, topicId: string): SoloState {
   };
 }
 
+/**
+ * Whether a conversation has anything in it worth ending a session over.
+ *
+ * Every session opens with the tutor speaking first, so a conversation the
+ * student never answered is not a session they had — it is a screen they
+ * looked at. Closing one of those would count a session, move the date, and
+ * write "Session ended almost immediately" over what was remembered from last
+ * time, all for a student who did nothing. So it is dropped instead.
+ */
+export function worthAssessing(messages: ChatMessage[]): boolean {
+  return messages.some((m) => m.role === 'user' && m.content.trim() !== '');
+}
+
 export function newSessionId(): string {
   try {
     return crypto.randomUUID();
