@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { findActiveStudentEnrollment } from '@/lib/enrollment';
 import { pickTopic, choiceForTopic } from '@/lib/picker';
-import { topics } from '@/lib/curriculum';
+import { visibleTopics, topicsInUnit, unitPosition } from '@/lib/curriculum';
 import { isSoloMode, soloModeReady } from '@/lib/mode';
 import { ACCESS_COOKIE, NAME_COOKIE, hasAccess } from '@/lib/access';
 import Header from '@/components/Header';
@@ -57,6 +57,7 @@ export default async function TutorPage() {
 
   const choice = open ? choiceForTopic(open.topic_id, progress) : pickTopic(progress);
   const activeTopic = choice.topic;
+  const position = unitPosition(activeTopic.id);
 
   const statusMap: Record<string, string> = {};
   progress.forEach((p) => { statusMap[p.topic_id] = p.status; });
@@ -81,11 +82,16 @@ export default async function TutorPage() {
             unit: activeTopic.unit_title,
           }}
           because={choice.because}
-          topicList={topics.map((t) => ({
+          // Only what this student has reached. A progress row exists for every
+          // topic they have started, which is what makes one visible.
+          topicList={visibleTopics(Object.keys(statusMap), activeTopic.id).map((t) => ({
             id: t.id,
             name: t.student_facing_name,
             status: statusMap[t.id] ?? 'not_started',
           }))}
+          totalTopics={topicsInUnit(activeTopic.unit_title).length}
+          unitIndex={position.index}
+          unitCount={position.total}
         />
         <p className="privacy-note">
           Calcu-Buddy remembers what you have worked on so it can pick up where you left off,

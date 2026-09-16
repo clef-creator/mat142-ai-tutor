@@ -173,7 +173,13 @@ function unescape(value: string): string {
   return value.replace(/\\\$/g, '$');
 }
 
-export default function MathText({ text }: { text: string }) {
+/**
+ * `inline` is for maths that sits inside a line of interface text rather than
+ * in a message — a topic name such as "the precise ($\epsilon$–$\delta$)
+ * definition" in a sidebar row. A paragraph is a block element and would break
+ * that layout, so in this mode there is not one.
+ */
+export default function MathText({ text, inline = false }: { text: string; inline?: boolean }) {
   const paragraphs = useMemo(() => {
     return text
       .split(/\n{2,}/)
@@ -182,10 +188,12 @@ export default function MathText({ text }: { text: string }) {
       .map(segment);
   }, [text]);
 
+  const Block = inline ? 'span' : 'p';
+
   return (
     <>
       {paragraphs.map((segs, pi) => (
-        <p key={pi}>
+        <Block key={pi}>
           {segs.map((seg, si) => {
             if (seg.kind === 'text') {
               // Preserve single newlines inside a paragraph.
@@ -207,7 +215,7 @@ export default function MathText({ text }: { text: string }) {
 
             return <span key={si} dangerouslySetInnerHTML={{ __html: html }} />;
           })}
-        </p>
+        </Block>
       ))}
     </>
   );

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import TutorClient from './TutorClient';
 import { pickTopic, choiceForTopic } from '@/lib/picker';
-import { topics, getTopic } from '@/lib/curriculum';
+import { getTopic, visibleTopics, topicsInUnit, unitPosition } from '@/lib/curriculum';
 import {
   applyOutcome,
   clearState,
@@ -74,6 +74,7 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
   state.progress.forEach((p) => { statusMap[p.topic_id] = p.status; });
 
   const name = state.name?.trim() || 'there';
+  const position = unitPosition(choice.topic.id);
 
   return (
     <div className="shell">
@@ -90,11 +91,16 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
           unit: choice.topic.unit_title,
         }}
         because={choice.because}
-        topicList={topics.map((t) => ({
+        // Only what this student has reached. Anything a progress row exists
+        // for has been started, which is what makes a topic visible.
+        topicList={visibleTopics(Object.keys(statusMap), choice.topic.id).map((t) => ({
           id: t.id,
           name: t.student_facing_name,
           status: statusMap[t.id] ?? 'not_started',
         }))}
+        totalTopics={topicsInUnit(choice.topic.unit_title).length}
+        unitIndex={position.index}
+        unitCount={position.total}
         solo={{
           context() {
             const s = stateRef.current ?? emptyState;

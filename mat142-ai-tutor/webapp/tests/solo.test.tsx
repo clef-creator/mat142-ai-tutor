@@ -21,7 +21,7 @@ import {
   saveState,
   type SoloState,
 } from '@/lib/solo-store';
-import { topics } from '@/lib/curriculum';
+import { topics, units, topicsInUnit, unitPosition, visibleTopics } from '@/lib/curriculum';
 import { pickTopic, choiceForTopic } from '@/lib/picker';
 import { parseSignals, unassessedSignals } from '@/lib/signals';
 
@@ -146,7 +146,16 @@ const baseProps = {
     unit: topic.unit_title,
   },
   because: 'Starting here.',
-  topicList: topics.map((t) => ({ id: t.id, name: t.student_facing_name, status: 'not_started' })),
+  // A student who has just arrived. visibleTopics decides what that means, so
+  // the screen is fed exactly what the real pages feed it.
+  topicList: visibleTopics([], topic.id).map((t) => ({
+    id: t.id,
+    name: t.student_facing_name,
+    status: 'not_started',
+  })),
+  totalTopics: topicsInUnit(topic.unit_title).length,
+  unitIndex: unitPosition(topic.id).index,
+  unitCount: unitPosition(topic.id).total,
 };
 
 const soloHooks = {
@@ -164,20 +173,57 @@ function screenChecks() {
   const solo = renderToStaticMarkup(<TutorClient {...baseProps} solo={soloHooks} />);
   const account = renderToStaticMarkup(<TutorClient {...baseProps} />);
 
-  // Every topic in the pilot must be reachable, so the whole unit can be judged.
+  // The whole point of the change: someone arriving is shown the one topic they
+  // are on, not the fifty-eight the course contains.
+  const unit = topicsInUnit(topic.unit_title);
   const jumps = (solo.match(/class="tjump"/g) ?? []).length;
-  check('every topic but the current one can be jumped to',
-    jumps === topics.length - 1, `${jumps} of ${topics.length - 1}`);
-  check('the current topic is not a button', solo.includes('<b>' + topic.student_facing_name));
+  check('a student arriving sees only the topic they are on', jumps === 0, `${jumps} jump buttons`);
+  check('the rest of the course is not even named',
+    unit.slice(1).every((t) => !solo.includes(t.student_facing_name)));
+  check('what is still to come is counted rather than listed',
+    solo.includes(`${unit.length - 1} more topics`), `unit has ${unit.length}`);
+
+  // The name in bold is the current topic. It is typeset now, so read the text
+  // between the tags rather than matching the markup.
+  const bold = solo.slice(solo.indexOf('<b>') + 3, solo.indexOf('</b>')).replace(/<[^>]+>/g, '');
+  check('the current topic is not a button', bold === topic.student_facing_name, bold);
   check('there is a way to clear everything and start again',
     solo.includes('Clear everything and start again'));
+
+  // Progress is measured against the whole unit, not against what is on screen,
+  // or finishing the one visible topic would read as finished.
+  check('progress counts the topics not yet shown',
+    solo.includes(`of ${unit.length} topics steady`), `unit has ${unit.length}`);
+  check('the student is told which part of the course they are in',
+    solo.includes(`Part ${unitPosition(topic.id).index} of ${units.length}`));
 
   // The signed-in version must be untouched by any of this.
   check('the signed-in version has no jump buttons', !account.includes('tjump'));
   check('the signed-in version has no reset button',
     !account.includes('Clear everything and start again'));
-  check('the signed-in version still lists every topic',
-    topics.every((t) => account.includes(t.student_facing_name)));
+  check('the signed-in version withholds the rest of the course too',
+    unit.slice(1).every((t) => !account.includes(t.student_facing_name)));
+
+  // Someone who has worked through part of the unit sees what they have done
+  // and can click back to it, but still nothing ahead.
+  const done = unit.slice(0, 3);
+  const partway = {
+    ...baseProps,
+    topic: { ...baseProps.topic, id: done[2].id, studentFacingName: done[2].student_facing_name },
+    topicList: visibleTopics(done.map((t) => t.id), done[2].id).map((t) => ({
+      id: t.id,
+      name: t.student_facing_name,
+      status: t.id === done[2].id ? 'not_started' : 'steady',
+    })),
+  };
+  const midway = renderToStaticMarkup(<TutorClient {...partway} solo={soloHooks} />);
+  const midJumps = (midway.match(/class="tjump"/g) ?? []).length;
+  check('finished topics stay clickable, so going back is always allowed',
+    midJumps === 2, `${midJumps} jump buttons`);
+  check('nothing ahead of a student is shown',
+    unit.slice(3).every((t) => !midway.includes(t.student_facing_name)));
+  check('the count of what is left shrinks as topics open',
+    midway.includes(`${unit.length - 3} more topics`));
 
   // The tutoring screen itself is the same either way — that is the point.
   for (const piece of ['mathbar', 'composer', 'End session', topic.unit_title]) {
@@ -199,6 +245,84 @@ function screenChecks() {
   check('both versions render the conversation identically',
     talkSolo.slice(talkSolo.indexOf('class="thread"')) ===
       talkAccount.slice(talkAccount.indexOf('class="thread"')));
+}
+
+/* ------------------------------------------------------------------ */
+/* What a student is allowed to see                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The rule is: the unit you are in, as far as you have got, and no further.
+ * These check the rule itself rather than the screen that draws it.
+ */
+function windowChecks() {
+  const unitOne = topicsInUnit(units[0]);
+  const unitTwo = topicsInUnit(units[1]);
+
+  const fresh = visibleTopics([], null);
+  check('a student who has done nothing sees exactly one topic',
+    fresh.length === 1 && fresh[0].id === topics[0].id, `${fresh.length} shown`);
+
+  const afterFour = visibleTopics(unitOne.slice(0, 4).map((t) => t.id), unitOne[4].id);
+  check('four topics finished opens five', afterFour.length === 5, `${afterFour.length} shown`);
+  check('the list is the start of the unit, in order, with no gaps',
+    afterFour.every((t, i) => t.id === unitOne[i].id));
+
+  check('a student is never shown a topic the course has not reached',
+    visibleTopics([], unitOne[0].id).length === 1);
+
+  // Whatever else happens, the topic in hand must be on the list, or the
+  // sidebar would not show what the student is working on.
+  const jumped = visibleTopics([], unitOne[6].id);
+  check('the topic being worked on is always shown', jumped.some((t) => t.id === unitOne[6].id));
+
+  // A new unit starts the list again. Finishing unit one must not unlock
+  // unit two.
+  const intoUnitTwo = visibleTopics(unitOne.map((t) => t.id), unitTwo[0].id);
+  check('a new unit starts the list again',
+    intoUnitTwo.length === 1 && intoUnitTwo[0].id === unitTwo[0].id,
+    `${intoUnitTwo.length} shown`);
+  check('the list never mixes two units',
+    intoUnitTwo.every((t) => t.unit_title === units[1]));
+
+  check('a topic id that no longer exists is ignored rather than breaking',
+    visibleTopics(['not-a-real-topic'], unitOne[0].id).length === 1);
+  check('an unknown current topic falls back to the start of the course',
+    visibleTopics([], 'not-a-real-topic')[0].id === topics[0].id);
+
+  check('every unit is accounted for', units.length === unitPosition(topics[0].id).total);
+  check('the units together hold every topic',
+    units.reduce((n, u) => n + topicsInUnit(u).length, 0) === topics.length);
+
+  // Topic names carry maths of their own, and were being printed as source.
+  const mathy = topics.find((t) => /\$/.test(t.student_facing_name));
+  if (mathy) {
+    const unitOfMathy = topicsInUnit(mathy.unit_title);
+    const shown = renderToStaticMarkup(
+      <TutorClient
+        {...baseProps}
+        topic={{
+          id: mathy.id,
+          title: mathy.title,
+          studentFacingName: mathy.student_facing_name,
+          unit: mathy.unit_title,
+        }}
+        topicList={visibleTopics([mathy.id], mathy.id).map((t) => ({
+          id: t.id, name: t.student_facing_name, status: 'not_started',
+        }))}
+        totalTopics={unitOfMathy.length}
+        unitIndex={unitPosition(mathy.id).index}
+        unitCount={unitPosition(mathy.id).total}
+        solo={soloHooks}
+      />,
+    );
+    const list = shown.slice(shown.indexOf('class="tlist"'), shown.indexOf('</ul>'));
+    check('maths in a topic name is typeset, not shown as source',
+      list.includes('katex') && !list.includes('$'), list.slice(0, 200));
+    // A paragraph inside a flex row would break the sidebar, and is invalid
+    // inside <b> besides.
+    check('a topic name does not open a paragraph', !list.includes('<p>'));
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -294,7 +418,7 @@ function assessmentChecks() {
   // A real sticking point from last time must not be erased by a failure.
   let withNote = applyOutcome(markStarted(emptyState, id), id, 'shaky', 'Stuck.', 'forgets the inner function');
   withNote = applyOutcome(withNote, id, 'shaky', `Worked on ${name}.`, null, false);
-  check('a failed summary keeps last time\u2019s sticking point',
+  check('a failed summary keeps last time’s sticking point',
     withNote.progress[0].note === 'forgets the inner function');
 
   // Retrying the assessment afterwards must land normally.
@@ -307,6 +431,7 @@ async function main() {
   await accessChecks();
   storeChecks();
   screenChecks();
+  windowChecks();
   jumpChecks();
   assessmentChecks();
 

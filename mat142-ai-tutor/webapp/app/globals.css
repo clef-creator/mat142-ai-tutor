@@ -125,6 +125,10 @@ a { color: var(--maroon); }
 .tlist .nm { flex: 1; }
 .tlist li.upcoming .nm { color: #a79f98; }
 
+/* The count of topics still to come. Set apart from the named ones, because it
+   is not a topic and cannot be clicked. */
+.tlist li.tlocked .nm { color: #a79f98; font-style: italic; }
+
 /* Jumping between topics exists only in the try-it-out version, so it is
    styled to look like the plain list until you hover it. */
 .tjump {

@@ -57,6 +57,9 @@ export default function TutorClient({
   topic,
   because,
   topicList,
+  totalTopics,
+  unitIndex,
+  unitCount,
   solo,
 }: {
   studentName: string;
@@ -66,7 +69,15 @@ export default function TutorClient({
   existingMessages: ChatMessage[];
   topic: TopicSummary;
   because: string;
+  /**
+   * Only the topics this student has reached. The rest of the unit is
+   * deliberately absent — see `visibleTopics` in lib/curriculum.
+   */
   topicList: TopicListItem[];
+  /** How many topics the unit holds in all, including those not yet shown. */
+  totalTopics: number;
+  unitIndex: number;
+  unitCount: number;
   solo?: SoloHooks;
 }) {
   const router = useRouter();
@@ -270,8 +281,13 @@ export default function TutorClient({
     });
   }
 
+  // The bar measures progress through the whole unit, not through the part of
+  // it that happens to be on screen. Otherwise finishing the single topic a new
+  // student can see would read as 100%.
+  const total = Math.max(totalTopics, topicList.length, 1);
   const steadyCount = topicList.filter((t) => t.status === 'steady').length;
-  const pct = Math.round((steadyCount / topicList.length) * 100);
+  const pct = Math.round((steadyCount / total) * 100);
+  const locked = Math.max(total - topicList.length, 0);
 
   return (
     <div className="layout">
@@ -292,9 +308,10 @@ export default function TutorClient({
           <div className="panel-h">Where you are</div>
           <div className="panel-b">
             <div className="who-name">{topic.unit}</div>
+            <div className="who-sub">Part {unitIndex} of {unitCount}</div>
             <div className="bar"><i style={{ width: `${pct}%` }} /></div>
             <div className="bar-lbl">
-              {steadyCount} of {topicList.length} topics steady
+              {steadyCount} of {total} topics steady in this part
             </div>
           </div>
         </div>
@@ -316,7 +333,14 @@ export default function TutorClient({
                 const label = (
                   <>
                     <span className={`tick ${cls}`}>{glyph}</span>
-                    <span className="nm">{isNow ? <b>{t.name}</b> : t.name}</span>
+                    {/* Topic names carry maths of their own — "the precise
+                        ($\epsilon$–$\delta$) definition" — so they are typeset
+                        rather than printed as written. */}
+                    <span className="nm">
+                      {isNow
+                        ? <b><MathText text={t.name} inline /></b>
+                        : <MathText text={t.name} inline />}
+                    </span>
                   </>
                 );
                 return (
@@ -333,6 +357,17 @@ export default function TutorClient({
                   </li>
                 );
               })}
+
+              {/* What is still ahead is counted, never named. A student can see
+                  there is more to come without meeting the whole unit at once. */}
+              {locked > 0 ? (
+                <li className="tlocked">
+                  <span className="tick t-next">+</span>
+                  <span className="nm">
+                    {locked === 1 ? '1 more topic' : `${locked} more topics`} unlock as you go
+                  </span>
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>
@@ -342,8 +377,8 @@ export default function TutorClient({
             <div className="panel-h">Trying it out</div>
             <div className="panel-b">
               <p className="who-sub" style={{ marginBottom: 10 }}>
-                Click any topic above to jump straight to it. Nothing here is saved anywhere
-                except this browser.
+                Topics open up one at a time as you finish them. You can click back to any
+                you have already done. Nothing here is saved anywhere except this browser.
               </p>
               <button type="button" className="linkbtn" onClick={startOver}>
                 Clear everything and start again
@@ -399,7 +434,7 @@ export default function TutorClient({
               ref={inputRef}
               rows={2}
               value={input}
-              placeholder={'Type your answer, or tell me you\u2019re stuck\u2026'}
+              placeholder={'Type your answer, or tell me you’re stuck…'}
               disabled={busy || !sessionId}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
@@ -418,7 +453,7 @@ export default function TutorClient({
             <span>Enter to send, Shift+Enter for a new line</span>
             <span>&middot;</span>
             <button className="linkbtn" onClick={() => void endSession()} disabled={ending || !sessionId}>
-              {ending ? 'Saving\u2026' : 'End session'}
+              {ending ? 'Saving…' : 'End session'}
             </button>
           </div>
         </div>

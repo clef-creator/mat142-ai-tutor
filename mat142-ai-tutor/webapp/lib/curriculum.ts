@@ -16,6 +16,53 @@ export function topicName(id: string): string {
   return byId.get(id)?.student_facing_name ?? byId.get(id)?.title ?? id;
 }
 
+/** The units of the course, in teaching order. */
+export const units: string[] = [...new Set(topics.map((t) => t.unit_title))];
+
+/** Every topic in one unit, in the order the course teaches them. */
+export function topicsInUnit(unitTitle: string): Topic[] {
+  return topics.filter((t) => t.unit_title === unitTitle);
+}
+
+/** Which unit a topic sits in, counting from 1, for "Part 3 of 5". */
+export function unitPosition(topicId: string): { index: number; total: number; title: string } {
+  const unit = getTopic(topicId)?.unit_title ?? units[0];
+  return { index: units.indexOf(unit) + 1, total: units.length, title: unit };
+}
+
+/**
+ * The topics a student should be shown, given what they have reached.
+ *
+ * The whole course is fifty-eight topics. Putting that in front of someone in
+ * the bottom fifth of the cohort is not information, it is a wall — so the list
+ * opens one topic at a time. A student sees the unit they are in, up to and
+ * including the furthest topic they have reached, and nothing beyond it.
+ *
+ * Two consequences worth stating plainly. Going back is always allowed: every
+ * topic already reached stays on the list and stays clickable. Going forward is
+ * not, so the list can never show a topic the course has not brought them to.
+ *
+ * The first topic of a unit is always visible, otherwise a student arriving in
+ * a new unit would be looking at an empty list.
+ */
+export function visibleTopics(
+  reachedIds: Iterable<string>,
+  currentTopicId?: string | null,
+): Topic[] {
+  const current = (currentTopicId && getTopic(currentTopicId)) || topics[0];
+  const inUnit = topicsInUnit(current.unit_title);
+
+  const reached = new Set<string>(reachedIds);
+  reached.add(current.id);
+
+  let last = 0; // the unit's first topic is always visible
+  inUnit.forEach((t, i) => {
+    if (reached.has(t.id) && i > last) last = i;
+  });
+
+  return inUnit.slice(0, last + 1);
+}
+
 /**
  * Plain-English names for the skills the course assumes students arrive with.
  *
