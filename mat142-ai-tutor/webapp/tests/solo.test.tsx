@@ -418,7 +418,7 @@ function assessmentChecks() {
   // A real sticking point from last time must not be erased by a failure.
   let withNote = applyOutcome(markStarted(emptyState, id), id, 'shaky', 'Stuck.', 'forgets the inner function');
   withNote = applyOutcome(withNote, id, 'shaky', `Worked on ${name}.`, null, false);
-  check('a failed summary keeps last time\\u2019s sticking point',
+  check('a failed summary keeps last time\u2019s sticking point',
     withNote.progress[0].note === 'forgets the inner function');
 
   // Retrying the assessment afterwards must land normally.
@@ -435,7 +435,7 @@ async function main() {
   jumpChecks();
   assessmentChecks();
 
-  console.log(failures === 0 ? '\\nAll checks passed.' : `\\n${failures} check(s) failed.`);
+  console.log(failures === 0 ? '\nAll checks passed.' : `\n${failures} check(s) failed.`);
   process.exit(failures === 0 ? 0 : 1);
 }
 
