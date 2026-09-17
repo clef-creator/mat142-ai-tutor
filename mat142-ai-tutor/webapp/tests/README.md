@@ -9,6 +9,12 @@ Run them with:
 npm test
 ```
 
+`npm run test:chat-turns:integration` checks concurrent opening and student turns,
+duplicate requests, failed and expired generations, atomic counters, and the
+turn limit against a disposable Supabase project. Apply `supabase/schema.sql`
+there first, then set `TEST_SUPABASE_URL` and
+`TEST_SUPABASE_SERVICE_ROLE_KEY`. The test creates and deletes its own user.
+
 Everything should print `ok`. Anything printing `FAIL` is a real problem.
 
 **`tutoring.test.ts`** checks the part that decides what a student works on:

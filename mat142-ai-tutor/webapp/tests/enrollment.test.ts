@@ -68,7 +68,8 @@ async function run() {
   await checkRevokedRoute('chat with an existing session', () => chat(new Request('http://localhost/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sessionId: enrollmentTestState.existingSessionId, message: 'hello' }),
+    body: JSON.stringify({ sessionId: enrollmentTestState.existingSessionId,
+      requestId: '11111111-1111-4111-8111-111111111111', message: 'hello' }),
   })));
   await checkRevokedRoute('session end with an existing session', () => endSession(new Request('http://localhost/api/session/end', {
     method: 'POST',

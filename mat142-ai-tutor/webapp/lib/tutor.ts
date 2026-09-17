@@ -21,8 +21,9 @@ export interface TurnUsage {
 export function streamTutorReply(opts: {
   sessionPrompt: string;
   messages: ChatMessage[];
-  /** Runs once the reply is complete. Failures here must not break the stream. */
+  /** Runs once the reply is complete and must persist it before success is reported. */
   onComplete?: (full: string, usage: TurnUsage) => Promise<void>;
+  onError?: () => Promise<void>;
 }): ReadableStream<Uint8Array> {
   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
   const encoder = new TextEncoder();
@@ -71,21 +72,19 @@ export function streamTutorReply(opts: {
         const u = final.usage;
 
         if (opts.onComplete) {
-          try {
-            await opts.onComplete(full, {
-              inputTokens:
-                (u.input_tokens ?? 0) +
-                (u.cache_creation_input_tokens ?? 0) +
-                (u.cache_read_input_tokens ?? 0),
-              outputTokens: u.output_tokens ?? 0,
-            });
-          } catch (err) {
-            // Bookkeeping failing must not cost the student their reply.
-            console.error('[tutor] post-reply bookkeeping failed', err);
-          }
+          await opts.onComplete(full, {
+            inputTokens:
+              (u.input_tokens ?? 0) +
+              (u.cache_creation_input_tokens ?? 0) +
+              (u.cache_read_input_tokens ?? 0),
+            outputTokens: u.output_tokens ?? 0,
+          });
         }
       } catch (err) {
         console.error('[tutor] model call failed', err);
+        try { await opts.onError?.(); } catch (failure) {
+          console.error('[tutor] failed to release turn', failure);
+        }
         controller.enqueue(
           encoder.encode(
             full.length > 0

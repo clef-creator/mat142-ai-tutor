@@ -25,6 +25,7 @@
     "db:reset": "supabase db reset",
     "db:lint": "supabase db lint --local --level warning --fail-on error",
     "db:verify": "npm run db:reset && supabase db query --local --file supabase/tests/baseline_fixture.sql && supabase migration repair 20260916054800 --status reverted --local && supabase migration up --include-all --local && supabase db query --local --file supabase/tests/baseline_preserves_data.sql && npm run db:lint",
+    "test:chat-turns:integration": "esbuild tests/chat-turns.integration.test.ts --bundle --platform=node --format=cjs --log-level=warning --outfile=.tests/chat-turns.integration.cjs && node .tests/chat-turns.integration.cjs",
     "check": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
