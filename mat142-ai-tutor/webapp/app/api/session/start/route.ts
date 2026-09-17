@@ -32,24 +32,33 @@ export async function POST() {
   }
 
   // Resume rather than duplicate if one is already open.
-  const { data: open } = await admin
+  const { data: open, error: openError } = await admin
     .from('sessions')
-    .select('id')
+    .select('id, topic_id')
     .eq('student_id', user.id)
     .is('ended_at', null)
     .order('started_at', { ascending: false })
     .limit(1)
     .maybeSingle();
 
-  if (open) return NextResponse.json({ sessionId: open.id, resumed: true });
+  if (openError) return NextResponse.json({ error: 'Could not read sessions' }, { status: 500 });
+  if (open) {
+    const { error } = await admin.from('progress').upsert(
+      { student_id: user.id, topic_id: open.topic_id, status: 'shaky', attempts: 0 },
+      { onConflict: 'student_id,topic_id', ignoreDuplicates: true },
+    );
+    if (error) return NextResponse.json({ error: 'Could not resume session' }, { status: 500 });
+    return NextResponse.json({ sessionId: open.id, resumed: true });
+  }
 
   const since = new Date();
   since.setHours(0, 0, 0, 0);
-  const { count } = await admin
+  const { count, error: countError } = await admin
     .from('sessions')
     .select('id', { count: 'exact', head: true })
     .eq('student_id', user.id)
     .gte('started_at', since.toISOString());
+  if (countError) return NextResponse.json({ error: 'Could not check session limit' }, { status: 500 });
 
   if ((count ?? 0) >= MAX_SESSIONS_PER_DAY) {
     return NextResponse.json(
@@ -58,10 +67,11 @@ export async function POST() {
     );
   }
 
-  const { data: progressRows } = await admin
+  const { data: progressRows, error: progressError } = await admin
     .from('progress')
     .select('*')
     .eq('student_id', user.id);
+  if (progressError) return NextResponse.json({ error: 'Could not read progress' }, { status: 500 });
 
   const choice = pickTopic((progressRows ?? []) as ProgressRow[]);
 
@@ -80,7 +90,7 @@ export async function POST() {
   // is not lost. `attempts` stays at zero until a session is actually judged —
   // session/end is the only place it goes up, and only when `assessed` is true.
   // Counting the opening here as well made one finished session read as two.
-  await admin.from('progress').upsert(
+  const { error: progressWriteError } = await admin.from('progress').upsert(
     {
       student_id: user.id,
       topic_id: choice.topic.id,
@@ -90,6 +100,13 @@ export async function POST() {
     },
     { onConflict: 'student_id,topic_id', ignoreDuplicates: true },
   );
+  if (progressWriteError) {
+    console.error('[session/start] progress write failed', progressWriteError);
+    const { error: cleanupError } = await admin.from('sessions').delete()
+      .eq('id', created.id).eq('student_id', user.id);
+    if (cleanupError) console.error('[session/start] cleanup failed', cleanupError);
+    return NextResponse.json({ error: 'Could not start a session' }, { status: 500 });
+  }
 
   return NextResponse.json({
     sessionId: created.id,

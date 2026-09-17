@@ -6,7 +6,7 @@
  */
 
 import { POST as startSession } from '@/app/api/session/start/route';
-import { POST as chat } from '@/app/api/chat/route';
+import { GET as chatStatus, POST as chat } from '@/app/api/chat/route';
 import { POST as endSession } from '@/app/api/session/end/route';
 import {
   findActiveStudentEnrollment,
@@ -71,6 +71,9 @@ async function run() {
     body: JSON.stringify({ sessionId: enrollmentTestState.existingSessionId,
       requestId: '11111111-1111-4111-8111-111111111111', message: 'hello' }),
   })));
+  await checkRevokedRoute('chat status with an existing session', () => chatStatus(new Request(
+    `http://localhost/api/chat?sessionId=${enrollmentTestState.existingSessionId}&requestId=11111111-1111-4111-8111-111111111111`,
+  )));
   await checkRevokedRoute('session end with an existing session', () => endSession(new Request('http://localhost/api/session/end', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -70,6 +70,7 @@ export function streamTutorReply(opts: {
 
         const final = await result.finalMessage();
         const u = final.usage;
+        if (!full.trim()) throw new Error('Tutor returned an empty reply');
 
         if (opts.onComplete) {
           await opts.onComplete(full, {
@@ -80,20 +81,14 @@ export function streamTutorReply(opts: {
             outputTokens: u.output_tokens ?? 0,
           });
         }
+        controller.close();
       } catch (err) {
-        console.error('[tutor] model call failed', err);
+        console.error('[tutor] reply failed', err);
         try { await opts.onError?.(); } catch (failure) {
           console.error('[tutor] failed to release turn', failure);
         }
-        controller.enqueue(
-          encoder.encode(
-            full.length > 0
-              ? '\n\n(Something interrupted that reply. Send your message again.)'
-              : 'Sorry \u2014 I could not reach the tutor just then. Try sending that again in a moment.',
-          ),
-        );
-      } finally {
-        controller.close();
+        // Reject the reader. Partial text is never a completed assistant turn.
+        controller.error(err);
       }
     },
   });

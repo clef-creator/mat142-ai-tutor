@@ -15,6 +15,14 @@ turn limit against a disposable Supabase project. Apply `supabase/schema.sql`
 there first, then set `TEST_SUPABASE_URL` and
 `TEST_SUPABASE_SERVICE_ROLE_KEY`. The test creates and deletes its own user.
 
+`chat-failures.test.ts` checks that model, persistence, and network failures
+reject the stream after partial text instead of turning an error into a saved
+assistant message. The client then checks saved history before showing a turn
+as complete.
+
+`session-write-failures.test.ts` checks that failed session start, end, and
+history reads return errors instead of claiming the work was saved.
+
 Everything should print `ok`. Anything printing `FAIL` is a real problem.
 
 **`tutoring.test.ts`** checks the part that decides what a student works on:

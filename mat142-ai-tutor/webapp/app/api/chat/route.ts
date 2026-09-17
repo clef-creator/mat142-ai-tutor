@@ -31,18 +31,33 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
   const admin = createAdminClient();
-  const { data: session } = await admin.from('sessions').select('id')
+  const enrollment = await findActiveStudentEnrollment(admin, user);
+  if (!enrollment) {
+    return NextResponse.json(
+      { error: INACTIVE_ENROLLMENT_ERROR, message: INACTIVE_ENROLLMENT_MESSAGE },
+      { status: 403 },
+    );
+  }
+  const { data: session, error: sessionError } = await admin.from('sessions').select('id')
     .eq('id', sessionId).eq('student_id', user.id).maybeSingle();
+  if (sessionError) return NextResponse.json({ error: 'Could not check session' }, { status: 500 });
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
-  const { data: turn, error: turnError } = await admin.from('chat_turns')
-    .select('status, reply, lease_until')
-    .eq('session_id', sessionId).eq('request_id', requestId)
-    .eq('student_id', user.id).maybeSingle();
-  if (turnError) return NextResponse.json({ error: 'Could not check turn' }, { status: 500 });
+  const [turnResult, historyResult] = await Promise.all([
+    admin.from('chat_turns').select('status, lease_until')
+      .eq('session_id', sessionId).eq('request_id', requestId)
+      .eq('student_id', user.id).maybeSingle(),
+    admin.from('messages').select('role, content')
+      .eq('session_id', sessionId).eq('student_id', user.id)
+      .order('id', { ascending: true }),
+  ]);
+  if (turnResult.error || historyResult.error) {
+    return NextResponse.json({ error: 'Could not check saved history' }, { status: 500 });
+  }
+  const turn = turnResult.data;
   return NextResponse.json({
     status: turn?.status ?? 'missing',
-    reply: turn?.status === 'completed' ? turn.reply : null,
     retryAfter: turn?.status === 'processing' ? turn.lease_until : null,
+    history: historyResult.data ?? [],
   });
 }
 
