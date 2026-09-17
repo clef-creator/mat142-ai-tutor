@@ -65,6 +65,20 @@ whose browser still has a valid login and an open tutoring session after their
 address is removed from the pilot allow-list. Session start, chat and session
 end must all return `403` before reading session data or calling either model.
 
+**`signin.test.ts`** checks the two things that stand between a pasted class
+list and fifteen students with working sign-ins. Reading the list: a name
+either side of the address, or none at all, an address from outside the
+university, the same student twice, a line with no address in it — each is
+either understood or reported, never silently dropped. Creating the accounts:
+a student who already has one keeps the password they were given, one address
+failing does not stop the rest, and nothing at all is created if the existing
+accounts cannot be read or the pilot list cannot be written, because a student
+holding a password that will not let them in is worse than one holding none.
+It also checks the passwords themselves — long, all different, and free of the
+characters that get misread off a printed sheet — and the lock on the page that
+creates them, which stays shut when the token is missing, too short, or nearly
+right.
+
 **`faculty.test.ts`** checks that a professor role requires a privileged
 faculty row matching both the authenticated user ID and email. It also checks
 revocation, email changes and database lookup failures.

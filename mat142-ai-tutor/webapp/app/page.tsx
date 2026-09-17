@@ -30,8 +30,8 @@ export default async function Home() {
           <div className="signin">
             <h1>Sign in</h1>
             <p className="lede">
-              Use your Ahmedabad University address. We&rsquo;ll email you a link that signs
-              you in &mdash; there&rsquo;s no password to remember.
+              Use your Ahmedabad University address and the password you were given. If you
+              have lost it, ask for a new one &mdash; it can be replaced in a moment.
             </p>
             <SignInForm />
           </div>

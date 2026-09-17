@@ -1,57 +1,45 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 
 const DOMAIN = process.env.NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN ?? 'ahduni.edu.in';
 
 export default function SignInForm() {
   const [email, setEmail] = useState('');
-  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
-  const [message, setMessage] = useState('');
+  const [password, setPassword] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const address = email.trim().toLowerCase();
+    if (busy) return;
 
-    if (!address.endsWith('@' + DOMAIN)) {
-      setState('error');
-      setMessage(`Please use your @${DOMAIN} address.`);
-      return;
+    setBusy(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+      });
+
+      const info = await res.json().catch(() => ({}));
+
+      if (!res.ok || !info.next) {
+        setError(info.error ?? 'Something went wrong signing you in. Please try again.');
+        setBusy(false);
+        return;
+      }
+
+      // A full page load rather than a client navigation, so the page that
+      // comes next is rendered by the server with the new session already in
+      // place instead of with whatever it had cached a moment ago.
+      window.location.href = info.next;
+    } catch {
+      setError('Could not reach the server. Check your connection and try again.');
+      setBusy(false);
     }
-
-    setState('sending');
-
-    const { error } = await createClient().auth.signInWithOtp({
-      email: address,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        shouldCreateUser: true,
-      },
-    });
-
-    if (error) {
-      setState('error');
-      // Supabase returns this when the address is not on the pilot allow-list.
-      setMessage(
-        error.message.toLowerCase().includes('not allowed') ||
-        error.message.toLowerCase().includes('signups not allowed')
-          ? 'That address is not on the pilot list. If you think it should be, contact your instructor.'
-          : 'Something went wrong sending the link. Please try again in a moment.',
-      );
-      return;
-    }
-
-    setState('sent');
-  }
-
-  if (state === 'sent') {
-    return (
-      <div className="notice ok">
-        Check your inbox. We&rsquo;ve sent a sign-in link to <strong>{email.trim().toLowerCase()}</strong>.
-        It works once and expires in an hour.
-      </div>
-    );
   }
 
   return (
@@ -61,15 +49,28 @@ export default function SignInForm() {
         id="email"
         type="email"
         required
-        autoComplete="email"
+        autoComplete="username"
         placeholder={`yourname@${DOMAIN}`}
         value={email}
-        onChange={(e) => { setEmail(e.target.value); if (state === 'error') setState('idle'); }}
+        onChange={(e) => { setEmail(e.target.value); if (error) setError(null); }}
       />
-      <button className="btn" type="submit" disabled={state === 'sending'}>
-        {state === 'sending' ? 'Sending\u2026' : 'Email me a sign-in link'}
+
+      <label className="field" htmlFor="password" style={{ marginTop: 14 }}>Password</label>
+      <input
+        id="password"
+        type="password"
+        required
+        autoComplete="current-password"
+        placeholder="The password you were given"
+        value={password}
+        onChange={(e) => { setPassword(e.target.value); if (error) setError(null); }}
+      />
+
+      <button className="btn" type="submit" disabled={busy || !email.trim() || !password}>
+        {busy ? 'Signing you in\u2026' : 'Sign in'}
       </button>
-      {state === 'error' ? <div className="notice bad">{message}</div> : null}
+
+      {error ? <div className="notice bad">{error}</div> : null}
     </form>
   );
 }
