@@ -32,7 +32,9 @@ jobs:
           cache: npm
           cache-dependency-path: mat142-ai-tutor/webapp/package-lock.json
       - run: npm ci
-      - run: npm run db:start
+      - run: npx supabase start
       - run: npm run db:verify
+      - run: npm run test:chat-turns:integration
+      - run: npm run test:account:integration
       - if: always()
         run: npx supabase stop --no-backup

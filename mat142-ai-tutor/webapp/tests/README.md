@@ -9,11 +9,20 @@ Run them with:
 npm test
 ```
 
-`npm run test:chat-turns:integration` checks concurrent opening and student turns,
+The database integration checks run against the disposable local Supabase CLI
+project after migrations. From `webapp`, run `npx supabase start`,
+`npm run db:reset`, then `npm run test:chat-turns:integration` and
+`npm run test:account:integration`. The database CI job runs both checks after
+`db:verify`. They read local connection details from `supabase status -o env`,
+create temporary Auth users, and delete them afterwards. They refuse a remote
+Supabase URL.
+
+`test:chat-turns:integration` checks concurrent opening and student turns,
 duplicate requests, failed and expired generations, atomic counters, and the
-turn limit against a disposable Supabase project. Apply `supabase/schema.sql`
-there first, then set `TEST_SUPABASE_URL` and
-`TEST_SUPABASE_SERVICE_ROLE_KEY`. The test creates and deletes its own user.
+turn limit. `test:account:integration` signs in two students and a professor,
+checks enrollment and revocation, runs start/chat/end routes with a deterministic
+tutor, verifies transcript isolation and faculty dashboard reads, and exercises
+model and database failures. There is no export endpoint yet to authorize.
 
 `chat-failures.test.ts` checks that model, persistence, and network failures
 reject the stream after partial text instead of turning an error into a saved
