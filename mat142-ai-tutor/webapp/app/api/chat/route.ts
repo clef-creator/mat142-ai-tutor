@@ -16,6 +16,35 @@ export const maxDuration = 60;
 
 const MAX_TURNS = Number(process.env.MAX_TURNS_PER_SESSION ?? 40);
 const MAX_MESSAGE_CHARS = 4000;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** The browser uses this after a stream ends or a connection is lost. */
+export async function GET(req: Request) {
+  if (isSoloMode()) return NextResponse.json({ error: 'Not available in this mode' }, { status: 404 });
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Not signed in' }, { status: 401 });
+  const url = new URL(req.url);
+  const sessionId = url.searchParams.get('sessionId');
+  const requestId = url.searchParams.get('requestId');
+  if (!sessionId || !requestId || !UUID.test(sessionId) || !UUID.test(requestId)) {
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+  }
+  const admin = createAdminClient();
+  const { data: session } = await admin.from('sessions').select('id')
+    .eq('id', sessionId).eq('student_id', user.id).maybeSingle();
+  if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
+  const { data: turn, error: turnError } = await admin.from('chat_turns')
+    .select('status, reply, lease_until')
+    .eq('session_id', sessionId).eq('request_id', requestId)
+    .eq('student_id', user.id).maybeSingle();
+  if (turnError) return NextResponse.json({ error: 'Could not check turn' }, { status: 500 });
+  return NextResponse.json({
+    status: turn?.status ?? 'missing',
+    reply: turn?.status === 'completed' ? turn.reply : null,
+    retryAfter: turn?.status === 'processing' ? turn.lease_until : null,
+  });
+}
 
 /** One turn of tutoring, for a signed-in student. */
 export async function POST(req: Request) {
@@ -27,18 +56,30 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Not signed in' }, { status: 401 });
 
-  let body: { sessionId?: string; message?: string; opening?: boolean };
+  let body: { sessionId?: string; requestId?: string; message?: string; opening?: boolean };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: 'Bad request' }, { status: 400 });
   }
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Bad request' }, { status: 400 });
+  }
+  if (body.opening !== undefined && typeof body.opening !== 'boolean') {
+    return NextResponse.json({ error: 'Invalid opening flag' }, { status: 400 });
+  }
 
-  const { sessionId, opening } = body;
+  const { sessionId, requestId, opening } = body;
+  if (body.message !== undefined && typeof body.message !== 'string') {
+    return NextResponse.json({ error: 'Invalid message' }, { status: 400 });
+  }
   const message = (body.message ?? '').slice(0, MAX_MESSAGE_CHARS).trim();
 
-  if (!sessionId) return NextResponse.json({ error: 'Missing session' }, { status: 400 });
+  if (!sessionId || !requestId || !UUID.test(sessionId) || !UUID.test(requestId)) {
+    return NextResponse.json({ error: 'Missing or invalid session/request ID' }, { status: 400 });
+  }
   if (!opening && !message) return NextResponse.json({ error: 'Empty message' }, { status: 400 });
+  if (opening && message) return NextResponse.json({ error: 'Opening cannot include a message' }, { status: 400 });
 
   const admin = createAdminClient();
   const enrollment = await findActiveStudentEnrollment(admin, user);
@@ -49,123 +90,115 @@ export async function POST(req: Request) {
     );
   }
 
-  // --- the session must belong to this student, and still be open -----------
-  const { data: session } = await admin
-    .from('sessions')
-    .select('*')
-    .eq('id', sessionId)
-    .eq('student_id', user.id)
-    .maybeSingle();
-
-  if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
-  if (session.ended_at) return NextResponse.json({ error: 'Session already ended' }, { status: 409 });
-
-  if (session.turn_count >= MAX_TURNS) {
-    return NextResponse.json(
-      { error: 'turn-limit', message: 'This session has reached its length limit. Start a new one when you are ready.' },
-      { status: 429 },
-    );
-  }
-
-  // --- history --------------------------------------------------------------
-  const { data: history } = await admin
-    .from('messages')
-    .select('role, content')
-    .eq('session_id', sessionId)
-    .order('id', { ascending: true });
-
-  const priorMessages: ChatMessage[] = (history ?? []) as ChatMessage[];
-
-  if (opening && priorMessages.length > 0) {
-    return NextResponse.json({ error: 'Session already opened' }, { status: 409 });
-  }
-
-  // --- context for the prompt ----------------------------------------------
-  const { data: progressRows } = await admin
-    .from('progress')
-    .select('*')
-    .eq('student_id', user.id);
-  const progress = (progressRows ?? []) as ProgressRow[];
-
-  const { data: student } = await admin
-    .from('students')
-    .select('display_name')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  const { count: sessionCount } = await admin
-    .from('sessions')
-    .select('id', { count: 'exact', head: true })
-    .eq('student_id', user.id);
-
-  const { data: lastSession } = await admin
-    .from('sessions')
-    .select('topic_id, summary')
-    .eq('student_id', user.id)
-    .not('ended_at', 'is', null)
-    .order('ended_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  // The session's topic was fixed when it was created; keep using that one.
-  const sessionPrompt = buildSessionPrompt({
-    studentName: student?.display_name ?? null,
-    choice: choiceForTopic(session.topic_id, progress),
-    progress,
-    lastSummary: lastSession?.summary ?? null,
-    lastTopicId: lastSession?.topic_id ?? null,
-    sessionNumber: sessionCount ?? 1,
+  const { data: claim, error: claimError } = await admin.rpc('claim_chat_turn', {
+    p_session_id: sessionId, p_student_id: user.id, p_request_id: requestId,
+    p_opening: Boolean(opening), p_message: message, p_max_turns: MAX_TURNS,
   });
-
-  // --- persist the student's turn before calling the model -------------------
-  if (message) {
-    await admin.from('messages').insert({
-      session_id: sessionId,
-      student_id: user.id,
-      role: 'user',
-      content: message,
+  if (claimError || !claim) {
+    console.error('[chat] claim failed', claimError);
+    return NextResponse.json({ error: 'Could not start turn' }, { status: 500 });
+  }
+  const result = claim as { status: string; reply?: string; generationId?: string };
+  if (result.status === 'completed') {
+    return new Response(result.reply ?? '', { headers: STREAM_HEADERS });
+  }
+  if (result.status !== 'claimed') {
+    const status = result.status === 'not_found' ? 404 : result.status === 'turn_limit' ? 429 : 409;
+    return NextResponse.json({ error: result.status, message: result.status === 'busy'
+      ? 'Another reply is still in progress. Try again shortly.'
+      : result.status === 'turn_limit' ? 'This session has reached its length limit.'
+      : 'This turn cannot be started.' }, { status });
+  }
+  const generationId = result.generationId!;
+  const fail = async () => {
+    const { error } = await admin.rpc('fail_chat_turn', {
+      p_session_id: sessionId, p_student_id: user.id,
+      p_request_id: requestId, p_generation_id: generationId,
     });
+    if (error) throw error;
+  };
+
+  try {
+    // The claim serializes this session before any history is read.
+    const { data: session } = await admin
+      .from('sessions')
+      .select('*')
+      .eq('id', sessionId)
+      .eq('student_id', user.id)
+      .maybeSingle();
+
+    if (!session) { await fail(); return NextResponse.json({ error: 'Session not found' }, { status: 404 }); }
+
+    // --- history --------------------------------------------------------------
+    const { data: history, error: historyError } = await admin
+      .from('messages')
+      .select('role, content')
+      .eq('session_id', sessionId)
+      .order('id', { ascending: true });
+
+    if (historyError) { await fail(); return NextResponse.json({ error: 'Could not read history' }, { status: 500 }); }
+    const priorMessages: ChatMessage[] = (history ?? []) as ChatMessage[];
+
+    // --- context for the prompt ----------------------------------------------
+    const { data: progressRows } = await admin
+      .from('progress')
+      .select('*')
+      .eq('student_id', user.id);
+    const progress = (progressRows ?? []) as ProgressRow[];
+
+    const { data: student } = await admin
+      .from('students')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    const { count: sessionCount } = await admin
+      .from('sessions')
+      .select('id', { count: 'exact', head: true })
+      .eq('student_id', user.id);
+
+    const { data: lastSession } = await admin
+      .from('sessions')
+      .select('topic_id, summary')
+      .eq('student_id', user.id)
+      .not('ended_at', 'is', null)
+      .order('ended_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    // The session's topic was fixed when it was created; keep using that one.
+    const sessionPrompt = buildSessionPrompt({
+      studentName: student?.display_name ?? null,
+      choice: choiceForTopic(session.topic_id, progress),
+      progress,
+      lastSummary: lastSession?.summary ?? null,
+      lastTopicId: lastSession?.topic_id ?? null,
+      sessionNumber: sessionCount ?? 1,
+    });
+
+    const outbound: ChatMessage[] = [...priorMessages];
+    if (message) outbound.push({ role: 'user', content: message });
+
+    const stream = streamTutorReply({
+      sessionPrompt,
+      messages: outbound,
+      async onComplete(full, usage) {
+        const { data: saved, error } = await admin.rpc('complete_chat_turn', {
+          p_session_id: sessionId, p_student_id: user.id, p_request_id: requestId,
+          p_generation_id: generationId, p_reply: full,
+          p_input_tokens: usage.inputTokens, p_output_tokens: usage.outputTokens,
+        });
+        if (error || !saved) throw error ?? new Error('Turn completion was rejected');
+      },
+      onError: fail,
+    });
+
+    return new Response(stream, { headers: STREAM_HEADERS });
+  } catch (error) {
+    console.error('[chat] turn setup failed', error);
+    try { await fail(); } catch (releaseError) {
+      console.error('[chat] turn release failed', releaseError);
+    }
+    return NextResponse.json({ error: 'Could not start reply' }, { status: 500 });
   }
-
-  const outbound: ChatMessage[] = [...priorMessages];
-  if (message) outbound.push({ role: 'user', content: message });
-
-  const stream = streamTutorReply({
-    sessionPrompt,
-    messages: outbound,
-    async onComplete(full, usage) {
-      await admin.from('messages').insert({
-        session_id: sessionId,
-        student_id: user.id,
-        role: 'assistant',
-        content: full,
-      });
-
-      await admin
-        .from('sessions')
-        .update({ turn_count: session.turn_count + 1 })
-        .eq('id', sessionId);
-
-      const today = new Date().toISOString().slice(0, 10);
-      const { data: existing } = await admin
-        .from('usage_daily')
-        .select('input_tokens, output_tokens, turns')
-        .eq('student_id', user.id)
-        .eq('day', today)
-        .maybeSingle();
-
-      await admin.from('usage_daily').upsert(
-        {
-          student_id: user.id,
-          day: today,
-          input_tokens: (existing?.input_tokens ?? 0) + usage.inputTokens,
-          output_tokens: (existing?.output_tokens ?? 0) + usage.outputTokens,
-          turns: (existing?.turns ?? 0) + 1,
-        },
-        { onConflict: 'student_id,day' },
-      );
-    },
-  });
-
-  return new Response(stream, { headers: STREAM_HEADERS });
 }

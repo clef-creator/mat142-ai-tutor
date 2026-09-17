@@ -91,6 +91,10 @@ export default function TutorClient({
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState<{
+    sessionId: string; requestId: string; message?: string; opening?: boolean;
+    history?: ChatMessage[];
+  } | null>(null);
   const [ending, setEnding] = useState(false);
 
   const threadRef = useRef<HTMLDivElement>(null);
@@ -125,6 +129,7 @@ export default function TutorClient({
       message?: string;
       opening?: boolean;
       history?: ChatMessage[];
+      requestId?: string;
     }) => {
       setBusy(true);
       setError(null);
@@ -149,6 +154,7 @@ export default function TutorClient({
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 sessionId: payload.sessionId,
+                requestId: payload.requestId,
                 message: payload.message,
                 opening: payload.opening,
               }),
@@ -157,7 +163,17 @@ export default function TutorClient({
         if (!res.ok) {
           const info = await res.json().catch(() => ({}));
           setError(info.message ?? 'Something went wrong. Please try again.');
-          setBusy(false);
+          if (!solo && info.error !== 'busy' && res.status !== 500) {
+            setPending(null);
+            if (payload.message) {
+              setInput(payload.message);
+              setMessages((prev) => {
+                const next = prev.slice(0, -1);
+                messagesRef.current = next;
+                return next;
+              });
+            }
+          }
           return;
         }
 
@@ -174,15 +190,40 @@ export default function TutorClient({
           setStreaming(acc);
         }
 
+        let reply = acc;
+        if (!solo) {
+          const state = await fetch(`/api/chat?sessionId=${encodeURIComponent(payload.sessionId)}&requestId=${encodeURIComponent(payload.requestId ?? '')}`);
+          if (!state.ok) throw new Error('Could not check turn status');
+          const turn = await state.json();
+          if (turn.status !== 'completed') throw new Error('Turn not complete');
+          reply = turn.reply;
+        }
         setMessages((prev) => {
-          const next = [...prev, { role: 'assistant' as const, content: acc }];
+          const next = [...prev, { role: 'assistant' as const, content: reply }];
           messagesRef.current = next;
           solo?.persist(next);
           return next;
         });
+        setPending(null);
         setStreaming('');
       } catch {
-        setError('Lost the connection. Your message was saved — try again.');
+        setStreaming('');
+        if (!solo && payload.requestId) {
+          try {
+            const state = await fetch(`/api/chat?sessionId=${encodeURIComponent(payload.sessionId)}&requestId=${encodeURIComponent(payload.requestId)}`);
+            const turn = await state.json();
+            if (state.ok && turn.status === 'completed') {
+              setMessages((prev) => {
+                const next = [...prev, { role: 'assistant' as const, content: turn.reply }];
+                messagesRef.current = next;
+                return next;
+              });
+              setPending(null);
+              return;
+            }
+          } catch { /* Retrying uses the same request ID. */ }
+        }
+        setError('The reply was interrupted. Retry this turn to check or continue it.');
       } finally {
         setBusy(false);
         inputRef.current?.focus();
@@ -213,7 +254,9 @@ export default function TutorClient({
       }
 
       if (messages.length === 0 && id) {
-        await run({ sessionId: id, opening: true });
+        const requestId = crypto.randomUUID();
+        setPending({ sessionId: id, opening: true, requestId });
+        await run({ sessionId: id, opening: true, requestId });
       }
     })();
     // Intentionally runs once.
@@ -222,7 +265,7 @@ export default function TutorClient({
 
   async function send() {
     const text = input.trim();
-    if (!text || busy || !sessionId) return;
+    if (!text || busy || pending || !sessionId) return;
 
     // What was said before this turn, captured before the screen is updated.
     // The new message is sent separately, so it must not also be in here.
@@ -233,7 +276,9 @@ export default function TutorClient({
     setMessages(next);
     solo?.persist(next);
     setInput('');
-    await run({ sessionId, message: text, history: priorHistory });
+    const requestId = crypto.randomUUID();
+    setPending({ sessionId, requestId, message: text, history: priorHistory });
+    await run({ sessionId, requestId, message: text, history: priorHistory });
   }
 
   async function endSession() {
@@ -437,6 +482,9 @@ export default function TutorClient({
           ) : null}
 
           {error ? <div className="notice bad">{error}</div> : null}
+          {pending && !busy ? (
+            <button type="button" className="linkbtn" onClick={() => void run(pending)}>Retry this turn</button>
+          ) : null}
         </div>
 
         <div className="composer">
@@ -455,7 +503,7 @@ export default function TutorClient({
               rows={2}
               value={input}
               placeholder={'Type your answer, or tell me you\u2019re stuck\u2026'}
-              disabled={busy || !sessionId}
+              disabled={busy || !!pending || !sessionId}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -464,7 +512,7 @@ export default function TutorClient({
                 }
               }}
             />
-            <button type="button" onClick={() => void send()} disabled={busy || !input.trim()}>
+            <button type="button" onClick={() => void send()} disabled={busy || !!pending || !input.trim()}>
               Send
             </button>
           </div>
@@ -472,7 +520,7 @@ export default function TutorClient({
           <div className="compfoot">
             <span>Enter to send, Shift+Enter for a new line</span>
             <span>&middot;</span>
-            <button className="linkbtn" onClick={() => void endSession()} disabled={ending || !sessionId}>
+            <button className="linkbtn" onClick={() => void endSession()} disabled={ending || !!pending || !sessionId}>
               {ending ? 'Saving\u2026' : 'End session'}
             </button>
           </div>

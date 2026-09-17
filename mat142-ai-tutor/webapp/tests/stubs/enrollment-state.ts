@@ -2,7 +2,7 @@ export const enrollmentTestState = {
   user: { id: 'student-1', email: 'Student@AHDUNI.EDU.IN' },
   allowed: false,
   allowedLookupError: false,
-  existingSessionId: 'existing-session',
+  existingSessionId: '22222222-2222-4222-8222-222222222222',
   tablesRead: [] as string[],
   tutorCalls: 0,
   summaryCalls: 0,
