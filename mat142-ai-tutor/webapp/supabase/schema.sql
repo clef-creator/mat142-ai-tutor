@@ -173,6 +173,10 @@ as $$
   )
 $$;
 
+drop policy if exists "faculty read pilot allowlist" on public.allowed_students;
+create policy "faculty read pilot allowlist" on public.allowed_students
+  for select using (public.is_faculty());
+
 -- --- students ---------------------------------------------------------------
 drop policy if exists "student reads own record" on public.students;
 create policy "student reads own record" on public.students

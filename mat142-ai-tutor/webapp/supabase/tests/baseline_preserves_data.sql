@@ -22,5 +22,15 @@ begin
   ) then
     raise exception 'faculty must not receive transcript access';
   end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public'
+      and tablename = 'allowed_students'
+      and policyname = 'faculty read pilot allowlist'
+      and coalesce(qual, '') ilike '%is_faculty%'
+  ) then
+    raise exception 'the dashboard roster requires a faculty-only allowlist read policy';
+  end if;
 end
 $$;

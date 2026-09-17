@@ -46,6 +46,10 @@ end must all return `403` before reading session data or calling either model.
 faculty row matching both the authenticated user ID and email. It also checks
 revocation, email changes and database lookup failures.
 
+**`dashboard.test.ts`** checks the rolling weekly window, distinct-student
+difficulty counts, unassessed sessions, roster aggregation and the absence of
+transcripts or private summaries from the dashboard view model.
+
 **`deployment-config.test.ts`** checks the explicit pre-deployment validator:
 complete solo and account configurations pass, while partial Supabase setup,
 placeholder secrets, insecure production URLs, mismatched domains and unsafe
