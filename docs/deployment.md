@@ -77,39 +77,63 @@ Account mode requires:
 - matching `ALLOWED_EMAIL_DOMAIN` and `NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN`
 - positive `MAX_TURNS_PER_SESSION` and `MAX_SESSIONS_PER_DAY`
 
+`STUDENT_SETUP_TOKEN` is set only while accounts are being created, and must be
+at least sixteen characters; the validator rejects a shorter one. See
+[Creating student accounts](#creating-student-accounts).
+
 Never prefix the Anthropic or service-role key with `NEXT_PUBLIC_`. Scope
 `NEXT_PUBLIC_SITE_URL` to the production environment when preview deployments
 must return to their own origins.
 
-## Supabase Auth and email
+## Supabase Auth
 
-In **Authentication → URL Configuration**:
+Students sign in with their university address and a password issued to them.
+`signInWithPassword` sends no mail, so **no SMTP provider, sending domain or DNS
+record is required** for the pilot. Leave Supabase's default mail service alone
+rather than configuring it.
 
-- set Site URL to the exact production origin;
-- add the exact production callback, for example
-  `https://calcu-buddy.example.edu/auth/callback`;
-- add `http://localhost:3000/auth/callback` for local development;
-- add a narrowly scoped Vercel preview pattern only if preview authentication
-  is required.
+In **Authentication → URL Configuration**, set Site URL to the exact production
+origin. The `/auth/callback` route is retained and still works, so if emailed
+links are ever enabled, also add the exact production callback
+(`https://calcu-buddy.example.edu/auth/callback`), `http://localhost:3000/auth/callback`
+for local development, and a narrowly scoped preview pattern only if preview
+authentication is required. The app builds that callback from the browser's
+current origin, so the origin must appear in the redirect allow-list.
 
-The callback URL sent by the app uses the browser's current origin, so that
-origin must appear in Supabase's redirect allow-list.
+Confirm **Authentication → Providers → Email** has the email provider enabled
+and, since no mail can be delivered, that confirmations are not required for
+sign-in. Accounts created by the setup page are marked confirmed server-side.
 
-Configure a custom SMTP provider before a real pilot. Supabase's default mail
-service is for limited testing and may only deliver to pre-authorized project
-members. Test delivery, expiry and single-use behavior with non-production
-student accounts before launch.
+## Creating student accounts
 
-## Students and professor access
+Set `STUDENT_SETUP_TOKEN` in Vercel and redeploy. The site then serves one
+additional page, `/setup`, which is unlinked and marked `noindex`. It accepts
+the token, a pasted class list, and creates an Auth account per address with a
+generated password, showing them once in a table to be copied and handed out.
+Passwords are never logged and cannot be recovered; a student who loses one is
+given a new one by pasting their address again with "give everyone a new
+password" ticked.
 
-Store allow-listed student emails in lowercase in `public.allowed_students`.
-The callback creates their `students` row; removing the allow-list entry
+The page is the only thing the token unlocks, and anyone holding it can create
+sign-ins and read their passwords. It rejects addresses outside
+`ALLOWED_EMAIL_DOMAIN`, caps a single run at sixty addresses, compares the token
+in constant time and delays a wrong answer. Clear the variable and redeploy once
+the cohort has signed in; the page then 404s and no account is affected.
+
+Each address is written to `public.allowed_students` before its password is
+issued, so a student is never handed a credential that authorization will
+immediately reject. The `students` row is created at first sign-in, which is how
+the dashboard distinguishes invited from started. Removing the allow-list entry
 revokes subsequent tutor requests and direct student reads.
 
-The professor uses the same email-link form, but the role is granted only by a
-trusted administrator. In Supabase Auth, create or invite the professor's
-university email address. Copy its Auth user UUID, then, using the SQL Editor
-as an administrator, provision that exact identity:
+## Professor access
+
+The professor signs in with the same form, but the role is granted only by a
+trusted administrator and never by `/setup` — a professor must not appear in
+`allowed_students`. In Supabase **Authentication → Users → Add user**, create
+the professor's university address with a password and auto-confirm it. Copy its
+Auth user UUID, then, using the SQL Editor as an administrator, provision that
+exact identity:
 
 ```sql
 insert into public.faculty (id, email, full_name)
@@ -119,9 +143,9 @@ on conflict (id) do update
 ```
 
 Replace the placeholders with the real Auth user and address. The Auth email,
-faculty email and configured domain must match. A professor must not be added
-to `allowed_students`; `allowed_faculty` is a legacy table and is not used for
-authorization. The callback sends the professor to `/dashboard`, which checks
+faculty email and configured domain must match. `allowed_faculty` is a legacy
+table and is not used for authorization. Sign-in sends the professor to
+`/dashboard`, which checks
 the faculty row again on every visit. Delete the `faculty` row to revoke access.
 Only an administrator with privileged database access can grant this role; there is no
 client-facing role assignment. The dashboard shows authorized learning signals
@@ -134,6 +158,8 @@ to `public.messages`.
 2. Verify permissions and row counts.
 3. Deploy the compatible Vercel build.
 4. Exercise sign-in, session start, chat and session end with test accounts.
+5. Create the student accounts, hand out the passwords, then clear
+   `STUDENT_SETUP_TOKEN` and redeploy.
 
 If application verification fails, roll Vercel back to the prior compatible
 build. Correct database problems with a new forward migration; do not improvise
@@ -141,4 +167,4 @@ destructive rollback SQL on a database containing student data.
 
 References: [Supabase migration workflow](https://supabase.com/docs/guides/local-development/cli-workflows),
 [Supabase redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls),
-and [Supabase custom SMTP](https://supabase.com/docs/guides/auth/auth-smtp).
+and [Supabase password sign-in](https://supabase.com/docs/guides/auth/passwords).
