@@ -45,23 +45,24 @@ export async function POST(req: Request) {
     );
   }
 
-  const { data: session } = await admin
+  const { data: session, error: sessionError } = await admin
     .from('sessions')
     .select('*')
     .eq('id', sessionId)
     .eq('student_id', user.id)
     .maybeSingle();
 
+  if (sessionError) return NextResponse.json({ error: 'Could not read session' }, { status: 500 });
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 });
   if (session.ended_at) return NextResponse.json({ ok: true, alreadyEnded: true });
 
-  const { data: history } = await admin
+  const { data: history, error: historyError } = await admin
     .from('messages')
     .select('role, content')
     .eq('session_id', sessionId)
     .order('id', { ascending: true });
+  if (historyError) return NextResponse.json({ error: 'Could not read history' }, { status: 500 });
 
-  const endedAt = new Date().toISOString();
   const topic = getTopic(session.topic_id);
 
   // A session too short to judge never reaches the model; one that does may
@@ -73,21 +74,29 @@ export async function POST(req: Request) {
     history: (history ?? []) as ChatMessage[],
   });
 
-  await admin
-    .from('sessions')
-    .update({
-      ended_at: endedAt,
-      // A session with no assessment is recorded as having none, rather than
-      // as a shaky one. The dashboard counts outcomes.
-      outcome: signals.assessed ? signals.outcome : null,
-      summary: signals.summary,
-      sticking_point: signals.assessed ? signals.sticking_point : null,
-      asked_for_answers: signals.assessed && signals.asked_for_answers,
-      self_critical: signals.assessed && signals.self_critical,
-    })
-    .eq('id', sessionId);
-
-  await admin.from('students').update({ last_seen_at: endedAt }).eq('id', user.id);
+  const { data: saved, error: saveError } = await admin.rpc('finalize_tutor_session', {
+    p_session_id: sessionId,
+    p_student_id: user.id,
+    p_assessed: signals.assessed,
+    p_outcome: signals.assessed ? signals.outcome : null,
+    p_summary: signals.summary,
+    p_sticking_point: signals.assessed ? signals.sticking_point : null,
+    p_asked_for_answers: signals.assessed && signals.asked_for_answers,
+    p_self_critical: signals.assessed && signals.self_critical,
+  });
+  if (saveError || !saved) {
+    console.error('[session/end] save failed', saveError);
+    return NextResponse.json({ error: 'Could not save session', message: 'Could not save the session. Please try again.' }, { status: 500 });
+  }
+  const result = saved as { status: string };
+  if (result.status === 'not_found') return NextResponse.json({ error: 'Session not found' }, { status: 404 });
+  if (result.status === 'already_ended') return NextResponse.json({ ok: true, alreadyEnded: true });
+  if (result.status === 'busy') {
+    return NextResponse.json({ error: 'Reply in progress', message: 'Wait for the tutor reply before ending this session.' }, { status: 409 });
+  }
+  if (result.status !== 'completed') {
+    return NextResponse.json({ error: 'Could not save session', message: 'Could not save the session. Please try again.' }, { status: 500 });
+  }
 
   if (!signals.assessed) {
     // Leave the progress row exactly as it is — including `attempts`, so the
@@ -100,25 +109,6 @@ export async function POST(req: Request) {
       reason: signals.reason,
     });
   }
-
-  const { data: existing } = await admin
-    .from('progress')
-    .select('attempts')
-    .eq('student_id', user.id)
-    .eq('topic_id', session.topic_id)
-    .maybeSingle();
-
-  await admin.from('progress').upsert(
-    {
-      student_id: user.id,
-      topic_id: session.topic_id,
-      status: signals.outcome,
-      attempts: (existing?.attempts ?? 0) + 1,
-      last_worked_at: endedAt,
-      note: signals.sticking_point,
-    },
-    { onConflict: 'student_id,topic_id' },
-  );
 
   return NextResponse.json({ ok: true, assessed: true, outcome: signals.outcome });
 }

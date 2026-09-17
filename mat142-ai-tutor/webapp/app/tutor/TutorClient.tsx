@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import MathText from '@/components/MathText';
+import { readTutorStream } from '@/lib/chat-stream';
 import type { ChatMessage } from '@/lib/types';
 
 interface TopicSummary {
@@ -16,6 +17,43 @@ interface TopicListItem {
   id: string;
   name: string;
   status: string;
+}
+
+type PendingTurn = {
+  sessionId: string;
+  requestId: string;
+  message?: string;
+  opening?: boolean;
+  history?: ChatMessage[];
+};
+
+const PENDING_TURN_KEY = 'calcu-buddy-pending-turn';
+
+function rememberTurn(turn: PendingTurn) {
+  try {
+    sessionStorage.setItem(PENDING_TURN_KEY, JSON.stringify({
+      sessionId: turn.sessionId, requestId: turn.requestId,
+      message: turn.message, opening: turn.opening,
+    }));
+  } catch { /* In-memory retry still works when storage is unavailable. */ }
+}
+
+function forgetTurn() {
+  try { sessionStorage.removeItem(PENDING_TURN_KEY); } catch { /* No storage available. */ }
+}
+
+function rememberedTurn(sessionId: string): PendingTurn | null {
+  try {
+    const raw = sessionStorage.getItem(PENDING_TURN_KEY);
+    if (!raw) return null;
+    const value = JSON.parse(raw) as Partial<PendingTurn>;
+    if (value.sessionId === sessionId && typeof value.requestId === 'string' &&
+      (value.opening === true || typeof value.message === 'string')) {
+      return value as PendingTurn;
+    }
+  } catch { /* Ignore an unreadable pending turn. */ }
+  forgetTurn();
+  return null;
 }
 
 /**
@@ -91,10 +129,7 @@ export default function TutorClient({
   const [busy, setBusy] = useState(false);
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState<{
-    sessionId: string; requestId: string; message?: string; opening?: boolean;
-    history?: ChatMessage[];
-  } | null>(null);
+  const [pending, setPending] = useState<PendingTurn | null>(null);
   const [ending, setEnding] = useState(false);
 
   const threadRef = useRef<HTMLDivElement>(null);
@@ -124,16 +159,22 @@ export default function TutorClient({
    * be billed for reading it twice.
    */
   const run = useCallback(
-    async (payload: {
-      sessionId: string;
-      message?: string;
-      opening?: boolean;
-      history?: ChatMessage[];
-      requestId?: string;
-    }) => {
+    async (payload: PendingTurn) => {
       setBusy(true);
       setError(null);
       setStreaming('');
+
+      const reconcile = async () => {
+        const state = await fetch(`/api/chat?sessionId=${encodeURIComponent(payload.sessionId)}&requestId=${encodeURIComponent(payload.requestId ?? '')}`, {
+          cache: 'no-store',
+        });
+        if (!state.ok) throw new Error('Could not check saved history');
+        const turn = await state.json() as { status: string; history: ChatMessage[] };
+        if (!Array.isArray(turn.history)) throw new Error('Invalid saved history');
+        messagesRef.current = turn.history;
+        setMessages(turn.history);
+        return turn;
+      };
 
       try {
         // Solo mode has no database, so the conversation so far travels with
@@ -162,68 +203,60 @@ export default function TutorClient({
 
         if (!res.ok) {
           const info = await res.json().catch(() => ({}));
-          setError(info.message ?? 'Something went wrong. Please try again.');
-          if (!solo && info.error !== 'busy' && res.status !== 500) {
+          if (!solo) {
+            try {
+              const turn = await reconcile();
+              if (turn.status === 'completed') {
+                setPending(null);
+                forgetTurn();
+                return;
+              }
+            } catch { /* Keep the turn available while its status is unknown. */ }
+          }
+          setError(info.message ?? 'The turn could not be started. Please try again.');
+          if (!solo && info.error !== 'busy' && res.status < 500) {
             setPending(null);
-            if (payload.message) {
-              setInput(payload.message);
-              setMessages((prev) => {
-                const next = prev.slice(0, -1);
-                messagesRef.current = next;
-                return next;
-              });
-            }
+            forgetTurn();
+            if (payload.message) setInput(payload.message);
           }
           return;
         }
 
-        const reader = res.body?.getReader();
-        if (!reader) throw new Error('No response body');
+        const acc = await readTutorStream(res.body, setStreaming);
 
-        const decoder = new TextDecoder();
-        let acc = '';
-
-        for (;;) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          acc += decoder.decode(value, { stream: true });
-          setStreaming(acc);
-        }
-
-        let reply = acc;
         if (!solo) {
-          const state = await fetch(`/api/chat?sessionId=${encodeURIComponent(payload.sessionId)}&requestId=${encodeURIComponent(payload.requestId ?? '')}`);
-          if (!state.ok) throw new Error('Could not check turn status');
-          const turn = await state.json();
+          const turn = await reconcile();
           if (turn.status !== 'completed') throw new Error('Turn not complete');
-          reply = turn.reply;
+        } else {
+          setMessages((prev) => {
+            const next = [...prev, { role: 'assistant' as const, content: acc }];
+            messagesRef.current = next;
+            solo.persist(next);
+            return next;
+          });
         }
-        setMessages((prev) => {
-          const next = [...prev, { role: 'assistant' as const, content: reply }];
-          messagesRef.current = next;
-          solo?.persist(next);
-          return next;
-        });
         setPending(null);
+        if (!solo) forgetTurn();
         setStreaming('');
       } catch {
         setStreaming('');
-        if (!solo && payload.requestId) {
+        if (!solo) {
           try {
-            const state = await fetch(`/api/chat?sessionId=${encodeURIComponent(payload.sessionId)}&requestId=${encodeURIComponent(payload.requestId)}`);
-            const turn = await state.json();
-            if (state.ok && turn.status === 'completed') {
-              setMessages((prev) => {
-                const next = [...prev, { role: 'assistant' as const, content: turn.reply }];
-                messagesRef.current = next;
-                return next;
-              });
+            const turn = await reconcile();
+            if (turn.status === 'completed') {
               setPending(null);
+              forgetTurn();
               return;
             }
-          } catch { /* Retrying uses the same request ID. */ }
+            setError(turn.status === 'processing'
+              ? 'The tutor is still replying. Check this turn again shortly.'
+              : 'The reply failed. Your message was not saved. Retry this turn.');
+          } catch {
+            setError('Could not verify whether the reply was saved. Check this turn again.');
+          }
+        } else {
+          setError('The tutor reply was interrupted. Retry this turn.');
         }
-        setError('The reply was interrupted. Retry this turn to check or continue it.');
       } finally {
         setBusy(false);
         inputRef.current?.focus();
@@ -243,20 +276,36 @@ export default function TutorClient({
       // Solo mode creates its own session id in the browser; there is nothing
       // to ask the server for.
       if (!id && !solo) {
-        const res = await fetch('/api/session/start', { method: 'POST' });
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.message ?? 'Could not start a session.');
+        try {
+          const res = await fetch('/api/session/start', { method: 'POST' });
+          const data = await res.json();
+          if (!res.ok) {
+            setError(data.message ?? 'Could not start a session.');
+            return;
+          }
+          id = data.sessionId as string;
+          setSessionId(id);
+        } catch {
+          setError('Could not start a session. Check your connection and try again.');
           return;
         }
-        id = data.sessionId as string;
-        setSessionId(id);
+      }
+
+      if (id && !solo) {
+        const saved = rememberedTurn(id);
+        if (saved) {
+          setPending(saved);
+          await run(saved);
+          return;
+        }
       }
 
       if (messages.length === 0 && id) {
         const requestId = crypto.randomUUID();
-        setPending({ sessionId: id, opening: true, requestId });
-        await run({ sessionId: id, opening: true, requestId });
+        const turn = { sessionId: id, opening: true, requestId };
+        setPending(turn);
+        if (!solo) rememberTurn(turn);
+        await run(turn);
       }
     })();
     // Intentionally runs once.
@@ -272,13 +321,41 @@ export default function TutorClient({
     const priorHistory = messagesRef.current;
 
     const next: ChatMessage[] = [...priorHistory, { role: 'user', content: text }];
-    messagesRef.current = next;
-    setMessages(next);
-    solo?.persist(next);
+    if (solo) {
+      messagesRef.current = next;
+      setMessages(next);
+      solo.persist(next);
+    }
     setInput('');
     const requestId = crypto.randomUUID();
-    setPending({ sessionId, requestId, message: text, history: priorHistory });
-    await run({ sessionId, requestId, message: text, history: priorHistory });
+    const turn = { sessionId, requestId, message: text, history: priorHistory };
+    setPending(turn);
+    if (!solo) rememberTurn(turn);
+    await run(turn);
+  }
+
+  async function discardPending() {
+    if (!pending?.message || busy || solo) return;
+    try {
+      const res = await fetch(`/api/chat?sessionId=${encodeURIComponent(pending.sessionId)}&requestId=${encodeURIComponent(pending.requestId)}`, {
+        cache: 'no-store',
+      });
+      if (!res.ok) throw new Error('Could not check turn');
+      const turn = await res.json() as { status: string; history: ChatMessage[] };
+      if (!Array.isArray(turn.history)) throw new Error('Invalid history');
+      messagesRef.current = turn.history;
+      setMessages(turn.history);
+      if (turn.status === 'processing') {
+        setError('The tutor is still replying. Check this turn again shortly.');
+        return;
+      }
+      if (turn.status !== 'completed') setInput(pending.message);
+      setPending(null);
+      forgetTurn();
+      setError(null);
+    } catch {
+      setError('Could not verify whether the message was saved. Check this turn again.');
+    }
   }
 
   async function endSession() {
@@ -290,13 +367,24 @@ export default function TutorClient({
       return;
     }
 
-    await fetch('/api/session/end', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId }),
-    });
-    router.refresh();
-    window.location.href = '/tutor';
+    try {
+      const res = await fetch('/api/session/end', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      });
+      if (!res.ok) {
+        const info = await res.json().catch(() => ({}));
+        setError(info.message ?? 'Could not save the session. Please try again.');
+        return;
+      }
+      router.refresh();
+      window.location.href = '/tutor';
+    } catch {
+      setError('Could not confirm the session was saved. Please try again.');
+    } finally {
+      setEnding(false);
+    }
   }
 
   /**
@@ -470,9 +558,16 @@ export default function TutorClient({
             </div>
           ))}
 
+          {!solo && pending?.message ? (
+            <div className="msg you" aria-label="Message pending, not saved yet">
+              <div className="speaker">You · pending, not saved yet</div>
+              <MathText text={pending.message} />
+            </div>
+          ) : null}
+
           {streaming ? (
             <div className="msg tutor">
-              <div className="speaker">Calcu-Buddy</div>
+              <div className="speaker">Calcu-Buddy · reply in progress</div>
               <MathText text={streaming} />
             </div>
           ) : null}
@@ -482,8 +577,16 @@ export default function TutorClient({
           ) : null}
 
           {error ? <div className="notice bad">{error}</div> : null}
+          {!sessionId && error ? (
+            <button type="button" className="linkbtn" onClick={() => window.location.reload()}>Retry loading the session</button>
+          ) : null}
           {pending && !busy ? (
-            <button type="button" className="linkbtn" onClick={() => void run(pending)}>Retry this turn</button>
+            <div>
+              <button type="button" className="linkbtn" onClick={() => void run(pending)}>Retry this turn</button>
+              {!solo && pending.message ? (
+                <button type="button" className="linkbtn" onClick={() => void discardPending()}>Edit or discard this turn</button>
+              ) : null}
+            </div>
           ) : null}
         </div>
 

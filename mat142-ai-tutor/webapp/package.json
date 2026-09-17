@@ -11,7 +11,7 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "npm run test:tutoring && npm run test:rendering && npm run test:solo && npm run test:conversation && npm run test:enrollment && npm run test:faculty && npm run test:dashboard && npm run test:config",
+    "test": "npm run test:tutoring && npm run test:rendering && npm run test:solo && npm run test:conversation && npm run test:enrollment && npm run test:faculty && npm run test:dashboard && npm run test:config && npm run test:chat-failures && npm run test:session-write-failures",
     "test:conversation": "esbuild tests/conversation.test.ts --bundle --platform=node --format=cjs --alias:@=. --log-level=warning --outfile=.tests/conversation.cjs && node .tests/conversation.cjs",
     "test:tutoring": "esbuild tests/tutoring.test.ts --bundle --platform=node --format=cjs --alias:@=. --log-level=warning --outfile=.tests/tutoring.cjs && node .tests/tutoring.cjs",
     "test:rendering": "esbuild tests/rendering.test.tsx --bundle --platform=node --format=cjs --alias:@=. --jsx=automatic --log-level=warning --outfile=.tests/rendering.cjs && node .tests/rendering.cjs",
@@ -26,6 +26,9 @@
     "db:lint": "supabase db lint --local --level warning --fail-on error",
     "db:verify": "npm run db:reset && supabase db query --local --file supabase/tests/baseline_fixture.sql && supabase migration repair 20260916054800 --status reverted --local && supabase migration up --include-all --local && supabase db query --local --file supabase/tests/baseline_preserves_data.sql && npm run db:lint",
     "test:chat-turns:integration": "esbuild tests/chat-turns.integration.test.ts --bundle --platform=node --format=cjs --log-level=warning --outfile=.tests/chat-turns.integration.cjs && node .tests/chat-turns.integration.cjs",
+    "test:account:integration": "esbuild tests/account.integration.test.ts --bundle --platform=node --format=cjs --alias:@/lib/supabase/server=./tests/stubs/account-integration-server.ts --alias:@/lib/tutor=./tests/stubs/account-integration-tutor.ts --alias:@/lib/signals=./tests/stubs/account-integration-signals.ts --alias:@=. --log-level=warning --outfile=.tests/account.integration.cjs && node .tests/account.integration.cjs",
+    "test:chat-failures": "esbuild tests/chat-failures.test.ts --bundle --platform=node --format=cjs --alias:@anthropic-ai/sdk=./tests/stubs/anthropic-stream.ts --alias:@=. --log-level=warning --outfile=.tests/chat-failures.cjs && node .tests/chat-failures.cjs",
+    "test:session-write-failures": "esbuild tests/session-write-failures.test.ts --bundle --platform=node --format=cjs --alias:@/lib/supabase/server=./tests/stubs/write-failure-server.ts --alias:@/lib/enrollment=./tests/stubs/write-failure-enrollment.ts --alias:@/lib/signals=./tests/stubs/write-failure-signals.ts --alias:@/lib/tutor=./tests/stubs/enrollment-tutor.ts --alias:@=. --log-level=warning --outfile=.tests/session-write-failures.cjs && node .tests/session-write-failures.cjs",
     "check": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
