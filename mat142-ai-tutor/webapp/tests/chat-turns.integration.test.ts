@@ -1,11 +1,10 @@
 /** Run only against a disposable Supabase project with schema.sql applied. */
 import assert from 'node:assert/strict';
 import { createClient } from '@supabase/supabase-js';
+import { localSupabase } from './local-supabase';
 
-const url = process.env.TEST_SUPABASE_URL;
-const key = process.env.TEST_SUPABASE_SERVICE_ROLE_KEY;
-if (!url || !key) throw new Error('Set TEST_SUPABASE_URL and TEST_SUPABASE_SERVICE_ROLE_KEY');
-const db = createClient(url, key, { auth: { persistSession: false } });
+const { url, serviceKey } = localSupabase();
+const db = createClient(url, serviceKey, { auth: { persistSession: false } });
 
 async function rpc<T>(name: string, args: Record<string, unknown>): Promise<T> {
   const { data, error } = await db.rpc(name, args);
