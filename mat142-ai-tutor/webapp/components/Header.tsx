@@ -23,10 +23,6 @@ export default function Header({ email, subtitle }: { email?: string | null; sub
       <div className="coursebar">
         <div className="coursebar-in">
           <span>MAT142 &middot; Introductory Calculus</span>
-          <span className="sep">|</span>
-          <span>School of Arts and Sciences</span>
-          <span className="sep">|</span>
-          <span>Monsoon 2026</span>
         </div>
       </div>
     </>
