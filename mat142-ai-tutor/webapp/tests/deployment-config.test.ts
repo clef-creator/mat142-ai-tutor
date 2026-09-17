@@ -61,4 +61,20 @@ check('the service-role key cannot be exposed as the anon key', sameKeys.errors.
 const invalidLimit = validateDeploymentConfig({ ...common, ACCESS_CODE: 'a-long-demo-code', MAX_TURNS_PER_SESSION: '0' });
 check('limits must be positive integers', invalidLimit.errors.some((e) => e.includes('positive integer')));
 
+const shortSetupToken = validateDeploymentConfig({ ...accountEnv, STUDENT_SETUP_TOKEN: 'too-short' });
+check(
+  'a guessable setup token is rejected outright',
+  shortSetupToken.errors.some((e) => e.includes('STUDENT_SETUP_TOKEN')),
+);
+
+const setupTokenSet = validateDeploymentConfig({
+  ...accountEnv,
+  STUDENT_SETUP_TOKEN: 'a-long-enough-setup-token',
+});
+check(
+  'leaving the account-creating page open is worth a warning',
+  setupTokenSet.errors.length === 0 &&
+    setupTokenSet.warnings.some((w) => w.includes('STUDENT_SETUP_TOKEN')),
+);
+
 if (failures > 0) process.exit(1);
