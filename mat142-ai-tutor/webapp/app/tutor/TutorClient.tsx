@@ -19,6 +19,12 @@ interface TopicListItem {
   status: string;
 }
 
+interface TopicOption {
+  id: string;
+  name: string;
+  unit: string;
+}
+
 type PendingTurn = {
   sessionId: string;
   requestId: string;
@@ -99,6 +105,7 @@ export default function TutorClient({
   topic,
   because,
   topicList,
+  topicOptions,
   totalTopics,
   unitIndex,
   unitCount,
@@ -116,6 +123,8 @@ export default function TutorClient({
    * deliberately absent — see `visibleTopics` in lib/curriculum.
    */
   topicList: TopicListItem[];
+  /** Full course list for an explicit signed-in topic change. */
+  topicOptions?: TopicOption[];
   /** How many topics the unit holds in all, including those not yet shown. */
   totalTopics: number;
   unitIndex: number;
@@ -131,6 +140,7 @@ export default function TutorClient({
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<PendingTurn | null>(null);
   const [ending, setEnding] = useState(false);
+  const [sessionClosed, setSessionClosed] = useState(false);
 
   const threadRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -314,7 +324,7 @@ export default function TutorClient({
 
   async function send() {
     const text = input.trim();
-    if (!text || busy || pending || !sessionId) return;
+    if (!text || busy || pending || sessionClosed || !sessionId) return;
 
     // What was said before this turn, captured before the screen is updated.
     // The new message is sent separately, so it must not also be in here.
@@ -358,6 +368,26 @@ export default function TutorClient({
     }
   }
 
+  async function saveAccountSession(id: string): Promise<boolean> {
+    try {
+      const res = await fetch('/api/session/end', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: id }),
+      });
+      if (!res.ok) {
+        const info = await res.json().catch(() => ({}));
+        setError(info.message ?? 'Could not save the session. Please try again.');
+        return false;
+      }
+      setSessionClosed(true);
+      return true;
+    } catch {
+      setError('Could not confirm the session was saved. Please try again.');
+      return false;
+    }
+  }
+
   async function endSession() {
     if (!sessionId || ending || busy || pending) return;
     setEnding(true);
@@ -368,34 +398,23 @@ export default function TutorClient({
     }
 
     try {
-      const res = await fetch('/api/session/end', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId }),
-      });
-      if (!res.ok) {
-        const info = await res.json().catch(() => ({}));
-        setError(info.message ?? 'Could not save the session. Please try again.');
-        return;
-      }
+      if (!await saveAccountSession(sessionId)) return;
       router.refresh();
       window.location.href = '/tutor';
-    } catch {
-      setError('Could not confirm the session was saved. Please try again.');
     } finally {
       setEnding(false);
     }
   }
 
   /**
-   * Jump to another topic (try-it-out version only).
+   * Save the topic being left before opening a session on the chosen topic.
    *
    * This ends the current session rather than abandoning it, so the work
    * already done is read and remembered. It therefore takes as long as "End
    * session" does, which is why it shares the same waiting state.
    */
   async function jumpTo(topicId: string, topicName: string) {
-    if (!solo || busy || ending) return;
+    if (!sessionId || topicId === topic.id || busy || ending || pending) return;
     const started = messagesRef.current.some((m) => m.role === 'user');
     if (
       started &&
@@ -406,7 +425,29 @@ export default function TutorClient({
       return;
     }
     setEnding(true);
-    await solo.switchTopic(topicId, messagesRef.current);
+    if (solo) {
+      await solo.switchTopic(topicId, messagesRef.current);
+      return;
+    }
+    try {
+      if (!await saveAccountSession(sessionId)) return;
+      const res = await fetch('/api/session/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topicId }),
+      });
+      const started = await res.json().catch(() => ({}));
+      if (!res.ok || !started.sessionId || started.topicId !== topicId) {
+        setError(`Your work was saved. ${started.message ?? 'The new topic could not be opened. Please try again.'}`);
+        return;
+      }
+      router.refresh();
+      window.location.href = '/tutor';
+    } catch {
+      setError('Your work was saved, but the new topic could not be opened. Please try again.');
+    } finally {
+      setEnding(false);
+    }
   }
 
   function startOver() {
@@ -493,13 +534,11 @@ export default function TutorClient({
                 );
                 return (
                   <li key={t.id} className={!isNow && t.status === 'not_started' ? 'upcoming' : undefined}>
-                    {/* Only the try-it-out version lets you jump about. Students
-                        follow the order the course teaches things in. */}
-                    {solo && !isNow ? (
+                    {!isNow ? (
                       <button
                         type="button"
                         className="tjump"
-                        disabled={busy || ending}
+                        disabled={busy || ending || !!pending || !sessionId}
                         onClick={() => void jumpTo(t.id, t.name)}
                       >
                         {label}
@@ -522,6 +561,23 @@ export default function TutorClient({
                 </li>
               ) : null}
             </ul>
+            {!solo && topicOptions && (
+              <div className="topic-chooser">
+                <label htmlFor="topic-chooser">Choose another topic</label>
+                <select id="topic-chooser" value={topic.id}
+                  disabled={busy || ending || !!pending || !sessionId}
+                  onChange={(event) => {
+                    const next = topicOptions.find((option) => option.id === event.target.value);
+                    event.currentTarget.value = topic.id;
+                    if (next) void jumpTo(next.id, next.name);
+                  }}>
+                  {topicOptions.map((option) => (
+                    <option key={option.id} value={option.id}>{option.unit}: {option.name}</option>
+                  ))}
+                </select>
+                <p>Your work here is saved before the new topic opens.</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -606,7 +662,7 @@ export default function TutorClient({
               rows={2}
               value={input}
               placeholder={'Type your answer, or tell me you\u2019re stuck\u2026'}
-              disabled={busy || !!pending || !sessionId}
+              disabled={busy || !!pending || sessionClosed || !sessionId}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -615,7 +671,7 @@ export default function TutorClient({
                 }
               }}
             />
-            <button type="button" onClick={() => void send()} disabled={busy || !!pending || !input.trim()}>
+            <button type="button" onClick={() => void send()} disabled={busy || !!pending || sessionClosed || !input.trim()}>
               Send
             </button>
           </div>

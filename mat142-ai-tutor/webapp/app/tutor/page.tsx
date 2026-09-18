@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { findActiveStudentEnrollment } from '@/lib/enrollment';
 import { pickTopic, choiceForTopic } from '@/lib/picker';
-import { visibleTopics, topicsInUnit, unitPosition } from '@/lib/curriculum';
+import { topics, visibleTopics, topicsInUnit, unitPosition } from '@/lib/curriculum';
 import { isSoloMode, soloModeReady } from '@/lib/mode';
 import { ACCESS_COOKIE, NAME_COOKIE, hasAccess } from '@/lib/access';
 import Header from '@/components/Header';
@@ -89,6 +89,7 @@ export default async function TutorPage() {
             name: t.student_facing_name,
             status: statusMap[t.id] ?? 'not_started',
           }))}
+          topicOptions={topics.map((t) => ({ id: t.id, name: t.student_facing_name, unit: t.unit_title }))}
           totalTopics={topicsInUnit(activeTopic.unit_title).length}
           unitIndex={position.index}
           unitCount={position.total}

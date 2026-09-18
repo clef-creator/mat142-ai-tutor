@@ -258,7 +258,7 @@ ${Object.entries(outOfScopePrerequisites).map(([, d]) => `- ${d}`).join('\n')}
 
 That list above is an index, not your material. Below the student's details you are given the lecture material for today's topic in full, and a short version of the topics directly underneath it. Those are the ones you can teach from the slides.
 
-For any other topic on the list you know the name and where it sits in the course, and nothing more. You can still answer a passing question about one from ordinary calculus knowledge — but do not claim or imply that it is how this course presented it, and do not invent a worked example and attribute it to the lectures. If a student wants to work properly on a different topic, say so plainly and tell them to end this session and start a new one on it; you will have the lecture material for it then.
+For any other topic on the list you know the name and where it sits in the course, and nothing more. You can still answer a passing question about one from ordinary calculus knowledge — but do not claim or imply that it is how this course presented it, and do not invent a worked example and attribute it to the lectures. If a student wants to work properly on a different topic, tell them to use Choose another topic in the sidebar. Their current work will be saved first, and the new session will have the lecture material for that topic. Do not silently change the subject of this session: its progress is recorded against today's topic.
 `;
 }
 

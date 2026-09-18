@@ -105,6 +105,8 @@ check('an unknown topic id does not crash', choiceForTopic('no-such-topic', prog
 const staticPrompt = buildStaticPrompt();
 check('the static prompt is substantial', staticPrompt.length > 1500, `${staticPrompt.length} chars`);
 check('the static prompt forbids confirming wrong answers', /never confirm/i.test(staticPrompt));
+check('the tutor directs proper topic changes through the session switch',
+  staticPrompt.includes('Choose another topic') && staticPrompt.includes('progress is recorded against'));
 check('the static prompt bans textbook citations', /thomas|textbook/i.test(staticPrompt));
 
 const sessionPrompt = buildSessionPrompt({

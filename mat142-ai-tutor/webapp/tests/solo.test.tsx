@@ -174,7 +174,8 @@ const soloHooks = {
 
 function screenChecks() {
   const solo = renderToStaticMarkup(<TutorClient {...baseProps} solo={soloHooks} />);
-  const account = renderToStaticMarkup(<TutorClient {...baseProps} />);
+  const account = renderToStaticMarkup(<TutorClient {...baseProps}
+    topicOptions={topics.map((t) => ({ id: t.id, name: t.student_facing_name, unit: t.unit_title }))} />);
 
   // The whole point of the change: someone arriving is shown the one topic they
   // are on, not the fifty-eight the course contains.
@@ -200,12 +201,12 @@ function screenChecks() {
   check('the student is told which part of the course they are in',
     solo.includes(`Part ${unitPosition(topic.id).index} of ${units.length}`));
 
-  // The signed-in version must be untouched by any of this.
-  check('the signed-in version has no jump buttons', !account.includes('tjump'));
+  // Signed-in students can choose another course topic explicitly.
+  check('the signed-in version offers a topic chooser', account.includes('Choose another topic'));
   check('the signed-in version has no reset button',
     !account.includes('Clear everything and start again'));
-  check('the signed-in version withholds the rest of the course too',
-    unit.slice(1).every((t) => !account.includes(t.student_facing_name)));
+  check('the signed-in chooser includes topics beyond the current unit',
+    account.includes(topics.at(-1)!.student_facing_name));
 
   // Someone who has worked through part of the unit sees what they have done
   // and can click back to it, but still nothing ahead.
