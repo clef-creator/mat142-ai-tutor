@@ -52,6 +52,18 @@ a { color: var(--maroon); }
   background: none; border: 0; padding: 0; font: inherit; font-size: 13px;
   color: var(--maroon); cursor: pointer; border-bottom: 1px solid var(--maroon-line);
 }
+/* Sign-out has to be findable at a glance, not a quiet link: students share
+   computers in the lab, so the next one needs to see how to get the previous
+   one out. Its own class, because .linkbtn is used elsewhere. */
+.signout {
+  background: #fff; border: 1px solid var(--maroon-line); border-radius: 7px;
+  padding: 6px 13px; font: inherit; font-size: 13px; font-weight: 600;
+  color: var(--maroon); cursor: pointer; white-space: nowrap;
+}
+.signout:hover { background: var(--maroon); border-color: var(--maroon); color: #fff; }
+.signout:focus-visible { outline: 2px solid var(--maroon); outline-offset: 2px; }
+.uni-right .who { font-size: 12.5px; color: var(--muted); }
+
 .coursebar { background: var(--maroon); color: #fff; }
 .coursebar-in {
   max-width: 1180px; margin: 0 auto; padding: 7px 22px;
