@@ -1,5 +1,6 @@
 import { parseRoster, MAX_ROSTER_ENTRIES } from '@/lib/roster';
 import { newPassword, looksLikeGeneratedPassword, PASSWORD_LENGTH } from '@/lib/passwords';
+import { WORDS } from '@/lib/words';
 import { isSetupTokenCorrect, setupEnabled, MIN_SETUP_TOKEN_LENGTH } from '@/lib/setup-token';
 import { provisionStudents, type ProvisionResult } from '@/lib/provisioning';
 
@@ -54,11 +55,25 @@ check('the page will not take an unbounded list', MAX_ROSTER_ENTRIES > 15 && MAX
 const passwords = Array.from({ length: 400 }, () => newPassword());
 check('a password has the shape it is meant to', passwords.every(looksLikeGeneratedPassword));
 check('a password is long enough to be worth typing carefully', PASSWORD_LENGTH >= 14);
-check('four hundred passwords are four hundred different passwords', new Set(passwords).size === 400);
+check('a password is four words', passwords.every((p) => p.split('-').length === 4));
+
+// Not "all 400 differ": two identical draws are possible and would be a fluke,
+// not a fault. A generator that had stopped being random would repeat far more
+// than twice, and this still catches that.
+check('four hundred passwords are very nearly all different', new Set(passwords).size >= 398);
+
 check(
-  'no character that gets misread on paper',
-  passwords.every((p) => !/[ilouv01]/.test(p)),
+  'nothing to mistype: lower case letters and hyphens only',
+  passwords.every((p) => /^[a-z]+(?:-[a-z]+){3}$/.test(p)),
 );
+
+// The word list is the password. If it shrinks, or a word creeps in that has to
+// be spelled out over the phone, the passwords get worse without anything else
+// in the app changing.
+check('the word list is long enough for four words to be hard to guess', WORDS.length >= 300);
+check('every word is short enough to read off a slip', WORDS.every((w) => w.length >= 3 && w.length <= 7));
+check('every word is plain lower case letters', WORDS.every((w) => /^[a-z]+$/.test(w)));
+check('no word appears twice', new Set(WORDS).size === WORDS.length);
 
 // --- the lock on the setup page --------------------------------------------
 
