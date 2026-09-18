@@ -48,7 +48,6 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         <div>
           <p className="eyebrow">Teaching team view</p>
           <h1>Pilot cohort</h1>
-          <p>{countLabel(data.students.length, 'student')} · Rolling seven days, {dateLabel(data.windowStart)} to {dateLabel(data.windowEnd)} (UTC)</p>
         </div>
       </div>
 
