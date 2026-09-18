@@ -50,6 +50,19 @@ check(
 check('blank lines and notes are neither entries nor problems', roster.problems.length === 3);
 check('the page will not take an unbounded list', MAX_ROSTER_ENTRIES > 15 && MAX_ROSTER_ENTRIES <= 100);
 
+// A professor is faculty or student, never both, so seeing the tutor from a
+// student's side takes a second address. A plus-suffix is the one anybody can
+// have without asking IT for a mailbox, and no mail is ever sent to it.
+const plus = parseRoster(
+  ['clef@ahduni.edu.in', 'clef+student@ahduni.edu.in'].join('\n'),
+  DOMAIN,
+);
+check('a plus-suffix address is accepted', plus.entries.length === 2);
+check(
+  'and is a different person from the address it is built on',
+  plus.problems.length === 0 && plus.entries[1].email === 'clef+student@ahduni.edu.in',
+);
+
 // --- the passwords ----------------------------------------------------------
 
 const passwords = Array.from({ length: 400 }, () => newPassword());
