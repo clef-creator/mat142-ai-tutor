@@ -64,7 +64,7 @@ async function run() {
   );
   check('an allow-listed, provisioned student is active', active?.studentId === 'student-1');
 
-  await checkRevokedRoute('session start', () => startSession());
+  await checkRevokedRoute('session start', () => startSession(new Request('http://localhost/api/session/start', { method: 'POST' })));
   await checkRevokedRoute('chat with an existing session', () => chat(new Request('http://localhost/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

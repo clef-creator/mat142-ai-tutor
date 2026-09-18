@@ -16,7 +16,7 @@ async function run() {
   try {
     resetWriteFailureState();
     state.progressWriteFails = true;
-    const start = await startSession();
+    const start = await startSession(new Request('http://localhost/api/session/start', { method: 'POST' }));
     assert.equal(start.status, 500, 'failed progress write is not reported as a started session');
     assert.equal(state.deletedFailedStart, true, 'the incomplete session is removed');
 

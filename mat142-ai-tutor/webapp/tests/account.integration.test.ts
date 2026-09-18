@@ -68,6 +68,7 @@ const getChat = (sessionId: string, id: string) =>
 const postEnd = (sessionId: string) =>
   endSession(new Request('http://localhost/api/session/end', { method: 'POST',
     body: JSON.stringify({ sessionId }) }));
+const startDefault = () => startSession(new Request('http://localhost/api/session/start', { method: 'POST' }));
 async function reply(response: Response) {
   assert.equal(response.status, 200);
   return readTutorStream(response.body, () => undefined);
@@ -91,18 +92,18 @@ async function main() {
     await Promise.all(people.map(signIn));
 
     asUser(studentA);
-    assert.equal((await startSession()).status, 403, 'an Auth account alone is not enrollment');
+    assert.equal((await startDefault()).status, 403, 'an Auth account alone is not enrollment');
     await enroll(studentA);
     await enroll(studentB);
     assert.equal((await findActiveFaculty(admin, studentA))?.id, undefined);
     assert.equal((await findActiveFaculty(admin, professor))?.id, professor.id);
 
-    const startedA = await startSession();
+    const startedA = await startDefault();
     assert.equal(startedA.status, 200);
     const sessionA = (await startedA.json()).sessionId as string;
-    assert.equal((await (await startSession()).json()).sessionId, sessionA, 'start resumes an open session');
+    assert.equal((await (await startDefault()).json()).sessionId, sessionA, 'start resumes an open session');
     asUser(studentB);
-    const sessionB = (await (await startSession()).json()).sessionId as string;
+    const sessionB = (await (await startDefault()).json()).sessionId as string;
     assert.notEqual(sessionA, sessionB);
     assert.equal((await postChat(sessionA, requestId(), 'Intrusion')).status, 404);
 
@@ -189,7 +190,7 @@ async function main() {
     asUser(studentA);
     successful(await admin.from('allowed_students').delete().eq('email', studentA.email));
     assert.deepEqual(value(await studentA.client.from('messages').select('id').eq('session_id', sessionA)), []);
-    assert.equal((await startSession()).status, 403);
+    assert.equal((await startDefault()).status, 403);
     assert.equal((await postChat(sessionA, requestId(), 'Revoked')).status, 403);
     assert.equal((await getChat(sessionA, firstId)).status, 403);
     assert.equal((await postEnd(sessionA)).status, 403);
@@ -207,6 +208,32 @@ async function main() {
     assert.ok(ended.ended_at);
     assert.equal(ended.outcome, 'steady');
     assert.equal(value(await admin.from('progress').select('attempts').eq('student_id', studentA.id).single()).attempts, 1);
+
+    const invalidTopic = await startSession(new Request('http://localhost/api/session/start', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topicId: 'not-a-course-topic' }),
+    }));
+    assert.equal(invalidTopic.status, 400, 'unknown topics cannot be selected');
+    const chosenTopic = 'derivative-chain-rule';
+    const chosenStart = await startSession(new Request('http://localhost/api/session/start', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topicId: chosenTopic }),
+    }));
+    assert.equal(chosenStart.status, 200);
+    const chosenSession = (await chosenStart.json()).sessionId as string;
+    assert.equal(value(await admin.from('sessions').select('topic_id').eq('id', chosenSession).single()).topic_id, chosenTopic);
+    const conflictingStart = await startSession(new Request('http://localhost/api/session/start', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topicId: 'what-is-a-function' }),
+    }));
+    assert.equal(conflictingStart.status, 409, 'a topic change cannot reuse an open session');
+    await reply(await postChat(chosenSession, requestId(), undefined, true));
+    await reply(await postChat(chosenSession, requestId(), 'Can we practice the chain rule?'));
+    assert.equal((await postEnd(chosenSession)).status, 200);
+    assert.equal(value(await admin.from('progress').select('attempts').eq('student_id', studentA.id)
+      .eq('topic_id', chosenTopic).single()).attempts, 1, 'new work is assessed on the chosen topic');
+    assert.equal(value(await admin.from('progress').select('attempts').eq('student_id', studentA.id)
+      .eq('topic_id', 'what-is-a-function').single()).attempts, 1, 'earlier progress is unchanged');
 
     const dashboard = await loadDashboardRows(professor.client);
     assert.ok(dashboard.allowedStudents.some((row) => row.email === studentA.email));

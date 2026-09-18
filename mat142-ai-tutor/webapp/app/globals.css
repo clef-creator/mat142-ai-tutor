@@ -172,8 +172,7 @@ a { color: var(--maroon); }
    is not a topic and cannot be clicked. */
 .tlist li.tlocked .nm { color: #a79f98; font-style: italic; }
 
-/* Jumping between topics exists only in the try-it-out version, so it is
-   styled to look like the plain list until you hover it. */
+/* Reachable topics act like the plain list until hovered. */
 .tjump {
   display: flex; align-items: center; gap: 9px; flex: 1;
   background: none; border: 0; padding: 2px 4px; margin: -2px -4px;
@@ -183,6 +182,13 @@ a { color: var(--maroon); }
 .tjump:hover { background: var(--maroon-tint); }
 .tjump:hover .nm { color: var(--maroon); }
 .tjump:focus-visible { outline: 2px solid var(--maroon); outline-offset: 1px; }
+.topic-chooser { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.topic-chooser label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.topic-chooser select {
+  width: 100%; padding: 8px; border: 1px solid var(--line); border-radius: 6px;
+  background: var(--card); color: var(--ink); font: inherit;
+}
+.topic-chooser p { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
 
 /* ---------- chat ---------- */
 .chat {
