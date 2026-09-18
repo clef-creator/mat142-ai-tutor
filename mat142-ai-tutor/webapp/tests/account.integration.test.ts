@@ -150,6 +150,31 @@ async function main() {
     assert.equal((await status(sessionA, failedWriteId)).status, 'failed');
     await reply(await postChat(sessionA, failedWriteId, 'Database failure'));
 
+    const closingTurnId = requestId();
+    const releaseClosingTurn = holdModel();
+    const closingTurn = await postChat(sessionA, closingTurnId, 'One more question');
+    assert.equal((await postEnd(sessionA)).status, 409, 'ending waits for an in-flight reply');
+    releaseClosingTurn();
+    await reply(closingTurn);
+
+    const assessmentClaim = value(await admin.rpc('claim_session_assessment', {
+      p_session_id: sessionA, p_student_id: studentA.id,
+    })) as { status: string; claimId: string };
+    assert.equal(assessmentClaim.status, 'claimed');
+    assert.equal((value(await admin.rpc('claim_session_assessment', {
+      p_session_id: sessionA, p_student_id: studentA.id,
+    })) as { status: string }).status, 'busy', 'a second ending cannot assess the same transcript');
+    assert.equal((await postChat(sessionA, requestId(), 'Too late')).status, 409,
+      'a new turn cannot change history during assessment');
+    successful(await admin.rpc('release_session_assessment', {
+      p_session_id: sessionA, p_student_id: studentA.id, p_claim_id: assessmentClaim.claimId,
+    }));
+    assert.equal((value(await admin.rpc('finalize_tutor_session', {
+      p_session_id: sessionA, p_student_id: studentA.id, p_claim_id: assessmentClaim.claimId,
+      p_assessed: true, p_outcome: 'steady', p_summary: 'Stale assessment',
+      p_sticking_point: null, p_asked_for_answers: false, p_self_critical: false,
+    })) as { status: string }).status, 'claim_expired', 'a released claim cannot finalize');
+
     asUser(studentB);
     await reply(await postChat(sessionB, requestId(), undefined, true));
     assert.deepEqual(value(await studentB.client.from('messages').select('id').eq('session_id', sessionA)), []);
@@ -173,6 +198,8 @@ async function main() {
     state.failFinalize = true;
     assert.equal((await postEnd(sessionA)).status, 500);
     assert.equal(value(await admin.from('sessions').select('ended_at').eq('id', sessionA).single()).ended_at, null);
+    assert.equal(value(await admin.from('progress').select('attempts').eq('student_id', studentA.id).single()).attempts, 0,
+      'failed finalization does not count an attempt');
     state.failFinalize = false;
     assert.equal((await postEnd(sessionA)).status, 200);
     assert.equal((await (await postEnd(sessionA)).json()).alreadyEnded, true);
