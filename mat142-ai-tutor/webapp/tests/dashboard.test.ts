@@ -16,8 +16,8 @@ const students = [
 const allowed = students.map((student) => ({ email: student.email, display_name: student.display_name }))
   .concat([{ email: 'invited@example.test', display_name: 'Invited Student' }]);
 const progress = [
-  { student_id: 'a', topic_id: 'derivative-chain-rule', status: 'shaky' as const },
-  { student_id: 'b', topic_id: 'derivative-chain-rule', status: 'steady' as const },
+  { student_id: 'a', topic_id: 'derivative-chain-rule', status: 'shaky' as const, attempts: 3 },
+  { student_id: 'b', topic_id: 'derivative-chain-rule', status: 'steady' as const, attempts: 5 },
 ];
 
 function session(id: string, student_id: string, started_at: string, changes: Partial<DashboardSession> = {}): DashboardSession {
@@ -48,6 +48,28 @@ check('roster includes invited students without an Auth identity',
   result.students.find((s) => s.email === 'invited@example.test')?.hasSignedIn === false);
 check('the drawer data uses status without progress notes', result.students.find((s) => s.id === 'a')?.shakyTopics.length === 1);
 check('answer seeking counts sessions, not turns', result.students.find((s) => s.id === 'a')?.answerSeekingSessions === 1);
+check('stuck needs three assessed attempts and a currently shaky status',
+  result.students.find((s) => s.id === 'a')?.flags.includes('Stuck') === true &&
+  result.students.find((s) => s.id === 'b')?.flags.includes('Stuck') === false);
+check('signed-in inactive student is Quiet, invited student is not',
+  result.students.find((s) => s.id === 'c')?.flags.includes('Quiet') === true &&
+  result.students.find((s) => s.email === 'invited@example.test')?.flags.length === 0);
+check('one answer-seeking session does not raise Answers',
+  result.students.find((s) => s.id === 'a')?.flags.includes('Answers') === false);
+const thresholdSessions = [
+  session('s1', 'a', '2026-09-15T10:00:00.000Z', { ended_at: '2026-09-15T10:02:59.000Z', asked_for_answers: true }),
+  session('s2', 'a', '2026-09-15T11:00:00.000Z', { ended_at: '2026-09-15T11:02:00.000Z', asked_for_answers: true }),
+  session('s3', 'a', '2026-09-15T12:00:00.000Z', { ended_at: '2026-09-15T12:00:00.000Z', asked_for_answers: true }),
+  session('boundary', 'a', '2026-09-09T12:00:00.000Z', { ended_at: '2026-09-09T12:03:00.000Z', asked_for_answers: true }),
+  session('old', 'a', '2026-09-09T11:59:59.000Z', { ended_at: '2026-09-09T12:00:00.000Z', asked_for_answers: true }),
+  session('open', 'a', '2026-09-15T13:00:00.000Z', { ended_at: null, asked_for_answers: true }),
+];
+const thresholdResult = buildDashboard(allowed, students, progress, thresholdSessions, now);
+const flagged = thresholdResult.students.find((s) => s.id === 'a');
+check('three completed sessions under three minutes raise Short; exactly three minutes does not',
+  flagged?.shortSessions === 3 && flagged.flags.includes('Short'));
+check('Answers counts ended sessions in the rolling window, not old or open sessions',
+  flagged?.answerSeekingSessions === 4 && flagged.flags.includes('Answers'));
 const selections: string[] = [];
 const client = {
   from(table: string) {
@@ -68,6 +90,8 @@ void loadDashboardRows(client as never).then(() => {
     selections.length === 4 && selections.every((selection) => /^(allowed_students|students|progress|sessions):/.test(selection)));
   check('queries exclude transcripts, summaries and private notes',
     selections.every((selection) => !/messages|content|summary|sticking_point|note|self_critical/.test(selection)));
+  check('progress query includes assessed attempt count',
+    selections.some((selection) => selection === 'progress:student_id, topic_id, status, attempts'));
   const failingClient = {
     from() {
       return {

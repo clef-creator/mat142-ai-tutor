@@ -17,10 +17,10 @@ function countLabel(value: number, singular: string, plural = `${singular}s`) {
 
 function observationList(student: StudentSignal): string[] {
   const observations: string[] = [];
-  if (!student.hasSignedIn) observations.push('Has not signed in');
-  else if (!student.sessionsThisWeek) observations.push('No practice session in the last 7 days');
-  if (student.shakyTopics.length) observations.push(countLabel(student.shakyTopics.length, 'topic') + ' currently marked shaky');
-  if (student.answerSeekingSessions) observations.push(countLabel(student.answerSeekingSessions, 'session') + ' with answer seeking observed');
+  if (student.flags.includes('Quiet')) observations.push('Quiet: no practice session started in the last 7 days');
+  if (student.flags.includes('Stuck')) observations.push(`Stuck: ${student.stuckTopics.map((topic) => `${topic} (3 or more assessed attempts, still shaky)`).join(', ')}`);
+  if (student.flags.includes('Short')) observations.push(`Short: ${countLabel(student.shortSessions, 'completed session')} under 3 minutes in the last 7 days`);
+  if (student.flags.includes('Answers')) observations.push(`Answers: ${countLabel(student.answerSeekingSessions, 'session')} with answer seeking observed in the last 7 days`);
   return observations;
 }
 
@@ -65,7 +65,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         <section className="panel">
           <h2 className="panel-h">Activity to review</h2>
           <div className="panel-b">
-            <p className="dash-caption">Current shaky topic statuses and observations from the last seven days. These are prompts to check in, not judgements.</p>
+            <p className="dash-caption">Quiet, Stuck, Short, and Answers are prompts to check in, not judgements. Short and Answers thresholds are pilot settings to review after the first week.</p>
             {!data.students.length ? <p>No students are on the pilot list yet.</p> : !review.length ? <p>No observations to review in this window.</p> : (
               <ul className="dash-review">
                 {review.map((student) => (
@@ -140,7 +140,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
               </dl>
               <h3>Topics currently marked shaky</h3>
               {selected.shakyTopics.length ? <ul>{selected.shakyTopics.map((topic, index) => <li key={`${topic}-${index}`}><MathText text={topic} inline /></li>)}</ul> : <p>None recorded.</p>}
-              <h3>Observations</h3>
+              <h3>Flags to review</h3>
               {observationList(selected).length ? <ul>{observationList(selected).map((item) => <li key={item}>{item}</li>)}</ul> : <p>None in this window.</p>}
               <div className="dash-sealed">Conversations and private tutor memory are not available in this dashboard.</div>
             </div>
