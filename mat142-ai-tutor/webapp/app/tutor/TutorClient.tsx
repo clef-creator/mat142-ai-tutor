@@ -359,7 +359,7 @@ export default function TutorClient({
   }
 
   async function endSession() {
-    if (!sessionId || ending) return;
+    if (!sessionId || ending || busy || pending) return;
     setEnding(true);
 
     if (solo) {
@@ -623,7 +623,7 @@ export default function TutorClient({
           <div className="compfoot">
             <span>Enter to send, Shift+Enter for a new line</span>
             <span>&middot;</span>
-            <button className="linkbtn" onClick={() => void endSession()} disabled={ending || !!pending || !sessionId}>
+            <button className="linkbtn" onClick={() => void endSession()} disabled={busy || ending || !!pending || !sessionId}>
               {ending ? 'Saving\u2026' : 'End session'}
             </button>
           </div>

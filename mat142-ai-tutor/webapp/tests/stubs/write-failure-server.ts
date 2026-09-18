@@ -59,6 +59,11 @@ export function createAdminClient() {
   return {
     from(table: string) { return new Query(table); },
     async rpc(name: string) {
+      if (name === 'claim_session_assessment') {
+        return { data: { status: 'claimed', claimId: '33333333-3333-4333-8333-333333333333',
+          topicId: 'what-is-a-function' }, error: null };
+      }
+      if (name === 'release_session_assessment') return { data: null, error: null };
       if (name === 'finalize_tutor_session') {
         return state.finalSaveFails
           ? { data: null, error: new Error('database write failed') }
