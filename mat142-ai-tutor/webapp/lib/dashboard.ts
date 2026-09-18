@@ -15,7 +15,19 @@ export interface DashboardProgress {
   student_id: string;
   topic_id: string;
   status: 'not_started' | 'shaky' | 'steady';
+  attempts: number;
 }
+
+export type DashboardFlag = 'Quiet' | 'Stuck' | 'Short' | 'Answers';
+
+// Short and Answers are pilot calibration settings; revisit after the first week.
+export const FLAG_THRESHOLDS = {
+  quietDays: 7,
+  stuckAttempts: 3,
+  shortMinutes: 3,
+  shortSessions: 3,
+  answerSeekingSessions: 3,
+} as const;
 
 export interface DashboardSession {
   id: string;
@@ -38,6 +50,9 @@ export interface StudentSignal {
   steadyTopics: number;
   shakyTopics: string[];
   answerSeekingSessions: number;
+  shortSessions: number;
+  stuckTopics: string[];
+  flags: DashboardFlag[];
   medianSessionMinutes: number | null;
 }
 
@@ -52,7 +67,7 @@ export interface DashboardData {
   students: StudentSignal[];
 }
 
-const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const WEEK_MS = FLAG_THRESHOLDS.quietDays * 24 * 60 * 60 * 1000;
 
 function median(values: number[]): number | null {
   if (!values.length) return null;
@@ -111,6 +126,19 @@ export function buildDashboard(
     const all = sessionsByStudent.get(id) ?? [];
     const weekly = weeklyByStudent.get(id) ?? [];
     const rows = progressByStudent.get(id) ?? [];
+    const answerSeekingSessions = weekly.filter((session) => session.ended_at && session.asked_for_answers).length;
+    const shortSessions = weekly.filter((session) => {
+      const minutes = durationMinutes(session);
+      return minutes !== null && minutes < FLAG_THRESHOLDS.shortMinutes;
+    }).length;
+    const stuckTopics = rows.filter((row) =>
+      row.status === 'shaky' && row.attempts >= FLAG_THRESHOLDS.stuckAttempts)
+      .map((row) => topicName(row.topic_id));
+    const flags: DashboardFlag[] = [];
+    if (student && !weekly.length) flags.push('Quiet');
+    if (stuckTopics.length) flags.push('Stuck');
+    if (shortSessions >= FLAG_THRESHOLDS.shortSessions) flags.push('Short');
+    if (answerSeekingSessions >= FLAG_THRESHOLDS.answerSeekingSessions) flags.push('Answers');
     return {
       id,
       name: student?.display_name?.trim() || allowed.display_name?.trim() || allowed.email,
@@ -122,7 +150,10 @@ export function buildDashboard(
       sessionsThisWeek: weekly.length,
       steadyTopics: rows.filter((row) => row.status === 'steady').length,
       shakyTopics: rows.filter((row) => row.status === 'shaky').map((row) => topicName(row.topic_id)),
-      answerSeekingSessions: weekly.filter((session) => session.asked_for_answers).length,
+      answerSeekingSessions,
+      shortSessions,
+      stuckTopics,
+      flags,
       medianSessionMinutes: median(all.map(durationMinutes).filter((n): n is number => n !== null)),
     };
   }).sort((a, b) => a.name.localeCompare(b.name));

@@ -31,7 +31,7 @@ export async function loadDashboardRows(supabase: SupabaseClient) {
     }),
     allRows<DashboardProgress>(async (from, to) => {
       const { data, error } = await supabase.from('progress')
-        .select('student_id, topic_id, status').order('student_id').order('topic_id').range(from, to);
+        .select('student_id, topic_id, status, attempts').order('student_id').order('topic_id').range(from, to);
       return { data, error };
     }),
     allRows<DashboardSession>(async (from, to) => {
