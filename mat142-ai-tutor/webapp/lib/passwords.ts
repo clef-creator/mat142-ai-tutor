@@ -1,43 +1,49 @@
 import { randomInt } from 'node:crypto';
+import { WORDS } from './words';
 
 /**
  * The passwords handed out to students.
  *
- * These are read off a printed sheet and typed by hand, once, by someone who
- * has just been told their calculus needs work. So the alphabet leaves out
- * every character that gets mistaken for another one on paper — no l or 1, no
- * O or 0, no u next to v — and the result is grouped in fours with hyphens,
- * the way a licence key is, because a fifteen-character run of letters is
- * misread and mistyped.
+ * These are read off a printed sheet and typed by hand by someone who has just
+ * been told their calculus needs work, and then typed again a week later when
+ * they come back. A run of random letters survives the first of those and not
+ * the second, so a password is four ordinary words instead: `maroon-river-
+ * seven-kite` is read once, pictured, and retyped from memory.
  *
- * What is given up in convenience is bought back in strength: three groups of
- * four from a thirty-character alphabet is a little under sixty bits, which is
- * far past anything that can be guessed against a live sign-in page.
+ * Each student still gets their own. That is the part that matters and the
+ * part not to trade away for convenience: the tutor remembers where a student
+ * is struggling, and a shared password would let any classmate read it.
+ *
+ * On strength. Four words drawn from this list is a little over thirty-four
+ * bits — about seventeen billion possibilities. That is less than the random
+ * letters it replaces, and it is still far beyond what can be tried against a
+ * live sign-in page: the sign-in route delays every wrong answer, Supabase
+ * limits repeated attempts, and an address has to be on the pilot list before
+ * a correct password gets anybody anywhere. Guessing is not the threat this
+ * pilot has; a forgotten password on Monday morning is.
  */
 
-/** No look-alikes: i, l, o, u, v, and every digit that imitates a letter. */
-const ALPHABET = 'abcdefghjkmnpqrstwxyz23456789';
+const WORD_COUNT = 4;
+const SEPARATOR = '-';
 
-const GROUPS = 3;
-const GROUP_LENGTH = 4;
-
-/** The shortest a generated password can be, used to check nothing regressed. */
-export const PASSWORD_LENGTH = GROUPS * GROUP_LENGTH + (GROUPS - 1);
+/** Shortest a generated password can be, used to check nothing regressed. */
+export const PASSWORD_LENGTH =
+  WORD_COUNT * Math.min(...WORDS.map((word) => word.length)) + (WORD_COUNT - 1);
 
 /**
  * A fresh password. `randomInt` is used rather than `Math.random` because the
  * latter is predictable, and a predictable password is not one.
+ *
+ * Words may repeat within a password. Forbidding that would remove the one
+ * arrangement an attacker could otherwise rule out, which makes guessing very
+ * slightly easier rather than harder.
  */
 export function newPassword(): string {
-  const groups: string[] = [];
-  for (let g = 0; g < GROUPS; g++) {
-    let group = '';
-    for (let i = 0; i < GROUP_LENGTH; i++) {
-      group += ALPHABET[randomInt(ALPHABET.length)];
-    }
-    groups.push(group);
+  const picked: string[] = [];
+  for (let i = 0; i < WORD_COUNT; i++) {
+    picked.push(WORDS[randomInt(WORDS.length)]);
   }
-  return groups.join('-');
+  return picked.join(SEPARATOR);
 }
 
 /**
@@ -47,8 +53,6 @@ export function newPassword(): string {
  * password cannot pass unnoticed.
  */
 export function looksLikeGeneratedPassword(value: string): boolean {
-  const pattern = new RegExp(
-    `^[${ALPHABET}]{${GROUP_LENGTH}}(?:-[${ALPHABET}]{${GROUP_LENGTH}}){${GROUPS - 1}}$`,
-  );
-  return pattern.test(value);
+  const parts = value.split(SEPARATOR);
+  return parts.length === WORD_COUNT && parts.every((part) => WORDS.includes(part));
 }

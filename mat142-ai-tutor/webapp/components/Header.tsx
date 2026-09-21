@@ -14,7 +14,9 @@ export default function Header({ email, subtitle }: { email?: string | null; sub
           </div>
           {email ? (
             <div className="uni-right">
-              <span>{email}</span>
+              {/* Naming who is signed in matters on a shared lab machine: a
+                  student who sees someone else's address knows to sign out. */}
+              <span className="who">Signed in as {email}</span>
               <SignOutButton />
             </div>
           ) : null}
