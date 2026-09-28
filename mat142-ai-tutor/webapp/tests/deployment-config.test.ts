@@ -61,6 +61,14 @@ check('the service-role key cannot be exposed as the anon key', sameKeys.errors.
 const invalidLimit = validateDeploymentConfig({ ...common, ACCESS_CODE: 'a-long-demo-code', MAX_TURNS_PER_SESSION: '0' });
 check('limits must be positive integers', invalidLimit.errors.some((e) => e.includes('positive integer')));
 
+const googleOn = validateDeploymentConfig({ ...accountEnv, NEXT_PUBLIC_GOOGLE_SIGN_IN: 'on' });
+check('Google sign-in switched on is valid', googleOn.errors.length === 0);
+const googleTrue = validateDeploymentConfig({ ...accountEnv, NEXT_PUBLIC_GOOGLE_SIGN_IN: 'true' });
+check(
+  'a Google setting that looks on but is not is caught',
+  googleTrue.errors.some((e) => e.includes('NEXT_PUBLIC_GOOGLE_SIGN_IN')),
+);
+
 const shortSetupToken = validateDeploymentConfig({ ...accountEnv, STUDENT_SETUP_TOKEN: 'too-short' });
 check(
   'a guessable setup token is rejected outright',
