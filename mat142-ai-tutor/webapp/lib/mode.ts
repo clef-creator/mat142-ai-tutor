@@ -25,3 +25,18 @@ export function isSoloMode(): boolean {
 export function soloModeReady(): boolean {
   return Boolean(process.env.ACCESS_CODE && process.env.ACCESS_CODE.length >= 4);
 }
+
+/**
+ * Whether students sign in with their university Google account.
+ *
+ * Off until `NEXT_PUBLIC_GOOGLE_SIGN_IN` is set to `on`, because the button
+ * only works once Google has been switched on in Supabase. Merging this code
+ * therefore changes nothing on the live site until that setting is added and
+ * the site is redeployed.
+ *
+ * With it on there are no passwords to hand out or forget: Google already
+ * knows who the student is. The pilot list still decides who gets in.
+ */
+export function googleSignInEnabled(): boolean {
+  return (process.env.NEXT_PUBLIC_GOOGLE_SIGN_IN ?? '').trim().toLowerCase() === 'on';
+}

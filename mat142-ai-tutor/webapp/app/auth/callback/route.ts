@@ -4,12 +4,20 @@ import { findAllowedStudent } from '@/lib/enrollment';
 import { findActiveFaculty } from '@/lib/faculty';
 import { isSoloMode } from '@/lib/mode';
 
-/** Exchange the emailed code, then route an authorized professor or student. */
+/** Exchange the code from Google (or an emailed link), then route an
+ *  authorized professor or student. */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
 
   // No accounts in this mode, so an emailed link cannot mean anything here.
   if (isSoloMode()) return NextResponse.redirect(`${origin}/`);
+
+  // Google sends people back with an error instead of a code when they
+  // cancel, or when the university has not allowed this app. Neither is an
+  // expired link, so say what actually happened.
+  if (searchParams.get('error')) {
+    return NextResponse.redirect(`${origin}/auth/error?reason=google`);
+  }
 
   const code = searchParams.get('code');
 
@@ -27,12 +35,19 @@ export async function GET(request: NextRequest) {
   const email = data.user.email.trim().toLowerCase();
   const domain = process.env.ALLOWED_EMAIL_DOMAIN ?? 'ahduni.edu.in';
 
+  const admin = createAdminClient();
+
   if (!email.endsWith('@' + domain)) {
     await supabase.auth.signOut();
+    // Google sign-in creates an account for whoever arrives, including a
+    // personal Gmail. Nobody outside the university domain can ever be let
+    // in, as student or professor, so that account is removed rather than
+    // left to accumulate in the user list.
+    const { error: deleteError } = await admin.auth.admin.deleteUser(data.user.id);
+    if (deleteError) console.error('[auth] could not remove an outside account', deleteError);
     return NextResponse.redirect(`${origin}/auth/error?reason=domain`);
   }
 
-  const admin = createAdminClient();
   if (await findActiveFaculty(admin, data.user)) {
     return NextResponse.redirect(`${origin}/dashboard`);
   }
