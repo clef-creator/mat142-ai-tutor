@@ -3,10 +3,11 @@ import { cookies } from 'next/headers';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { findActiveStudentEnrollment } from '@/lib/enrollment';
 import { findActiveFaculty } from '@/lib/faculty';
-import { isSoloMode, soloModeReady } from '@/lib/mode';
+import { googleSignInEnabled, isSoloMode, soloModeReady } from '@/lib/mode';
 import { ACCESS_COOKIE, hasAccess } from '@/lib/access';
 import Header from '@/components/Header';
 import SignInForm from './SignInForm';
+import GoogleSignInButton from './GoogleSignInButton';
 import AccessForm from './AccessForm';
 
 export const dynamic = 'force-dynamic';
@@ -29,11 +30,31 @@ export default async function Home() {
         <div>
           <div className="signin">
             <h1>Sign in</h1>
-            <p className="lede">
-              Use your Ahmedabad University address and the password you were given. If you
-              have lost it, ask for a new one &mdash; it can be replaced in a moment.
-            </p>
-            <SignInForm />
+            {googleSignInEnabled() ? (
+              <>
+                <p className="lede">
+                  Use your Ahmedabad University Google account, the one you use for university
+                  email. There is no separate password to remember.
+                </p>
+                <GoogleSignInButton />
+                {/* Kept for the professor's account and as a way in if Google is
+                    ever unavailable. Students do not need it. */}
+                <details style={{ marginTop: 18, fontSize: 14, color: 'var(--muted)' }}>
+                  <summary style={{ cursor: 'pointer', marginBottom: 12 }}>
+                    Sign in with a password instead
+                  </summary>
+                  <SignInForm />
+                </details>
+              </>
+            ) : (
+              <>
+                <p className="lede">
+                  Use your Ahmedabad University address and the password you were given. If you
+                  have lost it, ask for a new one &mdash; it can be replaced in a moment.
+                </p>
+                <SignInForm />
+              </>
+            )}
           </div>
           <p className="footnote">
             Calcu-Buddy remembers what you have worked on so it can pick up where you left

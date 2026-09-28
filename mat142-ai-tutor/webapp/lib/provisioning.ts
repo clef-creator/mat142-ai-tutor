@@ -20,7 +20,7 @@ import { newPassword } from './passwords';
  * knowing on Monday afternoon.
  */
 
-export type ProvisionStatus = 'created' | 'password-reset' | 'already-set-up' | 'failed';
+export type ProvisionStatus = 'created' | 'added' | 'password-reset' | 'already-set-up' | 'failed';
 
 export interface ProvisionResult {
   email: string;
@@ -34,6 +34,13 @@ export interface ProvisionResult {
 export interface ProvisionOptions {
   /** Replace the password of accounts that already exist. Off by default. */
   resetExisting?: boolean;
+  /**
+   * Issue passwords at all. On by default. Off when students sign in with
+   * Google: the address goes on the pilot list and gets an account with no
+   * password, which Google sign-in then attaches itself to. Nothing is shown
+   * to hand out, so there is nothing to lose.
+   */
+  passwords?: boolean;
 }
 
 /** Supabase pages its user list; read every page or the last student vanishes. */
@@ -76,6 +83,10 @@ export async function provisionStudents(
 
   const existing = await existingUsersByEmail(admin);
   const results: ProvisionResult[] = [];
+
+  if (options.passwords === false) {
+    return addWithoutPasswords(admin, entries, existing);
+  }
 
   for (const entry of entries) {
     const known = existing.get(entry.email);
@@ -139,6 +150,48 @@ export async function provisionStudents(
             password,
             status: 'created',
           },
+    );
+  }
+
+  return results;
+}
+
+/**
+ * The Google version: allow-listed already, so all that is left is making sure
+ * an account exists for the address. The account is created now, confirmed
+ * and without a password, rather than left for Google sign-in to create, so
+ * that sign-in still works if new sign-ups are ever switched off in Supabase.
+ * Google attaches to it because the address matches.
+ */
+async function addWithoutPasswords(
+  admin: SupabaseClient,
+  entries: RosterEntry[],
+  existing: Map<string, string>,
+): Promise<ProvisionResult[]> {
+  const results: ProvisionResult[] = [];
+
+  for (const entry of entries) {
+    if (existing.has(entry.email)) {
+      results.push({
+        email: entry.email,
+        displayName: entry.displayName,
+        password: null,
+        status: 'already-set-up',
+        detail: 'Already on the list. They sign in with Google.',
+      });
+      continue;
+    }
+
+    const { error } = await admin.auth.admin.createUser({
+      email: entry.email,
+      email_confirm: true,
+      user_metadata: entry.displayName ? { full_name: entry.displayName } : undefined,
+    });
+
+    results.push(
+      error
+        ? { email: entry.email, displayName: entry.displayName, password: null, status: 'failed', detail: error.message }
+        : { email: entry.email, displayName: entry.displayName, password: null, status: 'added' },
     );
   }
 
