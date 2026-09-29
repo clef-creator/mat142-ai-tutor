@@ -35,18 +35,12 @@ export async function GET(request: NextRequest) {
   const email = data.user.email.trim().toLowerCase();
   const domain = process.env.ALLOWED_EMAIL_DOMAIN ?? 'ahduni.edu.in';
 
-  const admin = createAdminClient();
-
   if (!email.endsWith('@' + domain)) {
     await supabase.auth.signOut();
-    // Google sign-in creates an account for whoever arrives, including a
-    // personal Gmail. Nobody outside the university domain can ever be let
-    // in, as student or professor, so that account is removed rather than
-    // left to accumulate in the user list.
-    const { error: deleteError } = await admin.auth.admin.deleteUser(data.user.id);
-    if (deleteError) console.error('[auth] could not remove an outside account', deleteError);
     return NextResponse.redirect(`${origin}/auth/error?reason=domain`);
   }
+
+  const admin = createAdminClient();
 
   if (await findActiveFaculty(admin, data.user)) {
     return NextResponse.redirect(`${origin}/dashboard`);
