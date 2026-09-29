@@ -6,7 +6,7 @@ begin
     where email = 'migration-fixture@example.test'
       and display_name = 'Migration Fixture'
   ) then
-    raise exception 'baseline migration removed or changed existing allow-list data';
+    raise exception 'migration removed or changed historical student list data';
   end if;
 
   if exists (
@@ -23,14 +23,23 @@ begin
     raise exception 'faculty must not receive transcript access';
   end if;
 
-  if not exists (
+  if exists (
     select 1 from pg_policies
     where schemaname = 'public'
       and tablename = 'allowed_students'
       and policyname = 'faculty read pilot allowlist'
-      and coalesce(qual, '') ilike '%is_faculty%'
   ) then
-    raise exception 'the dashboard roster requires a faculty-only allowlist read policy';
+    raise exception 'the historical student list must not have a faculty read policy';
+  end if;
+
+  if not exists (
+    select 1 from pg_proc
+    where oid = 'public.has_active_student_enrollment()'::regprocedure
+      and pg_get_functiondef(oid) ilike '%auth.identities%'
+      and pg_get_functiondef(oid) ilike '%amr%'
+      and pg_get_functiondef(oid) not ilike '%allowed_students%'
+  ) then
+    raise exception 'student RLS must require a Google OAuth identity without the old list';
   end if;
 end
 $$;
