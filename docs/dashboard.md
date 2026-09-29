@@ -12,10 +12,10 @@ students who started a session. Topics attempted means distinct session topic
 IDs. The median uses completed sessions that started in the window and have a
 nonnegative duration. The difficulty chart counts distinct students per topic
 whose session outcome is `shaky` in that window; unassessed sessions do not
-count as difficulty. The roster includes every currently allow-listed student,
-including those who have not signed in. It uses provisioned students' full
-history for total sessions and current steady/shaky topic statuses. Removed
-students are excluded from the active cohort's aggregates.
+count as difficulty. The roster includes students who have signed in with a
+verified university Google account, including those who have not practiced.
+It uses their full history for total sessions and current steady/shaky topic
+statuses.
 
 The "Activity to review" area reports facts only: no session in the window,
 current shaky topic statuses, and the number of sessions in the window whose
@@ -26,8 +26,7 @@ open in issue #11.
 
 The route checks the authenticated user against the privileged faculty table
 on every request. Dashboard rows are read with the signed-in Supabase client,
-under faculty row-level security. The faculty-only allowlist read is added by a
-migration. Queries explicitly select only identifiers,
+under faculty row-level security. Queries explicitly select only identifiers,
 display names, topic status and session-level outcomes/activity. They never
 query `messages`, progress notes, session summaries, sticking points or tone
 signals. If any read fails, the screen shows an error rather than partial

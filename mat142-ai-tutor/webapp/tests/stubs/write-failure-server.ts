@@ -52,7 +52,10 @@ class Query {
 }
 
 export async function createClient() {
-  return { auth: { async getUser() { return { data: { user: { id: state.userId } } }; } } };
+  return { auth: {
+    async getUser() { return { data: { user: { id: state.userId } } }; },
+    async getClaims() { return { data: { claims: { email: 'student@ahduni.edu.in', amr: [{ method: 'oauth' }] } } }; },
+  } };
 }
 
 export function createAdminClient() {

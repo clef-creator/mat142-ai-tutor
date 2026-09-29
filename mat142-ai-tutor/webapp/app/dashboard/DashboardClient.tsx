@@ -47,7 +47,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
       <div className="dash-heading">
         <div>
           <p className="eyebrow">Teaching team view</p>
-          <h1>Pilot cohort</h1>
+          <h1>University students</h1>
         </div>
       </div>
 
@@ -65,7 +65,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
           <h2 className="panel-h">Activity to review</h2>
           <div className="panel-b">
             <p className="dash-caption">Quiet, Stuck, Short, and Answers are prompts to check in, not judgements. Short and Answers thresholds are pilot settings to review after the first week.</p>
-            {!data.students.length ? <p>No students are on the pilot list yet.</p> : !review.length ? <p>No observations to review in this window.</p> : (
+            {!data.students.length ? <p>No students have signed in yet.</p> : !review.length ? <p>No observations to review in this window.</p> : (
               <ul className="dash-review">
                 {review.map((student) => (
                   <li key={student.id}>
@@ -98,8 +98,8 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
       </div>
 
       <section className="panel dash-roster">
-        <h2 className="panel-h">Student roster</h2>
-        {!data.students.length ? <p className="panel-b">No students are on the pilot list yet.</p> : (
+        <h2 className="panel-h">Students who have signed in</h2>
+        {!data.students.length ? <p className="panel-b">No students have signed in yet.</p> : (
           <div className="dash-table-wrap">
             <table>
               <thead><tr><th>Student</th><th>Last practice</th><th>Sessions</th><th>Topics steady</th><th>Current shaky topics</th><th>Observations</th></tr></thead>
@@ -107,7 +107,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
                 {data.students.map((student) => (
                   <tr key={student.id}>
                     <td><button type="button" className="dash-student-button" onClick={() => setSelectedId(student.id)}>{student.name}</button></td>
-                    <td>{student.hasSignedIn ? dateLabel(student.lastPractice) : 'Not signed in'}</td>
+                    <td>{dateLabel(student.lastPractice)}</td>
                     <td>{student.sessions}</td>
                     <td>{student.steadyTopics}</td>
                     <td>{student.shakyTopics.length}</td>
@@ -133,7 +133,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
               <dl>
                 <div><dt>Sessions, all time</dt><dd>{selected.sessions}</dd></div>
                 <div><dt>Sessions, last 7 days</dt><dd>{selected.sessionsThisWeek}</dd></div>
-                <div><dt>Last practice</dt><dd>{selected.hasSignedIn ? dateLabel(selected.lastPractice) : 'Not signed in'}</dd></div>
+                <div><dt>Last practice</dt><dd>{dateLabel(selected.lastPractice)}</dd></div>
                 <div><dt>Median completed session</dt><dd>{selected.medianSessionMinutes === null ? '—' : `${selected.medianSessionMinutes} min`}</dd></div>
                 <div><dt>Topics steady</dt><dd>{selected.steadyTopics}</dd></div>
               </dl>

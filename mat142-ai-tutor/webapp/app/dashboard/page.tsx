@@ -17,12 +17,12 @@ export default async function DashboardPage() {
   if (!user) redirect('/');
 
   const faculty = await findActiveFaculty(createAdminClient(), user);
-  if (!faculty) redirect('/auth/error?reason=not-on-list');
+  if (!faculty) redirect('/');
 
   let dashboard;
   try {
-    const { allowedStudents, students, progress, sessions } = await loadDashboardRows(supabase);
-    dashboard = buildDashboard(allowedStudents, students, progress, sessions);
+    const { students, progress, sessions } = await loadDashboardRows(supabase);
+    dashboard = buildDashboard(students, progress, sessions);
   } catch (error) {
     console.error('[dashboard] could not load authorized signals', error);
     return (

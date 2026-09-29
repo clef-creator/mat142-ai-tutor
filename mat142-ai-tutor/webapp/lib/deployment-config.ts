@@ -1,4 +1,3 @@
-import { MIN_SETUP_TOKEN_LENGTH } from './setup-token';
 
 export type DeploymentMode = 'solo' | 'account';
 
@@ -98,6 +97,9 @@ export function validateDeploymentConfig(env: Environment): DeploymentConfigResu
     if (serverDomain && (serverDomain.includes('@') || /\s/.test(serverDomain))) {
       errors.push('ALLOWED_EMAIL_DOMAIN must be a bare domain such as ahduni.edu.in.');
     }
+    if (serverDomain && serverDomain !== 'ahduni.edu.in') {
+      errors.push('ALLOWED_EMAIL_DOMAIN must be ahduni.edu.in to match the database policy.');
+    }
     if (publicDomain && serverDomain && publicDomain !== serverDomain) {
       errors.push('ALLOWED_EMAIL_DOMAIN and NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN must match.');
     }
@@ -108,18 +110,8 @@ export function validateDeploymentConfig(env: Environment): DeploymentConfigResu
       warnings.push('ACCESS_CODE is ignored in account mode.');
     }
 
-    // The page this token opens can create sign-ins and show their passwords,
-    // so a short one is worse than none at all, and leaving it set for longer
-    // than the afternoon it is needed is worth saying out loud.
-    const setupToken = value(env, 'STUDENT_SETUP_TOKEN');
-    if (setupToken && setupToken.length < MIN_SETUP_TOKEN_LENGTH) {
-      errors.push(
-        `STUDENT_SETUP_TOKEN must contain at least ${MIN_SETUP_TOKEN_LENGTH} characters.`,
-      );
-    } else if (setupToken) {
-      warnings.push(
-        'STUDENT_SETUP_TOKEN is set, so /setup can create accounts. Remove it once the students have signed in.',
-      );
+    if (value(env, 'STUDENT_SETUP_TOKEN')) {
+      warnings.push('STUDENT_SETUP_TOKEN is obsolete and can be removed.');
     }
 
     // "true" or "yes" would look switched on in Vercel and do nothing, which

@@ -6,11 +6,6 @@ export interface DashboardStudent {
   display_name: string | null;
 }
 
-export interface DashboardAllowedStudent {
-  email: string;
-  display_name: string | null;
-}
-
 export interface DashboardProgress {
   student_id: string;
   topic_id: string;
@@ -43,7 +38,6 @@ export interface StudentSignal {
   id: string;
   name: string;
   email: string;
-  hasSignedIn: boolean;
   lastPractice: string | null;
   sessions: number;
   sessionsThisWeek: number;
@@ -84,7 +78,6 @@ function durationMinutes(session: DashboardSession): number | null {
 
 /** A rolling seven-day UTC window, inclusive of its start and exclusive of now. */
 export function buildDashboard(
-  allowedStudents: DashboardAllowedStudent[],
   students: DashboardStudent[],
   progress: DashboardProgress[],
   sessions: DashboardSession[],
@@ -96,9 +89,7 @@ export function buildDashboard(
     const value = Date.parse(date);
     return Number.isFinite(value) && value >= start && value < end;
   };
-  const provisionedByEmail = new Map(students.map((student) => [student.email.toLowerCase(), student]));
-  const cohortIds = new Set(allowedStudents.map((allowed) =>
-    provisionedByEmail.get(allowed.email.toLowerCase())?.id).filter((id): id is string => Boolean(id)));
+  const cohortIds = new Set(students.map((student) => student.id));
   const cohortSessions = sessions.filter((session) => cohortIds.has(session.student_id));
   const weeklySessions = cohortSessions.filter((session) => inWeek(session.started_at));
   const sessionsByStudent = new Map<string, DashboardSession[]>();
@@ -120,9 +111,8 @@ export function buildDashboard(
     progressByStudent.set(row.student_id, list);
   }
 
-  const studentSignals = allowedStudents.map((allowed) => {
-    const student = provisionedByEmail.get(allowed.email.toLowerCase());
-    const id = student?.id ?? `invited:${allowed.email}`;
+  const studentSignals = students.map((student) => {
+    const id = student.id;
     const all = sessionsByStudent.get(id) ?? [];
     const weekly = weeklyByStudent.get(id) ?? [];
     const rows = progressByStudent.get(id) ?? [];
@@ -135,15 +125,14 @@ export function buildDashboard(
       row.status === 'shaky' && row.attempts >= FLAG_THRESHOLDS.stuckAttempts)
       .map((row) => topicName(row.topic_id));
     const flags: DashboardFlag[] = [];
-    if (student && !weekly.length) flags.push('Quiet');
+    if (!weekly.length) flags.push('Quiet');
     if (stuckTopics.length) flags.push('Stuck');
     if (shortSessions >= FLAG_THRESHOLDS.shortSessions) flags.push('Short');
     if (answerSeekingSessions >= FLAG_THRESHOLDS.answerSeekingSessions) flags.push('Answers');
     return {
       id,
-      name: student?.display_name?.trim() || allowed.display_name?.trim() || allowed.email,
-      email: allowed.email,
-      hasSignedIn: Boolean(student),
+      name: student.display_name?.trim() || student.email,
+      email: student.email,
       lastPractice: all.reduce<string | null>((latest, session) =>
         !latest || session.started_at > latest ? session.started_at : latest, null),
       sessions: all.length,
