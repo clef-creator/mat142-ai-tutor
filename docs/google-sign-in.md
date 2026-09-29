@@ -15,3 +15,5 @@ The professor can still use the existing password sign-in. Professor access requ
 The old `allowed_students` table is retained as historical data, but the app no longer reads it or grants access from it. `STUDENT_SETUP_TOKEN` can be removed from Vercel.
 
 If sign-in reaches `/auth/error`, inspect its `reason` query parameter. `domain` means the address is outside the university domain; `google-required` means the session did not prove a verified university Google identity; `provisioning` means creating the student row failed. Check Vercel logs for the last case.
+
+Some Google Workspace accounts need the email OAuth scope requested explicitly. The app requests `https://www.googleapis.com/auth/userinfo.email`; a `google-email` error means Supabase still could not read the Google address. Check Supabase Authentication logs and the university's Google app access settings in that case.

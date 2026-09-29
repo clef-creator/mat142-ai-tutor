@@ -20,6 +20,13 @@ const originalGoogle = process.env.NEXT_PUBLIC_GOOGLE_SIGN_IN;
 process.env.ALLOWED_EMAIL_DOMAIN = 'ahduni.edu.in';
 
 void (async () => {
+  const emailError = await GET(new Request(
+    'https://tutor.example/auth/callback?error=server_error&error_description=Error+getting+user+email+from+external+provider',
+  ) as never);
+  check('Google Workspace email-scope failure gets a specific explanation',
+    emailError.headers.get('location') ===
+      'https://tutor.example/auth/error?reason=google-email&provider=server_error');
+
   // A pre-existing account may belong to an older deployment. Rejecting this
   // sign-in must never delete that account or its dependent student work.
   for (const google of ['off', 'on']) {
