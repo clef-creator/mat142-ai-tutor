@@ -16,7 +16,11 @@ export async function GET(request: NextRequest) {
   // cancel, or when the university has not allowed this app. Neither is an
   // expired link, so say what actually happened.
   if (searchParams.get('error')) {
-    return NextResponse.redirect(`${origin}/auth/error?reason=google`);
+    const emailScopeError = searchParams.get('error') === 'server_error' &&
+      /error getting user email from external provider/i.test(
+        searchParams.get('error_description') ?? '',
+      );
+    return NextResponse.redirect(`${origin}/auth/error?reason=${emailScopeError ? 'google-email' : 'google'}`);
   }
 
   const code = searchParams.get('code');

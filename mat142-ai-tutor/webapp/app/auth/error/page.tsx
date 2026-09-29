@@ -6,6 +6,7 @@ const REASONS: Record<string, string> = {
   expired: 'Your sign-in session expired. Please try again.',
   domain: 'Only Ahmedabad University accounts can be used to sign in. If Google picked a personal account, try again and choose your university one.',
   google: 'Google sign-in did not finish. If you pressed cancel, just try again. If Google said access is blocked, tell your instructor.',
+  'google-email': 'Supabase could not read your university email from Google. Please try again; if this continues, tell your instructor that Google email access needs checking.',
   'google-required': 'Use your Ahmedabad University Google account to sign in.',
   'student-access-denied': 'Sign in with your Ahmedabad University Google account to use the tutor.',
   provisioning: 'Your account could not be set up just now. Please try again or contact your instructor.',
