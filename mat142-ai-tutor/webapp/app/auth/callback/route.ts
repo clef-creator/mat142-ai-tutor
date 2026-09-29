@@ -3,6 +3,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { isUniversityGoogleSession } from '@/lib/enrollment';
 import { findActiveFaculty } from '@/lib/faculty';
 import { isSoloMode } from '@/lib/mode';
+import { classifyOAuthError } from '@/lib/oauth-error';
 
 /** Exchange the code from Google (or an emailed link), then route an
  *  authorized professor or student. */
@@ -15,12 +16,21 @@ export async function GET(request: NextRequest) {
   // Google sends people back with an error instead of a code when they
   // cancel, or when the university has not allowed this app. Neither is an
   // expired link, so say what actually happened.
-  if (searchParams.get('error')) {
-    const emailScopeError = searchParams.get('error') === 'server_error' &&
-      /error getting user email from external provider/i.test(
-        searchParams.get('error_description') ?? '',
-      );
-    return NextResponse.redirect(`${origin}/auth/error?reason=${emailScopeError ? 'google-email' : 'google'}`);
+  // Supabase also reports provider failures here. Classify the description,
+  // then discard it so personal or credential text cannot reach a URL or log.
+  const oauthError = searchParams.get('error');
+  if (oauthError) {
+    const diagnosis = classifyOAuthError(
+      oauthError,
+      searchParams.get('error_code'),
+      searchParams.get('error_description'),
+    );
+    console.error('[auth] Google sign-in failed', diagnosis);
+    const destination = new URL('/auth/error', origin);
+    destination.searchParams.set('reason', diagnosis.reason);
+    if (diagnosis.providerError) destination.searchParams.set('provider', diagnosis.providerError);
+    if (diagnosis.providerCode) destination.searchParams.set('code', diagnosis.providerCode);
+    return NextResponse.redirect(destination.toString());
   }
 
   const code = searchParams.get('code');
