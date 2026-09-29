@@ -21,8 +21,9 @@ export default async function TutorPage() {
   if (!user) redirect('/');
 
   const admin = createAdminClient();
-  const enrollment = await findActiveStudentEnrollment(admin, user);
-  if (!enrollment) redirect('/auth/error?reason=enrollment-inactive');
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const enrollment = await findActiveStudentEnrollment(admin, user, claimsData?.claims);
+  if (!enrollment) redirect('/auth/error?reason=student-access-denied');
 
   const { data: progressRows } = await admin
     .from('progress')

@@ -37,7 +37,8 @@ export async function POST(req: Request) {
   if (!sessionId) return NextResponse.json({ error: 'Missing session' }, { status: 400 });
 
   const admin = createAdminClient();
-  const enrollment = await findActiveStudentEnrollment(admin, user);
+  const { data: claimsData } = await supabase.auth.getClaims();
+  const enrollment = await findActiveStudentEnrollment(admin, user, claimsData?.claims);
   if (!enrollment) {
     return NextResponse.json(
       { error: INACTIVE_ENROLLMENT_ERROR, message: INACTIVE_ENROLLMENT_MESSAGE },

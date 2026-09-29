@@ -42,6 +42,13 @@ const mismatchedDomains = validateDeploymentConfig({
 });
 check('client and server email domains must match', mismatchedDomains.errors.some((e) => e.includes('must match')));
 
+const unsupportedDomain = validateDeploymentConfig({
+  ...accountEnv,
+  ALLOWED_EMAIL_DOMAIN: 'other.edu',
+  NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN: 'other.edu',
+});
+check('domain must match the database policy', unsupportedDomain.errors.some((e) => e.includes('database policy')));
+
 const insecureProduction = validateDeploymentConfig({
   ...accountEnv,
   NEXT_PUBLIC_SITE_URL: 'http://calcu-buddy.example.edu',
@@ -69,18 +76,12 @@ check(
   googleTrue.errors.some((e) => e.includes('NEXT_PUBLIC_GOOGLE_SIGN_IN')),
 );
 
-const shortSetupToken = validateDeploymentConfig({ ...accountEnv, STUDENT_SETUP_TOKEN: 'too-short' });
-check(
-  'a guessable setup token is rejected outright',
-  shortSetupToken.errors.some((e) => e.includes('STUDENT_SETUP_TOKEN')),
-);
-
 const setupTokenSet = validateDeploymentConfig({
   ...accountEnv,
   STUDENT_SETUP_TOKEN: 'a-long-enough-setup-token',
 });
 check(
-  'leaving the account-creating page open is worth a warning',
+  'obsolete setup token gets a removal warning',
   setupTokenSet.errors.length === 0 &&
     setupTokenSet.warnings.some((w) => w.includes('STUDENT_SETUP_TOKEN')),
 );

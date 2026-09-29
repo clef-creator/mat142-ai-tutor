@@ -1,8 +1,8 @@
 /**
  * Active enrollment is checked on every account-mode tutoring operation.
  * These route-level checks model the important revocation case: the auth token
- * and an old open session still exist, but the student's allow-list row has
- * been removed. Nothing beyond the allow-list may be read and no model may run.
+ * and an old open session still exist, but the session was authenticated with
+ * a password. No student data may be read and no model may run.
  */
 
 import { POST as startSession } from '@/app/api/session/start/route';
@@ -39,11 +39,11 @@ async function checkRevokedRoute(
   const response = await invoke();
   const body = await response.json();
 
-  check(`${name} rejects a revoked student`, response.status === 403, `status ${response.status}`);
-  check(`${name} returns a stable revocation code`, body.error === INACTIVE_ENROLLMENT_ERROR);
+  check(`${name} rejects a password session`, response.status === 403, `status ${response.status}`);
+  check(`${name} returns a stable access code`, body.error === INACTIVE_ENROLLMENT_ERROR);
   check(
-    `${name} reads no session or student data after revocation`,
-    enrollmentTestState.tablesRead.join(',') === 'allowed_students',
+    `${name} reads no session or student data after rejection`,
+    enrollmentTestState.tablesRead.length === 0,
     enrollmentTestState.tablesRead.join(','),
   );
   check(`${name} does not call the tutor model`, enrollmentTestState.tutorCalls === 0);
@@ -57,12 +57,13 @@ async function run() {
   );
 
   resetEnrollmentTestState();
-  enrollmentTestState.allowed = true;
+  enrollmentTestState.claims = { email: 'student@ahduni.edu.in', amr: [{ method: 'oauth' }] };
   const active = await findActiveStudentEnrollment(
     createAdminClient() as never,
-    enrollmentTestState.user,
+    enrollmentTestState.user as never,
+    enrollmentTestState.claims,
   );
-  check('an allow-listed, provisioned student is active', active?.studentId === 'student-1');
+  check('a verified Google student is active', active?.studentId === 'student-1');
 
   await checkRevokedRoute('session start', () => startSession(new Request('http://localhost/api/session/start', { method: 'POST' })));
   await checkRevokedRoute('chat with an existing session', () => chat(new Request('http://localhost/api/chat', {
@@ -81,15 +82,22 @@ async function run() {
   })));
 
   resetEnrollmentTestState();
-  enrollmentTestState.allowedLookupError = true;
+  enrollmentTestState.claims = { email: 'student@ahduni.edu.in', amr: [{ method: 'oauth' }] };
+  enrollmentTestState.studentExists = false;
+  const missing = await findActiveStudentEnrollment(createAdminClient() as never,
+    enrollmentTestState.user as never, enrollmentTestState.claims);
+  check('a missing student record fails closed', missing === null);
+
+  enrollmentTestState.studentLookupError = true;
   const originalConsoleError = console.error;
   console.error = () => undefined;
   const unavailable = await findActiveStudentEnrollment(
     createAdminClient() as never,
-    enrollmentTestState.user,
+    enrollmentTestState.user as never,
+    enrollmentTestState.claims,
   );
   console.error = originalConsoleError;
-  check('an unavailable allow-list fails closed', unavailable === null);
+  check('an unavailable student table fails closed', unavailable === null);
 
   if (failures > 0) process.exit(1);
 }

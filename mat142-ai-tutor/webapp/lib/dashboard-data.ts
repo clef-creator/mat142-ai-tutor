@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { DashboardAllowedStudent, DashboardProgress, DashboardSession, DashboardStudent } from './dashboard';
+import type { DashboardProgress, DashboardSession, DashboardStudent } from './dashboard';
 
 const PAGE_SIZE = 1000;
 
@@ -18,12 +18,7 @@ async function allRows<T>(
 
 /** Uses the signed-in faculty client and its RLS policies, never the service role. */
 export async function loadDashboardRows(supabase: SupabaseClient) {
-  const [allowedStudents, students, progress, sessions] = await Promise.all([
-    allRows<DashboardAllowedStudent>(async (from, to) => {
-      const { data, error } = await supabase.from('allowed_students')
-        .select('email, display_name').order('email').range(from, to);
-      return { data, error };
-    }),
+  const [students, progress, sessions] = await Promise.all([
     allRows<DashboardStudent>(async (from, to) => {
       const { data, error } = await supabase.from('students')
         .select('id, email, display_name').order('id').range(from, to);
@@ -41,5 +36,5 @@ export async function loadDashboardRows(supabase: SupabaseClient) {
       return { data, error };
     }),
   ]);
-  return { allowedStudents, students, progress, sessions };
+  return { students, progress, sessions };
 }

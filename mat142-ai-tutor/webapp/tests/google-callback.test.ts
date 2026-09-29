@@ -7,9 +7,10 @@ function check(name: string, condition: boolean) {
   if (!condition) failures++;
 }
 
-function reset(email: string, allowed = false) {
+function reset(email: string) {
   Object.assign(callbackState, {
-    email, allowed, signOuts: 0, deletions: 0, adminClients: 0, studentWrites: 0,
+    email, verified: true, method: 'oauth', signOuts: 0, deletions: 0,
+    adminClients: 0, studentWrites: 0,
   });
 }
 
@@ -34,11 +35,25 @@ void (async () => {
       callbackState.adminClients === 0);
   }
 
-  reset('student@ahduni.edu.in', true);
-  const allowed = await GET(new Request('https://tutor.example/auth/callback?code=valid') as never);
-  check('an allowed student still reaches the tutor',
-    allowed.headers.get('location') === 'https://tutor.example/tutor' &&
+  reset('student@ahduni.edu.in');
+  const admitted = await GET(new Request('https://tutor.example/auth/callback?code=valid') as never);
+  check('a verified university Google student reaches the tutor without a roster entry',
+    admitted.headers.get('location') === 'https://tutor.example/tutor' &&
     callbackState.studentWrites === 1 && callbackState.signOuts === 0);
+
+  reset('student@ahduni.edu.in');
+  callbackState.verified = false;
+  const unverified = await GET(new Request('https://tutor.example/auth/callback?code=valid') as never);
+  check('an unverified Google address is rejected',
+    unverified.headers.get('location') === 'https://tutor.example/auth/error?reason=google-required' &&
+    callbackState.studentWrites === 0 && callbackState.signOuts === 1);
+
+  reset('student@ahduni.edu.in');
+  callbackState.method = 'password';
+  const password = await GET(new Request('https://tutor.example/auth/callback?code=valid') as never);
+  check('a password session cannot use the callback to enroll',
+    password.headers.get('location') === 'https://tutor.example/auth/error?reason=google-required' &&
+    callbackState.studentWrites === 0 && callbackState.signOuts === 1);
 
   if (originalDomain === undefined) delete process.env.ALLOWED_EMAIL_DOMAIN;
   else process.env.ALLOWED_EMAIL_DOMAIN = originalDomain;

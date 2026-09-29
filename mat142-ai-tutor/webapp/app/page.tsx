@@ -20,7 +20,8 @@ export default async function Home() {
   if (user) {
     const admin = createAdminClient();
     if (await findActiveFaculty(admin, user)) redirect('/dashboard');
-    if (await findActiveStudentEnrollment(admin, user)) redirect('/tutor');
+    const { data: claimsData } = await supabase.auth.getClaims();
+    if (await findActiveStudentEnrollment(admin, user, claimsData?.claims)) redirect('/tutor');
   }
 
   return (
@@ -37,11 +38,10 @@ export default async function Home() {
                   email. There is no separate password to remember.
                 </p>
                 <GoogleSignInButton />
-                {/* Kept for the professor's account and as a way in if Google is
-                    ever unavailable. Students do not need it. */}
+                {/* The professor can continue using a password. Students use Google. */}
                 <details style={{ marginTop: 18, fontSize: 14, color: 'var(--muted)' }}>
                   <summary style={{ cursor: 'pointer', marginBottom: 12 }}>
-                    Sign in with a password instead
+                    Faculty password sign-in
                   </summary>
                   <SignInForm />
                 </details>
@@ -49,8 +49,7 @@ export default async function Home() {
             ) : (
               <>
                 <p className="lede">
-                  Use your Ahmedabad University address and the password you were given. If you
-                  have lost it, ask for a new one &mdash; it can be replaced in a moment.
+                  University Google sign-in is not enabled. Faculty can still sign in with a password.
                 </p>
                 <SignInForm />
               </>

@@ -1,33 +1,17 @@
-# Google sign-in
+﻿# Google sign-in
 
-Students can sign in with their university Google account instead of a
-password, so there is nothing to hand out and nothing to forget. It is off
-until `NEXT_PUBLIC_GOOGLE_SIGN_IN` is set to `on` and the site is redeployed,
-so this code can be merged before Google is configured.
+Students sign in with a verified Google account whose email ends in `@ahduni.edu.in`. No student list, invitation, setup token, or issued password is needed. The first successful sign-in creates their `students` row. Subsequent tutor requests and direct database reads require a Google OAuth session. A university-address password session is not sufficient.
 
-## Turning it on
+The professor can still use the existing password sign-in. Professor access requires a matching `faculty` row provisioned by an administrator.
 
-1. In Google Cloud Console, create an OAuth client of type **Web application**.
-   Its **Authorized redirect URI** is the Supabase callback shown on the Google
-   provider page in Supabase (`https://<project-ref>.supabase.co/auth/v1/callback`),
-   not the site's own `/auth/callback`.
-2. In Supabase **Authentication → Sign In / Providers → Google**, enable the
-   provider and paste the client ID and secret.
-3. In Supabase **Authentication → URL Configuration**, set Site URL to the
-   production origin and add `<production origin>/auth/callback` to Redirect URLs.
-4. In Vercel, add `NEXT_PUBLIC_GOOGLE_SIGN_IN=on` and redeploy. The name starts
-   with `NEXT_PUBLIC_` because the browser reads it; it is not a secret.
+## Configuration
 
-## What changes and what does not
+1. In Google Cloud Console, create an OAuth client of type **Web application**. Add the Supabase Google provider callback, `https://<project-ref>.supabase.co/auth/v1/callback`, to **Authorized redirect URIs**. Follow Google's instructions for Authorized JavaScript origins if required for your client.
+2. In Supabase **Authentication → Sign In / Providers → Google**, enable Google and enter the client ID and secret.
+3. In Supabase **Authentication → URL Configuration**, set Site URL to the deployed site origin and allow `<site origin>/auth/callback` as a Redirect URL.
+4. Apply `webapp/supabase/migrations/20260929120000_university_google_students.sql` to the Supabase project before deploying this app version. It changes direct database access to the same Google-session rule.
+5. In Vercel, set `ALLOWED_EMAIL_DOMAIN=ahduni.edu.in`, `NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN=ahduni.edu.in`, and `NEXT_PUBLIC_GOOGLE_SIGN_IN=on`. Redeploy.
 
-Authorization is unchanged. `/auth/callback` still rejects and signs out any
-address outside `ALLOWED_EMAIL_DOMAIN`, sends faculty to `/dashboard`, and signs
-out anyone not on `allowed_students`. Supabase links a Google sign-in to an
-existing account with the same address, so students and the professor keep
-their progress and role.
+The old `allowed_students` table is retained as historical data, but the app no longer reads it or grants access from it. `STUDENT_SETUP_TOKEN` can be removed from Vercel.
 
-With the switch on, `/setup` adds students to the pilot list with a confirmed
-account and no password, and shows no passwords. The password form stays under
-"Sign in with a password instead" for the professor and as a fallback. A
-plus-suffix address such as `name+student@` has no Google account of its own,
-so it can only be used with a password.
+If sign-in reaches `/auth/error`, inspect its `reason` query parameter. `domain` means the address is outside the university domain; `google-required` means the session did not prove a verified university Google identity; `provisioning` means creating the student row failed. Check Vercel logs for the last case.

@@ -15,10 +15,7 @@
 create extension if not exists "pgcrypto";
 
 -- ---------------------------------------------------------------------------
--- Who is allowed in
---
--- One row per student in the pilot. Sign-in is refused for any address that
--- is not listed here, which is how the cohort stays at fifteen.
+-- Students appear here after their first university Google sign-in.
 -- ---------------------------------------------------------------------------
 create table if not exists public.students (
   id           uuid primary key references auth.users(id) on delete cascade,
@@ -29,7 +26,8 @@ create table if not exists public.students (
   last_seen_at timestamptz
 );
 
--- The allow-list. Add the fifteen addresses here before students try to sign in.
+-- Legacy pilot roster retained so existing deployments do not lose data.
+-- It no longer grants or revokes access.
 create table if not exists public.allowed_students (
   email        text primary key,
   display_name text,
@@ -325,9 +323,8 @@ as $$
   )
 $$;
 
--- A valid Supabase session is not, by itself, an active enrollment. This
--- function is used by student-facing RLS policies so removing an address from
--- allowed_students revokes direct database reads as well as application routes.
+-- Student reads require a university address verified by Google in this
+-- session. A password signup with a matching email cannot read student data.
 create or replace function public.has_active_student_enrollment()
 returns boolean
 language sql stable security definer set search_path = public
@@ -335,16 +332,21 @@ as $$
   select exists (
     select 1
     from public.students st
-    join public.allowed_students allowed
-      on lower(allowed.email) = lower(st.email)
+    join auth.identities google_identity on google_identity.user_id = st.id
     where st.id = auth.uid()
       and lower(st.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+      and lower(st.email) like '%@ahduni.edu.in'
+      and google_identity.provider = 'google'
+      and lower(google_identity.identity_data ->> 'email') = lower(st.email)
+      and google_identity.identity_data ->> 'email_verified' = 'true'
+      and (
+        coalesce(auth.jwt() -> 'amr', '[]'::jsonb) @> '[{"method":"oauth"}]'::jsonb
+        or coalesce(auth.jwt() -> 'amr', '[]'::jsonb) @> '["oauth"]'::jsonb
+      )
   )
 $$;
 
 drop policy if exists "faculty read pilot allowlist" on public.allowed_students;
-create policy "faculty read pilot allowlist" on public.allowed_students
-  for select using (public.is_faculty());
 
 -- --- students ---------------------------------------------------------------
 drop policy if exists "student reads own record" on public.students;

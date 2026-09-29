@@ -13,24 +13,15 @@ class Query {
   }
 
   async maybeSingle() {
-    if (this.table === 'allowed_students') {
-      if (enrollmentTestState.allowedLookupError) {
+    if (this.table === 'students') {
+      if (enrollmentTestState.studentLookupError) {
         return { data: null, error: new Error('database unavailable') };
       }
-      return {
-        data: enrollmentTestState.allowed
-          ? { email: 'student@ahduni.edu.in', display_name: 'Test Student' }
-          : null,
-        error: null,
-      };
-    }
-
-    if (this.table === 'students') {
       const matchesIdentity =
         this.filters.get('id') === enrollmentTestState.user.id &&
         this.filters.get('email') === 'student@ahduni.edu.in';
       return {
-        data: matchesIdentity
+        data: matchesIdentity && enrollmentTestState.studentExists
           ? { id: enrollmentTestState.user.id, email: 'student@ahduni.edu.in', display_name: 'Test Student' }
           : null,
         error: null,
@@ -53,6 +44,9 @@ export async function createClient() {
     auth: {
       async getUser() {
         return { data: { user: enrollmentTestState.user }, error: null };
+      },
+      async getClaims() {
+        return { data: { claims: enrollmentTestState.claims }, error: null };
       },
     },
   };

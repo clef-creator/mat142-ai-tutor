@@ -9,7 +9,7 @@ const DOMAIN = process.env.NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN ?? 'ahduni.edu.in';
  * Hands the student to Google and back.
  *
  * Google returns them to /auth/callback, which is the same route that decides
- * everything else: professor to the dashboard, a student on the pilot list to
+ * everything else: professor to the dashboard, a university Google student to
  * the tutor, anyone else signed straight back out. `hd` asks Google to offer
  * university accounts first and `select_account` stops it silently picking a
  * personal Gmail that happens to be signed in; neither is relied on, since the

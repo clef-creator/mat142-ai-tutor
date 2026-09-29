@@ -13,8 +13,6 @@ const students = [
   { id: 'b', email: 'b@example.test', display_name: 'B Student' },
   { id: 'c', email: 'c@example.test', display_name: 'C Student' },
 ];
-const allowed = students.map((student) => ({ email: student.email, display_name: student.display_name }))
-  .concat([{ email: 'invited@example.test', display_name: 'Invited Student' }]);
 const progress = [
   { student_id: 'a', topic_id: 'derivative-chain-rule', status: 'shaky' as const, attempts: 3 },
   { student_id: 'b', topic_id: 'derivative-chain-rule', status: 'steady' as const, attempts: 5 },
@@ -36,7 +34,7 @@ const sessions = [
   session('5', 'revoked', '2026-09-15T11:00:00.000Z'),
 ];
 
-const result = buildDashboard(allowed, students, progress, sessions, now);
+const result = buildDashboard(students, progress, sessions, now);
 check('rolling window starts exactly seven days earlier', result.windowStart === '2026-09-09T12:00:00.000Z');
 check('weekly totals include the start boundary and exclude revoked students', result.sessionsThisWeek === 4);
 check('active students are distinct, not session count', result.activeStudents === 2);
@@ -44,16 +42,13 @@ check('an unassessed session is not called a difficulty', result.difficulty[0]?.
 check('repeated shaky sessions count each student once per topic', result.difficulty.length === 1);
 check('median includes completed sessions and uses their durations', result.medianSessionMinutes === 15);
 check('roster includes students who have not practiced', result.students.find((s) => s.id === 'c')?.sessions === 0);
-check('roster includes invited students without an Auth identity',
-  result.students.find((s) => s.email === 'invited@example.test')?.hasSignedIn === false);
+check('roster contains only signed-in students', result.students.length === 3);
 check('the drawer data uses status without progress notes', result.students.find((s) => s.id === 'a')?.shakyTopics.length === 1);
 check('answer seeking counts sessions, not turns', result.students.find((s) => s.id === 'a')?.answerSeekingSessions === 1);
 check('stuck needs three assessed attempts and a currently shaky status',
   result.students.find((s) => s.id === 'a')?.flags.includes('Stuck') === true &&
   result.students.find((s) => s.id === 'b')?.flags.includes('Stuck') === false);
-check('signed-in inactive student is Quiet, invited student is not',
-  result.students.find((s) => s.id === 'c')?.flags.includes('Quiet') === true &&
-  result.students.find((s) => s.email === 'invited@example.test')?.flags.length === 0);
+check('inactive student is Quiet', result.students.find((s) => s.id === 'c')?.flags.includes('Quiet') === true);
 check('one answer-seeking session does not raise Answers',
   result.students.find((s) => s.id === 'a')?.flags.includes('Answers') === false);
 const thresholdSessions = [
@@ -64,7 +59,7 @@ const thresholdSessions = [
   session('old', 'a', '2026-09-09T11:59:59.000Z', { ended_at: '2026-09-09T12:00:00.000Z', asked_for_answers: true }),
   session('open', 'a', '2026-09-15T13:00:00.000Z', { ended_at: null, asked_for_answers: true }),
 ];
-const thresholdResult = buildDashboard(allowed, students, progress, thresholdSessions, now);
+const thresholdResult = buildDashboard(students, progress, thresholdSessions, now);
 const flagged = thresholdResult.students.find((s) => s.id === 'a');
 check('three completed sessions under three minutes raise Short; exactly three minutes does not',
   flagged?.shortSessions === 3 && flagged.flags.includes('Short'));
@@ -86,8 +81,8 @@ const client = {
 };
 
 void loadDashboardRows(client as never).then(() => {
-  check('dashboard queries only the four authorized roster and signal tables',
-    selections.length === 4 && selections.every((selection) => /^(allowed_students|students|progress|sessions):/.test(selection)));
+  check('dashboard queries only student and signal tables',
+    selections.length === 3 && selections.every((selection) => /^(students|progress|sessions):/.test(selection)));
   check('queries exclude transcripts, summaries and private notes',
     selections.every((selection) => !/messages|content|summary|sticking_point|note|self_critical/.test(selection)));
   check('progress query includes assessed attempt count',

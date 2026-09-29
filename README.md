@@ -12,7 +12,7 @@ The repository contains an implemented Next.js student tutor with two operating 
 | --- | --- |
 | Student tutor | Streaming AI chat, mathematical rendering, topic selection and session summaries |
 | Demo access | Shared code; progress and current conversation stored in the browser |
-| Account mode | Supabase email magic links, student allowlist, database-backed conversations and progress |
+| Account mode | Verified university Google sign-in, database-backed conversations and progress |
 | Active curriculum | 58 topics across the five course units, built from 22 supplied lecture decks |
 | Professor dashboard | Mockup with invented data; authenticated dashboard and export are not implemented |
 | Reliability and access controls | Known gaps tracked in [GitHub issues](https://github.com/clef-creator/mat142-ai-tutor/issues) |
@@ -21,7 +21,7 @@ The active curriculum has `verified_by_faculty: false`. Faculty review and the t
 
 ## How tutoring works
 
-1. The student enters the demo code or signs in with an approved university email.
+1. The student enters the demo code or signs in with a university Google account.
 2. The app resumes an open session or chooses a topic from the student's progress.
 3. The tutor opens with a question. Replies stream into the interface and LaTeX renders through KaTeX.
 4. The student works through the problem with progressively stronger hints.
@@ -37,7 +37,7 @@ The switch is implemented in [mode.ts](mat142-ai-tutor/webapp/lib/mode.ts): an e
 
 | Behavior | Solo / demo mode | Account mode |
 | --- | --- | --- |
-| Access | Shared code and optional first name | University email magic link |
+| Access | Shared code and optional first name | Verified `@ahduni.edu.in` Google account |
 | Application storage | Browser localStorage | Supabase PostgreSQL |
 | Current session | Restored in the same browser | Restored from the database |
 | Completed conversations | Replaced on completion; latest summary retained | Stored, but no history browser yet |
@@ -141,11 +141,10 @@ Open [localhost:3000](http://localhost:3000), enter the code, and start a conver
 Use a development Supabase project to exercise the existing account flow.
 
 1. From `mat142-ai-tutor/webapp`, run `npm ci`, `npm run db:start` and `npm run db:verify` to verify the migrations locally.
-2. Configure email authentication and email delivery for the intended test recipients.
+2. Configure the Google provider using [Google sign-in](docs/google-sign-in.md).
 3. Allow the app's callback URL, such as `http://localhost:3000/auth/callback`, in Supabase authentication redirect settings.
-4. Add approved student emails to `public.allowed_students`.
-5. Set the Supabase variables below, along with the Anthropic variables above.
-6. Restart the development server and sign in through the emailed link.
+4. Set the Supabase variables below, along with the Anthropic variables above.
+5. Restart the development server and sign in with a verified university Google account.
 
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=<your-project-url>
@@ -153,22 +152,12 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-project-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<your-server-only-service-role-key>
 ALLOWED_EMAIL_DOMAIN=ahduni.edu.in
 NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN=ahduni.edu.in
+NEXT_PUBLIC_GOOGLE_SIGN_IN=on
 ```
 
-Example development allowlist entry; replace with an actual approved test address:
+On a successful Google callback, the app checks the verified university address and creates or updates the `students` record linked to `auth.users`. Tutor routes and database policies require a Google-authenticated university session. No student list is needed.
 
-```sql
-insert into public.allowed_students (email, display_name)
-values ('approved.student@ahduni.edu.in', 'Test Student')
-on conflict (email) do update
-set display_name = excluded.display_name;
-```
-
-Store emails in lowercase. On a successful callback, the app checks the email domain and allowlist, then creates or updates the `students` record linked to `auth.users`.
-
-Enrollment remains active only while the signed-in email is present in `allowed_students` and its `students` row matches the authenticated user. Removing an allowlist row revokes the next tutor page or API request even when the browser still has a valid login and an open session. Reapply the checked-in schema changes to existing Supabase projects so the same rule protects direct database reads.
-
-Use the [deployment runbook](docs/deployment.md) to adopt or update a hosted project with `supabase db push`; do not rebuild a linked database with `db reset --linked`. Review the remaining [access-control work](https://github.com/clef-creator/mat142-ai-tutor/issues/5) before using real student data. Adding rows to the faculty tables does not create a working professor login flow.
+Use the [deployment runbook](docs/deployment.md) to adopt or update a hosted project with `supabase db push`; do not rebuild a linked database with `db reset --linked`. Apply the university Google student migration before deploying this app version.
 
 ## Configuration reference
 
@@ -183,6 +172,7 @@ Use the [deployment runbook](docs/deployment.md) to adopt or update a hosted pro
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only privileged database key |
 | `ALLOWED_EMAIL_DOMAIN` | Server callback domain check |
 | `NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN` | Corresponding sign-in form check |
+| `NEXT_PUBLIC_GOOGLE_SIGN_IN` | Set to `on` for student Google sign-in |
 | `MAX_TURNS_PER_SESSION` | Default 40; current request/turn limit |
 | `MAX_SESSIONS_PER_DAY` | Default 6; account-mode session-start limit |
 | `NEXT_PUBLIC_SITE_URL` | Present in the example; current sign-in code builds the callback from the browser origin |
@@ -198,9 +188,9 @@ The checked-in schema has **eight application tables**, plus the `student_signal
 | Table | Stores |
 | --- | --- |
 | `students` | Student identity, cohort and last-seen timestamp |
-| `allowed_students` | Approved student email addresses |
+| `allowed_students` | Historical student list; no longer grants access |
 | `faculty` | Faculty identities used by database policies |
-| `allowed_faculty` | Faculty allowlist table; not wired into the current callback |
+| `allowed_faculty` | Historical faculty list; not used for authorization |
 | `sessions` | Topic, timestamps, turn count, summary and assessment flags |
 | `messages` | Student and assistant conversation text |
 | `progress` | Per-student, per-topic status, attempts and learning note |
@@ -242,7 +232,7 @@ npm run validate:config -- .env.local
 | `test:tutoring` | Curriculum structure, topic selection, prompt construction |
 | `test:rendering` | LaTeX, currency, malformed formulas and partial streamed text |
 | `test:solo` | Shared-code helpers, browser storage and rendered solo/account differences |
-| `test:enrollment` | Active-enrollment checks and revoked users with existing sessions |
+| `test:enrollment` | Google-session access checks, including password sessions with existing tutor sessions |
 | `test:config` | Complete solo/account configuration and secret/URL safety rules |
 | `db:verify` | Fresh migration replay, idempotent reapplication over fixture data and database lint |
 
