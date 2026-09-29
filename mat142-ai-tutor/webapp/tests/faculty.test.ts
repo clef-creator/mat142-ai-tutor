@@ -8,17 +8,17 @@ function check(name: string, condition: boolean) {
 
 const professor = { id: 'professor-1', email: 'Professor@AHDUNI.EDU.IN' };
 
-function database(row: { id: string; email: string } | null, lookupError = false) {
+function database(row: { email: string } | null, lookupError = false) {
   const filters: Record<string, string> = {};
   return {
     from(table: string) {
-      check('role lookup uses only the faculty table', table === 'faculty');
+      check('role lookup uses only the admin allowlist', table === 'allowed_faculty');
       return {
         select() { return this; },
         eq(key: string, value: string) { filters[key] = value; return this; },
         async maybeSingle() {
           return {
-            data: !lookupError && row && row.id === filters.id && row.email === filters.email ? row : null,
+            data: !lookupError && row && row.email === filters.email ? row : null,
             error: lookupError ? new Error('database unavailable') : null,
           };
         },
@@ -28,14 +28,14 @@ function database(row: { id: string; email: string } | null, lookupError = false
 }
 
 async function run() {
-  const row = { id: 'professor-1', email: 'professor@ahduni.edu.in' };
-  check('provisioned faculty is recognized by ID and normalized email',
-    (await findActiveFaculty(database(row) as never, professor))?.id === row.id);
-  check('email alone cannot assign the professor role',
-    await findActiveFaculty(database(row) as never, { ...professor, id: 'student-1' }) === null);
-  check('an Auth email change revokes the role',
+  const row = { email: 'professor@ahduni.edu.in' };
+  check('allowlisted email is recognized for the authenticated user',
+    (await findActiveFaculty(database(row) as never, professor))?.id === professor.id);
+  check('another authenticated user with the approved email can sign in',
+    (await findActiveFaculty(database(row) as never, { ...professor, id: 'new-user' }))?.id === 'new-user');
+  check('an Auth email change revokes access',
     await findActiveFaculty(database(row) as never, { ...professor, email: 'other@ahduni.edu.in' }) === null);
-  check('deleting the faculty row revokes access',
+  check('deleting the allowlist row revokes access',
     await findActiveFaculty(database(null) as never, professor) === null);
   check('missing Auth email cannot obtain the role',
     await findActiveFaculty(database(row) as never, { ...professor, email: undefined }) === null);

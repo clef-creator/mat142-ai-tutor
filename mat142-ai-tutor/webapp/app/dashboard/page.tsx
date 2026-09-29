@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { findActiveFaculty } from '@/lib/faculty';
 import { isSoloMode } from '@/lib/mode';
@@ -17,7 +18,18 @@ export default async function DashboardPage() {
   if (!user) redirect('/');
 
   const faculty = await findActiveFaculty(createAdminClient(), user);
-  if (!faculty) redirect('/');
+  if (!faculty) return (
+    <>
+      <Header email={user.email} subtitle="Professor dashboard" />
+      <main className="shell">
+        <div className="panel panel-b" role="alert">
+          <h1>Access denied</h1>
+          <p>You do not have access to view the dashboard.</p>
+          <Link href="/">Choose another view</Link>
+        </div>
+      </main>
+    </>
+  );
 
   let dashboard;
   try {

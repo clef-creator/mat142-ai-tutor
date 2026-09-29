@@ -1,6 +1,6 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 
-/** Faculty membership is granted only by a privileged database administrator. */
+/** Dashboard membership is granted by the privileged email allowlist. */
 export async function findActiveFaculty(
   admin: SupabaseClient,
   user: Pick<User, 'id' | 'email'>,
@@ -9,9 +9,8 @@ export async function findActiveFaculty(
   if (!email) return null;
 
   const { data, error } = await admin
-    .from('faculty')
-    .select('id, email')
-    .eq('id', user.id)
+    .from('allowed_faculty')
+    .select('email')
     .eq('email', email)
     .maybeSingle();
 
@@ -19,5 +18,5 @@ export async function findActiveFaculty(
     console.error('[faculty] role lookup failed', error);
     return null;
   }
-  return data ? { id: data.id, email: data.email } : null;
+  return data ? { id: user.id, email: data.email } : null;
 }

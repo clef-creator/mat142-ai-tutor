@@ -189,8 +189,8 @@ The checked-in schema has **eight application tables**, plus the `student_signal
 | --- | --- |
 | `students` | Student identity, cohort and last-seen timestamp |
 | `allowed_students` | Historical student list; no longer grants access |
-| `faculty` | Faculty identities used by database policies |
-| `allowed_faculty` | Historical faculty list; not used for authorization |
+| `faculty` | Historical faculty identities |
+| `allowed_faculty` | Approved dashboard email addresses |
 | `sessions` | Topic, timestamps, turn count, summary and assessment flags |
 | `messages` | Student and assistant conversation text |
 | `progress` | Per-student, per-topic status, attempts and learning note |
@@ -199,6 +199,16 @@ The checked-in schema has **eight application tables**, plus the `student_signal
 Account-mode writes use a service-role client, which bypasses row-level security. Those server operations require their own authorization checks.
 
 `schema.sql` is the declarative schema source. The files under `supabase/migrations` are the deployment history. Change both through the documented diff-and-review workflow rather than editing a hosted database directly.
+
+The home page offers Student and Admin entries. Any verified university Google
+account can use the student tutor, including an approved admin. Dashboard access
+requires the signed-in email to appear in `allowed_faculty`; other accounts see
+an access-denied message even when opening `/dashboard` directly. The migration
+`20260929130000_admin_email_allowlist.sql` seeds `suryaraj.j@ahduni.edu.in`.
+Apply the migration before deploying this change. Add future approved emails in
+Supabase as lowercase rows in `allowed_faculty`; removing a row revokes access
+on the next request. Configure the Auth redirect allow list for both
+`/auth/callback?role=student` and `/auth/callback?role=admin`.
 
 ## Professor dashboard and privacy
 

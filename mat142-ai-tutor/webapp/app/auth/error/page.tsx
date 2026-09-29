@@ -13,6 +13,7 @@ const REASONS: Record<string, string> = {
   'google-database': 'Supabase could not save the sign-in. Ask the site administrator to check the Auth logs.',
   'google-required': 'Use your Ahmedabad University Google account to sign in.',
   'student-access-denied': 'Sign in with your Ahmedabad University Google account to use the tutor.',
+  'admin-access': 'You do not have access to view the dashboard.',
   provisioning: 'Your account could not be set up just now. Please try again or contact your instructor.',
 };
 

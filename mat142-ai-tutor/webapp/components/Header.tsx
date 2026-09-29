@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import SignOutButton from './SignOutButton';
 
 export default function Header({ email, subtitle }: { email?: string | null; subtitle?: string }) {
@@ -17,6 +18,7 @@ export default function Header({ email, subtitle }: { email?: string | null; sub
               {/* Naming who is signed in matters on a shared lab machine: a
                   student who sees someone else's address knows to sign out. */}
               <span className="who">Signed in as {email}</span>
+              <Link href="/">Switch view</Link>
               <SignOutButton />
             </div>
           ) : null}
