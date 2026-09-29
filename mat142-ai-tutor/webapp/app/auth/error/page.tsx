@@ -14,9 +14,12 @@ const REASONS: Record<string, string> = {
 export default async function AuthError({
   searchParams,
 }: {
-  searchParams: Promise<{ reason?: string }>;
+  searchParams: Promise<{ reason?: string; detail?: string }>;
 }) {
-  const { reason } = await searchParams;
+  const { reason, detail } = await searchParams;
+  // Shown as plain text. The callback has already stripped it to letters,
+  // digits and punctuation, and React escapes it again here.
+  const shownDetail = detail ? detail.slice(0, 200) : null;
   const message = REASONS[reason ?? ''] ?? 'Something went wrong signing you in.';
 
   return (
@@ -26,6 +29,11 @@ export default async function AuthError({
         <div className="signin">
           <h1>Couldn&rsquo;t sign you in</h1>
           <p className="lede">{message}</p>
+          {shownDetail ? (
+            <p className="footnote" style={{ marginTop: -8, marginBottom: 18 }}>
+              Details for whoever looks after the site: <code>{shownDetail}</code>
+            </p>
+          ) : null}
           <Link className="btn" href="/" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>
             Try again
           </Link>

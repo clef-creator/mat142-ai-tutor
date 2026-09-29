@@ -1,4 +1,5 @@
 import { GET } from '@/app/auth/callback/route';
+import { describeOAuthError } from '@/lib/oauth-error';
 import { callbackState } from './stubs/google-callback';
 
 let failures = 0;
@@ -54,6 +55,21 @@ void (async () => {
   check('a password session cannot use the callback to enroll',
     password.headers.get('location') === 'https://tutor.example/auth/error?reason=google-required' &&
     callbackState.studentWrites === 0 && callbackState.signOuts === 1);
+
+  // A failure reported by Supabase keeps its reason, so it can be diagnosed.
+  const reported = await GET(new Request(
+    'https://tutor.example/auth/callback?error=server_error&error_code=unexpected_failure' +
+    '&error_description=Unable+to+exchange+external+code',
+  ) as never);
+  const location = reported.headers.get('location') ?? '';
+  check('a reported Google failure goes to the error page',
+    location.startsWith('https://tutor.example/auth/error?reason=google&detail='));
+  check('and carries the reason Supabase gave',
+    decodeURIComponent(location.split('detail=')[1] ?? '').includes('Unable to exchange external code'));
+  check('nothing that could become markup survives the cleaning',
+    !/[<>"&]/.test(describeOAuthError('x', null, '<script>alert("hi")</script>&y')));
+  check('a very long reason is cut short',
+    describeOAuthError('e', null, 'a'.repeat(500)).length <= 200);
 
   if (originalDomain === undefined) delete process.env.ALLOWED_EMAIL_DOMAIN;
   else process.env.ALLOWED_EMAIL_DOMAIN = originalDomain;

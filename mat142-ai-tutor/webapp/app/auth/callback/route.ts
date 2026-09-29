@@ -3,6 +3,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { isUniversityGoogleSession } from '@/lib/enrollment';
 import { findActiveFaculty } from '@/lib/faculty';
 import { isSoloMode } from '@/lib/mode';
+import { describeOAuthError } from '@/lib/oauth-error';
 
 /** Exchange the code from Google (or an emailed link), then route an
  *  authorized professor or student. */
@@ -15,8 +16,21 @@ export async function GET(request: NextRequest) {
   // Google sends people back with an error instead of a code when they
   // cancel, or when the university has not allowed this app. Neither is an
   // expired link, so say what actually happened.
-  if (searchParams.get('error')) {
-    return NextResponse.redirect(`${origin}/auth/error?reason=google`);
+  // Supabase uses the same route to report its own failures (a wrong client
+  // secret, sign-ups switched off, a database error), with the reason in
+  // `error_description`. Pass a short, cleaned copy on to the error page and
+  // the server log, so a failed sign-in says why instead of guessing.
+  const oauthError = searchParams.get('error');
+  if (oauthError) {
+    const detail = describeOAuthError(
+      oauthError,
+      searchParams.get('error_code'),
+      searchParams.get('error_description'),
+    );
+    console.error('[auth] Google sign-in returned an error:', detail);
+    return NextResponse.redirect(
+      `${origin}/auth/error?reason=google&detail=${encodeURIComponent(detail)}`,
+    );
   }
 
   const code = searchParams.get('code');
