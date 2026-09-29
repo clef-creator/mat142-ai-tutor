@@ -6,6 +6,7 @@ export const callbackState = {
   studentWrites: 0,
   verified: true,
   method: 'oauth',
+  approvedAdmin: false,
 };
 
 export const NextResponse = {
@@ -15,7 +16,9 @@ export const NextResponse = {
 };
 
 export function isSoloMode() { return false; }
-export async function findActiveFaculty() { return null; }
+export async function findActiveFaculty() {
+  return callbackState.approvedAdmin ? { id: 'existing-user', email: callbackState.email } : null;
+}
 export async function createClient() {
   return {
     auth: {

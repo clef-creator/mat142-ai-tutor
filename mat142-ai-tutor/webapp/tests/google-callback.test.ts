@@ -11,7 +11,7 @@ function check(name: string, condition: boolean) {
 function reset(email: string) {
   Object.assign(callbackState, {
     email, verified: true, method: 'oauth', signOuts: 0, deletions: 0,
-    adminClients: 0, studentWrites: 0,
+    adminClients: 0, studentWrites: 0, approvedAdmin: false,
   });
 }
 
@@ -47,6 +47,26 @@ void (async () => {
   const admitted = await GET(new Request('https://tutor.example/auth/callback?code=valid') as never);
   check('a verified university Google student reaches the tutor without a roster entry',
     admitted.headers.get('location') === 'https://tutor.example/tutor' &&
+    callbackState.studentWrites === 1 && callbackState.signOuts === 0);
+
+  reset('student@ahduni.edu.in');
+  const deniedAdmin = await GET(new Request('https://tutor.example/auth/callback?code=valid&role=admin') as never);
+  check('a student who chooses Admin is denied without provisioning a student record',
+    deniedAdmin.headers.get('location') === 'https://tutor.example/auth/error?reason=admin-access' &&
+    callbackState.studentWrites === 0 && callbackState.signOuts === 1);
+
+  reset('professor@ahduni.edu.in');
+  callbackState.approvedAdmin = true;
+  const admittedAdmin = await GET(new Request('https://tutor.example/auth/callback?code=valid&role=admin') as never);
+  check('an allowlisted Google account reaches the dashboard',
+    admittedAdmin.headers.get('location') === 'https://tutor.example/dashboard' &&
+    callbackState.studentWrites === 0 && callbackState.signOuts === 0);
+
+  reset('professor@ahduni.edu.in');
+  callbackState.approvedAdmin = true;
+  const adminAsStudent = await GET(new Request('https://tutor.example/auth/callback?code=valid&role=student') as never);
+  check('an allowlisted admin can choose the student tutor with Google',
+    adminAsStudent.headers.get('location') === 'https://tutor.example/tutor' &&
     callbackState.studentWrites === 1 && callbackState.signOuts === 0);
 
   reset('student@ahduni.edu.in');

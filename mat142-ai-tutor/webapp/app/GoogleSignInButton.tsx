@@ -8,14 +8,13 @@ const DOMAIN = process.env.NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN ?? 'ahduni.edu.in';
 /**
  * Hands the student to Google and back.
  *
- * Google returns them to /auth/callback, which is the same route that decides
- * everything else: professor to the dashboard, a university Google student to
- * the tutor, anyone else signed straight back out. `hd` asks Google to offer
+ * Google returns them to /auth/callback with the chosen role. The callback
+ * checks the admin allowlist or verifies the student Google session. `hd` asks Google to offer
  * university accounts first and `select_account` stops it silently picking a
  * personal Gmail that happens to be signed in; neither is relied on, since the
  * callback checks the address itself.
  */
-export default function GoogleSignInButton() {
+export default function GoogleSignInButton({ role = 'student' }: { role?: 'student' | 'admin' }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +26,7 @@ export default function GoogleSignInButton() {
     const { error: oauthError } = await createClient().auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?role=${role}`,
         scopes: 'https://www.googleapis.com/auth/userinfo.email',
         queryParams: { hd: DOMAIN, prompt: 'select_account' },
       },

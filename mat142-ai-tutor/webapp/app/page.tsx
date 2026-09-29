@@ -2,12 +2,10 @@ import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { findActiveStudentEnrollment } from '@/lib/enrollment';
-import { findActiveFaculty } from '@/lib/faculty';
 import { googleSignInEnabled, isSoloMode, soloModeReady } from '@/lib/mode';
 import { ACCESS_COOKIE, hasAccess } from '@/lib/access';
 import Header from '@/components/Header';
-import SignInForm from './SignInForm';
-import GoogleSignInButton from './GoogleSignInButton';
+import EntryChoice from './EntryChoice';
 import AccessForm from './AccessForm';
 
 export const dynamic = 'force-dynamic';
@@ -17,44 +15,20 @@ export default async function Home() {
 
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+  let studentReady = false;
   if (user) {
     const admin = createAdminClient();
-    if (await findActiveFaculty(admin, user)) redirect('/dashboard');
     const { data: claimsData } = await supabase.auth.getClaims();
-    if (await findActiveStudentEnrollment(admin, user, claimsData?.claims)) redirect('/tutor');
+    studentReady = Boolean(await findActiveStudentEnrollment(admin, user, claimsData?.claims));
   }
 
   return (
     <>
-      <Header />
+      <Header email={user?.email} />
       <div className="signin-wrap">
         <div>
-          <div className="signin">
-            <h1>Sign in</h1>
-            {googleSignInEnabled() ? (
-              <>
-                <p className="lede">
-                  Use your Ahmedabad University Google account, the one you use for university
-                  email. There is no separate password to remember.
-                </p>
-                <GoogleSignInButton />
-                {/* The professor can continue using a password. Students use Google. */}
-                <details style={{ marginTop: 18, fontSize: 14, color: 'var(--muted)' }}>
-                  <summary style={{ cursor: 'pointer', marginBottom: 12 }}>
-                    Faculty password sign-in
-                  </summary>
-                  <SignInForm />
-                </details>
-              </>
-            ) : (
-              <>
-                <p className="lede">
-                  University Google sign-in is not enabled. Faculty can still sign in with a password.
-                </p>
-                <SignInForm />
-              </>
-            )}
-          </div>
+          <EntryChoice signedIn={Boolean(user)} studentReady={studentReady}
+            googleEnabled={googleSignInEnabled()} />
           <p className="footnote">
             Calcu-Buddy remembers what you have worked on so it can pick up where you left
             off, which means your conversations are saved. Your teaching team can see which

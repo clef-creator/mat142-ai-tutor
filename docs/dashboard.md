@@ -24,9 +24,11 @@ observation, **not** a count of turns or a diagnosis. It does not implement the
 mockup's Quiet, Stuck, Short or Answers threshold labels. Those rules remain
 open in issue #11.
 
-The route checks the authenticated user against the privileged faculty table
-on every request. Dashboard rows are read with the signed-in Supabase client,
-under faculty row-level security. Queries explicitly select only identifiers,
+The route checks the authenticated user's email against `allowed_faculty` on
+every request. An account absent from that list sees an access-denied message.
+Approved admins can choose the student entry as well, using their university
+Google account. Dashboard rows are read with the signed-in Supabase client,
+under the same email allowlist in row-level security. Queries explicitly select only identifiers,
 display names, topic status and session-level outcomes/activity. They never
 query `messages`, progress notes, session summaries, sticking points or tone
 signals. If any read fails, the screen shows an error rather than partial

@@ -48,6 +48,10 @@ create table if not exists public.allowed_faculty (
   added_at timestamptz not null default now()
 );
 
+insert into public.allowed_faculty (email)
+values ('suryaraj.j@ahduni.edu.in')
+on conflict (email) do nothing;
+
 -- ---------------------------------------------------------------------------
 -- What each student can do, topic by topic
 --
@@ -316,10 +320,9 @@ create or replace function public.is_faculty()
 returns boolean
 language sql stable security definer set search_path = public
 as $$
-  select exists (
-    select 1 from public.faculty f
-    where f.id = auth.uid()
-      and lower(f.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  select auth.uid() is not null and exists (
+    select 1 from public.allowed_faculty f
+    where lower(f.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
   )
 $$;
 

@@ -9,6 +9,7 @@ import { classifyOAuthError } from '@/lib/oauth-error';
  *  authorized professor or student. */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
+  const role = searchParams.get('role');
 
   // No accounts in this mode, so an emailed link cannot mean anything here.
   if (isSoloMode()) return NextResponse.redirect(`${origin}/`);
@@ -56,7 +57,12 @@ export async function GET(request: NextRequest) {
 
   const admin = createAdminClient();
 
-  if (await findActiveFaculty(admin, data.user)) {
+  if (role === 'admin' && !(await findActiveFaculty(admin, data.user))) {
+    await supabase.auth.signOut();
+    return NextResponse.redirect(`${origin}/auth/error?reason=admin-access`);
+  }
+
+  if (role === 'admin' || (role !== 'student' && await findActiveFaculty(admin, data.user))) {
     return NextResponse.redirect(`${origin}/dashboard`);
   }
 
