@@ -1,14 +1,28 @@
-/** A short, printable summary of what Google or Supabase reported. Only
- *  letters, digits and plain punctuation survive, so nothing from the query
- *  string can become markup or a link on the error page. */
-export function describeOAuthError(
+/** Keep provider text out of URLs, page content, and application logs. */
+export function safeOAuthCode(value: string | null | undefined): string | null {
+  return value && /^[a-z][a-z0-9_]{0,63}$/i.test(value) ? value.toLowerCase() : null;
+}
+
+export function classifyOAuthError(
   error: string,
   code: string | null,
   description: string | null,
-): string {
-  const clean = (value: string | null) =>
-    (value ?? '').replace(/\+/g, ' ').replace(/[^\w .,:;'()\/-]/g, '').replace(/\s+/g, ' ').trim();
-  const parts = [clean(description), clean(code), clean(error)].filter(Boolean);
-  const unique = parts.filter((part, i) => parts.indexOf(part) === i);
-  return unique.join(' / ').slice(0, 200) || 'unknown error';
+) {
+  const detail = description ?? '';
+  let reason = 'google';
+  if (/error getting user email from external provider/i.test(detail)) {
+    reason = 'google-email';
+  } else if (/unable to exchange external code/i.test(detail)) {
+    reason = 'google-exchange';
+  } else if (/signups? (?:are )?(?:not allowed|disabled)|signup_disabled/i.test(detail)) {
+    reason = 'google-signups';
+  } else if (/database error/i.test(detail)) {
+    reason = 'google-database';
+  }
+
+  return {
+    reason,
+    providerError: safeOAuthCode(error),
+    providerCode: safeOAuthCode(code),
+  };
 }

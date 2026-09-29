@@ -1,5 +1,5 @@
 import { GET } from '@/app/auth/callback/route';
-import { describeOAuthError } from '@/lib/oauth-error';
+import { classifyOAuthError, safeOAuthCode } from '@/lib/oauth-error';
 import { callbackState } from './stubs/google-callback';
 
 let failures = 0;
@@ -56,20 +56,25 @@ void (async () => {
     password.headers.get('location') === 'https://tutor.example/auth/error?reason=google-required' &&
     callbackState.studentWrites === 0 && callbackState.signOuts === 1);
 
-  // A failure reported by Supabase keeps its reason, so it can be diagnosed.
+  // Show the failure category and codes without forwarding provider text.
+  const originalConsoleError = console.error;
+  let logged = '';
+  console.error = (...args: unknown[]) => { logged = JSON.stringify(args); };
   const reported = await GET(new Request(
     'https://tutor.example/auth/callback?error=server_error&error_code=unexpected_failure' +
-    '&error_description=Unable+to+exchange+external+code',
+    '&error_description=Unable+to+exchange+external+code+for+student%40ahduni.edu.in',
   ) as never);
+  console.error = originalConsoleError;
   const location = reported.headers.get('location') ?? '';
-  check('a reported Google failure goes to the error page',
-    location.startsWith('https://tutor.example/auth/error?reason=google&detail='));
-  check('and carries the reason Supabase gave',
-    decodeURIComponent(location.split('detail=')[1] ?? '').includes('Unable to exchange external code'));
-  check('nothing that could become markup survives the cleaning',
-    !/[<>"&]/.test(describeOAuthError('x', null, '<script>alert("hi")</script>&y')));
-  check('a very long reason is cut short',
-    describeOAuthError('e', null, 'a'.repeat(500)).length <= 200);
+  check('a Google exchange failure gets a specific message and safe codes',
+    location === 'https://tutor.example/auth/error?reason=google-exchange&provider=server_error&code=unexpected_failure');
+  check('provider description is absent from URL and logs',
+    !location.includes('student') && !logged.includes('student') &&
+    !location.includes('Unable to exchange') && !logged.includes('Unable to exchange'));
+  check('unknown descriptions are not reflected',
+    classifyOAuthError('server_error', null, 'private token 12345').reason === 'google');
+  check('markup and long provider codes are dropped',
+    safeOAuthCode('<script>') === null && safeOAuthCode('a'.repeat(65)) === null);
 
   if (originalDomain === undefined) delete process.env.ALLOWED_EMAIL_DOMAIN;
   else process.env.ALLOWED_EMAIL_DOMAIN = originalDomain;
