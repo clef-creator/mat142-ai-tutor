@@ -20,11 +20,11 @@ so this code can be merged before Google is configured.
 
 ## What changes and what does not
 
-Authorization is unchanged. `/auth/callback` still rejects any address outside
-`ALLOWED_EMAIL_DOMAIN` (and deletes the account Google sign-in just created for
-it), sends faculty to `/dashboard`, and signs out anyone not on
-`allowed_students`. Supabase links a Google sign-in to an existing account with
-the same address, so students and the professor keep their progress and role.
+Authorization is unchanged. `/auth/callback` still rejects and signs out any
+address outside `ALLOWED_EMAIL_DOMAIN`, sends faculty to `/dashboard`, and signs
+out anyone not on `allowed_students`. Supabase links a Google sign-in to an
+existing account with the same address, so students and the professor keep
+their progress and role.
 
 With the switch on, `/setup` adds students to the pilot list with a confirmed
 account and no password, and shows no passwords. The password form stays under
