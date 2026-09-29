@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
-import { isSoloMode } from '@/lib/mode';
+import { googleSignInEnabled, isSoloMode } from '@/lib/mode';
 import { isSetupTokenCorrect, setupEnabled } from '@/lib/setup-token';
 import { MAX_ROSTER_ENTRIES, parseRoster } from '@/lib/roster';
 import { provisionStudents } from '@/lib/provisioning';
@@ -61,6 +61,7 @@ export async function POST(req: Request) {
   try {
     const results = await provisionStudents(createAdminClient(), entries, {
       resetExisting: body.resetExisting === true,
+      passwords: !googleSignInEnabled(),
     });
     return NextResponse.json({ ok: true, results, problems });
   } catch (error) {

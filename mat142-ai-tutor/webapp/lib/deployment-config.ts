@@ -121,6 +121,13 @@ export function validateDeploymentConfig(env: Environment): DeploymentConfigResu
         'STUDENT_SETUP_TOKEN is set, so /setup can create accounts. Remove it once the students have signed in.',
       );
     }
+
+    // "true" or "yes" would look switched on in Vercel and do nothing, which
+    // is exactly the kind of setting that costs an afternoon.
+    const google = value(env, 'NEXT_PUBLIC_GOOGLE_SIGN_IN').toLowerCase();
+    if (google && google !== 'on' && google !== 'off') {
+      errors.push('NEXT_PUBLIC_GOOGLE_SIGN_IN must be "on" or "off" (or left out).');
+    }
   }
 
   validatePositiveInteger(env, 'MAX_TURNS_PER_SESSION', errors);

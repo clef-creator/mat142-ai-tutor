@@ -4,7 +4,8 @@ import Header from '@/components/Header';
 const REASONS: Record<string, string> = {
   'missing-code': 'That link was incomplete. Please request a new one.',
   expired: 'That link has already been used, or it expired. Sign-in links last one hour and work once.',
-  domain: 'Only Ahmedabad University addresses can be used to sign in.',
+  domain: 'Only Ahmedabad University accounts can be used to sign in. If Google picked a personal account, try again and choose your university one.',
+  google: 'Google sign-in did not finish. If you pressed cancel, just try again. If Google said access is blocked, tell your instructor.',
   'not-on-list': 'That address is not on the pilot list. If you think it should be, contact your instructor.',
   'enrollment-inactive': 'Your access to this pilot is no longer active. Contact your instructor if you think this is a mistake.',
   provisioning: 'Your account could not be set up just now. Please try again or contact your instructor.',

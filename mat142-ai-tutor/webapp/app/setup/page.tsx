@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
-import { isSoloMode } from '@/lib/mode';
+import { googleSignInEnabled, isSoloMode } from '@/lib/mode';
 import { setupEnabled } from '@/lib/setup-token';
 import SetupClient from './SetupClient';
 
@@ -24,7 +24,7 @@ export default async function SetupPage() {
   return (
     <>
       <Header subtitle="Setting up student sign-ins" />
-      <SetupClient domain={domain} />
+      <SetupClient domain={domain} google={googleSignInEnabled()} />
     </>
   );
 }
