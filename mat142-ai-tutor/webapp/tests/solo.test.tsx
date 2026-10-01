@@ -14,6 +14,7 @@ import TutorClient from '@/app/tutor/TutorClient';
 import { accessToken, isCodeCorrect, hasAccess } from '@/lib/access';
 import {
   applyOutcome,
+  archiveTopicSession,
   emptyState,
   loadState,
   markStarted,
@@ -105,6 +106,18 @@ function storeChecks() {
   check('a second go at a topic does not duplicate the row', after.progress.length === 1);
   check('one finished session counts as exactly one attempt', after.progress[0].attempts === 1);
 
+  const conversation: ChatMessage[] = [
+    { role: 'assistant', content: 'Try this step.' },
+    { role: 'user', content: 'I think it is 2x.' },
+  ];
+  const toArchive = { ...after, open: { id: newSessionId(), topicId: first.topic.id, messages: conversation } };
+  const archived = archiveTopicSession(toArchive, conversation);
+  saveState({ ...archived, open: null });
+  check('returning to a topic restores its previous conversation',
+    loadState().topicHistory[first.topic.id]?.[1]?.content === 'I think it is 2x.');
+  check('the topic summary survives a reload',
+    loadState().topicSummaries[first.topic.id] === 'Stuck on the chain rule.');
+
   // A shaky topic must come back round rather than being left behind.
   check('a shaky topic is offered again', pickTopic(after.progress).topic.id === first.topic.id);
 
@@ -173,6 +186,14 @@ const soloHooks = {
 };
 
 function screenChecks() {
+  const previous = renderToStaticMarkup(
+    <TutorClient {...baseProps} previousMessages={[
+      { role: 'assistant', content: 'Earlier question' },
+      { role: 'user', content: 'Earlier answer' },
+    ]} />,
+  );
+  check('returning to a topic displays the saved conversation',
+    previous.includes('Previous work on this topic') && previous.includes('Earlier answer'));
   const solo = renderToStaticMarkup(<TutorClient {...baseProps} solo={soloHooks} />);
   const account = renderToStaticMarkup(<TutorClient {...baseProps}
     topicOptions={topics.map((t) => ({ id: t.id, name: t.student_facing_name, unit: t.unit_title }))} />);

@@ -60,6 +60,30 @@ export default async function TutorPage() {
   const activeTopic = choice.topic;
   const position = unitPosition(activeTopic.id);
 
+  // A new session has a fresh transcript, but the student's last conversation
+  // on this topic remains visible when they return to it.
+  const { data: previousSession, error: previousSessionError } = await admin
+    .from('sessions')
+    .select('id')
+    .eq('student_id', user.id)
+    .eq('topic_id', activeTopic.id)
+    .gt('turn_count', 1)
+    .not('ended_at', 'is', null)
+    .order('ended_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (previousSessionError) throw previousSessionError;
+  let previousMessages: ChatMessage[] = [];
+  if (previousSession) {
+    const { data: msgs, error: previousMessagesError } = await admin
+      .from('messages')
+      .select('role, content')
+      .eq('session_id', previousSession.id)
+      .order('id', { ascending: true });
+    if (previousMessagesError) throw previousMessagesError;
+    previousMessages = (msgs ?? []) as ChatMessage[];
+  }
+
   const statusMap: Record<string, string> = {};
   progress.forEach((p) => { statusMap[p.topic_id] = p.status; });
 
@@ -76,6 +100,7 @@ export default async function TutorPage() {
           sessionCount={sessionCount ?? 0}
           existingSessionId={open?.id ?? null}
           existingMessages={existingMessages}
+          previousMessages={previousMessages}
           topic={{
             id: activeTopic.id,
             title: activeTopic.title,

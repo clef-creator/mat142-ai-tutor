@@ -6,6 +6,7 @@ import { pickTopic, choiceForTopic } from '@/lib/picker';
 import { getTopic, visibleTopics, topicsInUnit, unitPosition } from '@/lib/curriculum';
 import {
   applyOutcome,
+  archiveTopicSession,
   clearState,
   emptyState,
   loadState,
@@ -38,6 +39,7 @@ async function closeOpenSession(state: SoloState, messages: ChatMessage[]): Prom
   if (!worthAssessing(messages)) return { ...state, open: null };
 
   const topicId = state.open.topicId;
+  state = archiveTopicSession(state, messages);
   let outcome: 'steady' | 'shaky' = 'shaky';
   let summary = `Worked on ${getTopic(topicId)?.student_facing_name ?? topicId}.`;
   let sticking: string | null = null;
@@ -137,6 +139,7 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
         sessionCount={state.sessionCount}
         existingSessionId={open.id}
         existingMessages={open.messages}
+        previousMessages={state.topicHistory[open.topicId] ?? []}
         topic={{
           id: choice.topic.id,
           title: choice.topic.title,
@@ -162,8 +165,9 @@ export default function SoloTutorClient({ initialName }: { initialName: string |
               progress: s.progress,
               studentName: s.name,
               sessionNumber: s.sessionCount + 1,
-              lastSummary: s.lastSummary,
-              lastTopicId: s.lastTopicId,
+              lastSummary: s.topicSummaries?.[s.open?.topicId ?? choice.topic.id]
+                ?? (s.lastTopicId === (s.open?.topicId ?? choice.topic.id) ? s.lastSummary : null),
+              lastTopicId: s.open?.topicId ?? choice.topic.id,
             };
           },
 

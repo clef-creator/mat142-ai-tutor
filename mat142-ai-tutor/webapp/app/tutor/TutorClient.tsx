@@ -102,6 +102,7 @@ export default function TutorClient({
   sessionCount,
   existingSessionId,
   existingMessages,
+  previousMessages = [],
   topic,
   because,
   topicList,
@@ -116,6 +117,7 @@ export default function TutorClient({
   sessionCount: number;
   existingSessionId: string | null;
   existingMessages: ChatMessage[];
+  previousMessages?: ChatMessage[];
   topic: TopicSummary;
   because: string;
   /**
@@ -607,6 +609,18 @@ export default function TutorClient({
         </div>
 
         <div className="thread" ref={threadRef}>
+          {previousMessages.length > 0 ? (
+            <section aria-label="Previous work on this topic">
+              <div className="eyebrow">Previous work on this topic</div>
+              {previousMessages.map((m, i) => (
+                <div key={`previous-${i}`} className={m.role === 'assistant' ? 'msg tutor' : 'msg you'}>
+                  <div className="speaker">{m.role === 'assistant' ? 'Calcu-Buddy' : 'You'}</div>
+                  <MathText text={m.content} />
+                </div>
+              ))}
+              <div className="eyebrow">Current session</div>
+            </section>
+          ) : null}
           {messages.map((m, i) => (
             <div key={i} className={m.role === 'assistant' ? 'msg tutor' : 'msg you'}>
               <div className="speaker">{m.role === 'assistant' ? 'Calcu-Buddy' : 'You'}</div>
