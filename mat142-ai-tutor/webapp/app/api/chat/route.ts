@@ -178,6 +178,8 @@ export async function POST(req: Request) {
       .from('sessions')
       .select('topic_id, summary')
       .eq('student_id', user.id)
+      .eq('topic_id', session.topic_id)
+      .not('outcome', 'is', null)
       .not('ended_at', 'is', null)
       .order('ended_at', { ascending: false })
       .limit(1)

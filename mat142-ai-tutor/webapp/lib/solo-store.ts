@@ -30,6 +30,9 @@ export interface SoloState {
   progress: ProgressRow[];
   lastSummary: string | null;
   lastTopicId: string | null;
+  /** Most recent finished conversation for each topic. */
+  topicHistory: Record<string, ChatMessage[]>;
+  topicSummaries: Record<string, string>;
   open: OpenSession | null;
 }
 
@@ -39,6 +42,8 @@ export const emptyState: SoloState = {
   progress: [],
   lastSummary: null,
   lastTopicId: null,
+  topicHistory: {},
+  topicSummaries: {},
   open: null,
 };
 
@@ -57,6 +62,15 @@ export function loadState(): SoloState {
       progress: Array.isArray(parsed.progress) ? parsed.progress : [],
       lastSummary: typeof parsed.lastSummary === 'string' ? parsed.lastSummary : null,
       lastTopicId: typeof parsed.lastTopicId === 'string' ? parsed.lastTopicId : null,
+      topicHistory: parsed.topicHistory && typeof parsed.topicHistory === 'object' && !Array.isArray(parsed.topicHistory)
+        ? Object.fromEntries(Object.entries(parsed.topicHistory).filter((entry): entry is [string, ChatMessage[]] =>
+            Array.isArray(entry[1]) && entry[1].every((message) =>
+              message && (message.role === 'user' || message.role === 'assistant') && typeof message.content === 'string')))
+        : {},
+      topicSummaries: parsed.topicSummaries && typeof parsed.topicSummaries === 'object' && !Array.isArray(parsed.topicSummaries)
+        ? Object.fromEntries(Object.entries(parsed.topicSummaries).filter((entry): entry is [string, string] =>
+            typeof entry[1] === 'string'))
+        : {},
       open:
         parsed.open && typeof parsed.open.id === 'string' && typeof parsed.open.topicId === 'string'
           ? {
@@ -70,6 +84,19 @@ export function loadState(): SoloState {
     // Corrupt or unreadable. Starting fresh is better than a blank screen.
     return emptyState;
   }
+}
+
+/** Archive the completed thread before opening another session. */
+export function archiveTopicSession(state: SoloState, messages: ChatMessage[]): SoloState {
+  if (!state.open || !messages.some((message) => message.role === 'user')) return state;
+  const topicId = state.open.topicId;
+  return {
+    ...state,
+    topicHistory: {
+      ...state.topicHistory,
+      [topicId]: messages,
+    },
+  };
 }
 
 export function saveState(state: SoloState): void {
@@ -133,6 +160,9 @@ export function applyOutcome(
     progress,
     lastSummary: summary,
     lastTopicId: topicId,
+    topicSummaries: assessed
+      ? { ...state.topicSummaries, [topicId]: summary }
+      : state.topicSummaries,
     sessionCount: state.sessionCount + 1,
     open: null,
   };
